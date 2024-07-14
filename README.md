@@ -1,6 +1,9 @@
 # event-community-app
 Develop an Event Community App targeted for the Android platform using React Native. 
 
+## Discuss Page - excalidraw
+https://excalidraw.com/#room=5d838fa201be178adb7b,6KTrS1-Ul2ZQb_Zezlpjcg
+
 ## EXCELLENT CONDITIONS
 
 ### CODE
