@@ -14,7 +14,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
 import WelcomeScreen from './src/screens/WelcomeScreen';
 import TabNavigationComponent from './src/navigator/TabNavigationComponent';
-import {getData, setValue} from './src/helper/StorageHelper';
+import {getData, setValue} from './src/utils/StorageHelper';
 
 const Stack = createStackNavigator();
 

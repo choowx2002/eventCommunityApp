@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import CustomText from '../utils/CustomTextUtils';
-import colors from '../themes/colors';
-import fontSizes from '../themes/fontSize';
+import CustomText from '../components/CustomText';
+import colors from '../types/colors';
+import fontSizes from '../types/fontSize';
 
 const WelcomeScreen = ({ navigation }) => {
   // Initialize state to manage the theme
