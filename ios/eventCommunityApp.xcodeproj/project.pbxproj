@@ -15,6 +15,16 @@
 		6132EF182BDFF13200BBE14D /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 6132EF172BDFF13200BBE14D /* PrivacyInfo.xcprivacy */; };
 		7699B88040F8A987B510C191 /* libPods-eventCommunityApp-eventCommunityAppTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-eventCommunityApp-eventCommunityAppTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		6BF5315698AF4B31AFD8BF27 /* Lora-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6D4BBC31CFFE43A99D8B3073 /* Lora-Bold.ttf */; };
+		E58E7AA168B54F9AAF65368C /* Lora-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F301CA656D354DA6AFF13F20 /* Lora-BoldItalic.ttf */; };
+		1C0DAF06A7A24B0C9C6A701F /* Lora-Italic-VariableFont_wght.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FFD78A37376749A8AFBFE638 /* Lora-Italic-VariableFont_wght.ttf */; };
+		E407C5301F8A44629B6F0647 /* Lora-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 163A389850FE43B686DCB736 /* Lora-Italic.ttf */; };
+		EE5B7C62744C42EE91468BEF /* Lora-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = ECC5626784C74E56968E5738 /* Lora-Medium.ttf */; };
+		E3C661C3CEE24131B4FF5AD2 /* Lora-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AB627CA37D63439D8D2F64D7 /* Lora-MediumItalic.ttf */; };
+		6557B6B9CBC64D3FB6391FCD /* Lora-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D615DA6F09E543F19FC9A4F4 /* Lora-Regular.ttf */; };
+		780254C3244144A28E210164 /* Lora-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 154A6DE881D04E809C56FE92 /* Lora-SemiBold.ttf */; };
+		1205555900D8465C95CF3850 /* Lora-SemiBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 28B38E3691814FFBABF1FCBF /* Lora-SemiBoldItalic.ttf */; };
+		6A08927B6FD64A609868B69F /* Lora-VariableFont_wght.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BAE907B530FE493F86E52EE6 /* Lora-VariableFont_wght.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -46,6 +56,16 @@
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = eventCommunityApp/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-eventCommunityApp-eventCommunityAppTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-eventCommunityApp-eventCommunityAppTests.release.xcconfig"; path = "Target Support Files/Pods-eventCommunityApp-eventCommunityAppTests/Pods-eventCommunityApp-eventCommunityAppTests.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		6D4BBC31CFFE43A99D8B3073 /* Lora-Bold.ttf */ = {isa = PBXFileReference; name = "Lora-Bold.ttf"; path = "../src/assets/fonts/Lora-Bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		F301CA656D354DA6AFF13F20 /* Lora-BoldItalic.ttf */ = {isa = PBXFileReference; name = "Lora-BoldItalic.ttf"; path = "../src/assets/fonts/Lora-BoldItalic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		FFD78A37376749A8AFBFE638 /* Lora-Italic-VariableFont_wght.ttf */ = {isa = PBXFileReference; name = "Lora-Italic-VariableFont_wght.ttf"; path = "../src/assets/fonts/Lora-Italic-VariableFont_wght.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		163A389850FE43B686DCB736 /* Lora-Italic.ttf */ = {isa = PBXFileReference; name = "Lora-Italic.ttf"; path = "../src/assets/fonts/Lora-Italic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		ECC5626784C74E56968E5738 /* Lora-Medium.ttf */ = {isa = PBXFileReference; name = "Lora-Medium.ttf"; path = "../src/assets/fonts/Lora-Medium.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		AB627CA37D63439D8D2F64D7 /* Lora-MediumItalic.ttf */ = {isa = PBXFileReference; name = "Lora-MediumItalic.ttf"; path = "../src/assets/fonts/Lora-MediumItalic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		D615DA6F09E543F19FC9A4F4 /* Lora-Regular.ttf */ = {isa = PBXFileReference; name = "Lora-Regular.ttf"; path = "../src/assets/fonts/Lora-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		154A6DE881D04E809C56FE92 /* Lora-SemiBold.ttf */ = {isa = PBXFileReference; name = "Lora-SemiBold.ttf"; path = "../src/assets/fonts/Lora-SemiBold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		28B38E3691814FFBABF1FCBF /* Lora-SemiBoldItalic.ttf */ = {isa = PBXFileReference; name = "Lora-SemiBoldItalic.ttf"; path = "../src/assets/fonts/Lora-SemiBoldItalic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		BAE907B530FE493F86E52EE6 /* Lora-VariableFont_wght.ttf */ = {isa = PBXFileReference; name = "Lora-VariableFont_wght.ttf"; path = "../src/assets/fonts/Lora-VariableFont_wght.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -125,6 +145,7 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
+				677EAC3200BD4D189473090B /* Resources */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -150,6 +171,24 @@
 			);
 			path = Pods;
 			sourceTree = "<group>";
+		};
+		677EAC3200BD4D189473090B /* Resources */ = {
+			isa = "PBXGroup";
+			children = (
+				6D4BBC31CFFE43A99D8B3073 /* Lora-Bold.ttf */,
+				F301CA656D354DA6AFF13F20 /* Lora-BoldItalic.ttf */,
+				FFD78A37376749A8AFBFE638 /* Lora-Italic-VariableFont_wght.ttf */,
+				163A389850FE43B686DCB736 /* Lora-Italic.ttf */,
+				ECC5626784C74E56968E5738 /* Lora-Medium.ttf */,
+				AB627CA37D63439D8D2F64D7 /* Lora-MediumItalic.ttf */,
+				D615DA6F09E543F19FC9A4F4 /* Lora-Regular.ttf */,
+				154A6DE881D04E809C56FE92 /* Lora-SemiBold.ttf */,
+				28B38E3691814FFBABF1FCBF /* Lora-SemiBoldItalic.ttf */,
+				BAE907B530FE493F86E52EE6 /* Lora-VariableFont_wght.ttf */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+			path = "";
 		};
 /* End PBXGroup section */
 
@@ -247,6 +286,16 @@
 				6132EF182BDFF13200BBE14D /* PrivacyInfo.xcprivacy in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				6BF5315698AF4B31AFD8BF27 /* Lora-Bold.ttf in Resources */,
+				E58E7AA168B54F9AAF65368C /* Lora-BoldItalic.ttf in Resources */,
+				1C0DAF06A7A24B0C9C6A701F /* Lora-Italic-VariableFont_wght.ttf in Resources */,
+				E407C5301F8A44629B6F0647 /* Lora-Italic.ttf in Resources */,
+				EE5B7C62744C42EE91468BEF /* Lora-Medium.ttf in Resources */,
+				E3C661C3CEE24131B4FF5AD2 /* Lora-MediumItalic.ttf in Resources */,
+				6557B6B9CBC64D3FB6391FCD /* Lora-Regular.ttf in Resources */,
+				780254C3244144A28E210164 /* Lora-SemiBold.ttf in Resources */,
+				1205555900D8465C95CF3850 /* Lora-SemiBoldItalic.ttf in Resources */,
+				6A08927B6FD64A609868B69F /* Lora-VariableFont_wght.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
