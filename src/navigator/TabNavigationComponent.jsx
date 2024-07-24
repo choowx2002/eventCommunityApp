@@ -1,83 +1,70 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
 import React from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  useColorScheme,
-  View,
-} from 'react-native';
-import {
-  DrawerActions,
-  NavigationContainer,
-  useNavigation,
-} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import HomeScreen from '../screens/HomeScreen';
+import CustomHeader from '../components/CustomHeader';
+import { useTheme } from '../utils/ThemesChecker';
 
 const Tab = createBottomTabNavigator();
 
 const App = () => {
+  const { theme } = useTheme();
+  //list out the things in bottom tab
+  const menuItems = [
+    {
+      screenName: 'Home',
+      iconName: 'home',
+      component: HomeScreen,
+      headerName: 'Home',
+    },
+    {
+      screenName: 'Events',
+      iconName: 'planet',
+      component: HomeScreen,
+      headerName: 'Events',
+    },
+    {
+      screenName: 'Notifications',
+      iconName: 'notifications',
+      component: HomeScreen,
+      headerName: 'Notifications',
+    },
+    {
+      screenName: 'Profile',
+      iconName: 'person',
+      component: HomeScreen,
+      headerName: 'Profile',
+    },
+  ];
+
   return (
     <Tab.Navigator
       initialRouteName="Home"
       screenOptions={{
         tabBarStyle: {
           position: 'absolute',
-          backgroundColor: '#f6f6f6',
+          backgroundColor: theme.background,
           elevation: 0,
         },
+        header: ({ route }) => {
+          const item = menuItems.find(menu => menu.screenName === route.name);
+          return <CustomHeader title={item.headerName} />;
+        },
       }}>
-      <Tab.Screen
-        name="Home"
-        component={HomeScreen}
-        options={{
-          tabBarShowLabel: false,
-          tabBarIcon: ({color}) => (
-            <Ionicons name="home" color={color} size={26} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Events"
-        component={HomeScreen}
-        options={{
-          tabBarShowLabel: false,
-          tabBarIcon: ({color}) => (
-            <Ionicons name="planet" color={color} size={26} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Notifications"
-        component={HomeScreen}
-        options={{
-          tabBarShowLabel: false,
-          tabBarIcon: ({color}) => (
-            <Ionicons name="notifications" color={color} size={26} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Profile"
-        component={HomeScreen}
-        options={{
-          tabBarShowLabel: false,
-          tabBarIcon: ({color}) => (
-            <Ionicons name="person" color={color} size={26} />
-          ),
-        }}
-      />
+      {menuItems.map((item, index) => (
+        <Tab.Screen
+          key={index}
+          name={item.screenName}
+          component={item.component}
+          options={{
+            tabBarShowLabel: false,
+            tabBarActiveTintColor: theme.primary,
+            tabBarIcon: ({color}) => (
+              <Ionicons name={item.iconName} color={color} size={26} />
+            ),
+          }}
+        />
+      ))}
     </Tab.Navigator>
   );
 };

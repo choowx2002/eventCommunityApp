@@ -1,25 +1,17 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
 import React, {useEffect, useState} from 'react';
 import {
   NavigationContainer,
-  useNavigation,
 } from '@react-navigation/native';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
 import WelcomeScreen from './src/screens/WelcomeScreen';
 import TabNavigationComponent from './src/navigator/TabNavigationComponent';
 import {getData, setValue} from './src/utils/StorageHelper';
+import { ThemeProvider } from './src/utils/ThemesChecker';
 
 const Stack = createStackNavigator();
 
 const App = () => {
-  const [isFirstTime, setIsFirstTime] = useState<boolean | null>(null);
+  const [isFirstTime, setIsFirstTime] = useState(null);
 
   useEffect(() => {
     const checkFirstTime = async () => {
@@ -40,14 +32,16 @@ const App = () => {
   }
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator
-        screenOptions={{headerShown: false}}
-        initialRouteName={isFirstTime? 'welcome' : 'main'}>
-        <Stack.Screen name="welcome" component={WelcomeScreen} />
-        <Stack.Screen name="main" component={TabNavigationComponent} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <ThemeProvider>
+      <NavigationContainer>
+        <Stack.Navigator
+          screenOptions={{headerShown: false}}
+          initialRouteName={isFirstTime? 'welcome' : 'main'}>
+          <Stack.Screen name="welcome" component={WelcomeScreen} />
+          <Stack.Screen name="main" component={TabNavigationComponent} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </ThemeProvider>
   );
 };
 export default App;
