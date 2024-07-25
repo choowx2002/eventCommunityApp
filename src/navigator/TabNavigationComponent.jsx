@@ -48,7 +48,7 @@ const App = () => {
         },
         header: ({ route }) => {
           const item = menuItems.find(menu => menu.screenName === route.name);
-          return <CustomHeader title={item.headerName} />;
+          return <CustomHeader headerDetails={item} />;
         },
       }}>
       {menuItems.map((item, index) => (

@@ -1,8 +1,14 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import {View} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import {useTheme} from '../utils/ThemesChecker';
 const HomeScreen = () => {
-  return <View style={{ backgroundColor: '#f6f6f6', height: '100%' }}><Text>home</Text></View>;
+  const {theme} = useTheme();
+  return (
+    <View style={{backgroundColor: theme.background, height: '100%'}}>
+      
+    </View>
+  );
 };
 
 export default HomeScreen;

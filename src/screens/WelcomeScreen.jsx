@@ -1,56 +1,43 @@
 import React from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import CustomText from '../components/CustomText';
 import fontSizes from '../types/fontSize';
-import { useTheme } from '../utils/ThemesChecker';
+import {useTheme} from '../utils/ThemesChecker';
+import CustomButton from '../components/CustomButton';
 
-const WelcomeScreen = ({ navigation }) => {
-  const { theme, toggleTheme } = useTheme();
+const WelcomeScreen = ({navigation}) => {
+  const {theme, toggleTheme} = useTheme();
   return (
-    <View
-      style={[
-        styles.Container,
-        { backgroundColor: theme.background }
-      ]}
-    >
-      <View style={{ verticalAlign: 'middle', height: '50%', marginHorizontal: '10%' }}>
-        <CustomText
-          style={[styles.Title, { color: theme.text }]}
-          weight="semiBoldItalic"
-        >
+    <View style={[styles.Container, {backgroundColor: theme.background}]}>
+      <View
+        style={{
+          verticalAlign: 'middle',
+          height: '50%',
+          marginHorizontal: '10%',
+        }}>
+        <CustomText style={[styles.Title]} weight="semiBoldItalic">
           Welcome To EMC
         </CustomText>
-        <CustomText
-          style={[styles.Descriptions, { color: theme.text }]}
-        >
+        <CustomText style={[styles.Descriptions]}>
           Join a vibrant community where events come to life. Explore local and
           global events, share your experiences, and connect with others who
           share your passions. Together, we make every event memorable!
         </CustomText>
       </View>
 
-      <Pressable
-        style={[styles.Button, { backgroundColor: theme.secondary }]}
-        onPress={() => navigation.replace('main', { screen: 'Home' })}
-      >
-        <CustomText
-          style={[styles.ButtonText, { color: theme.text }]}
-          weight="bold"
-        >
-          CONTINUE
-        </CustomText>
-      </Pressable>
+      <CustomButton
+        onPress={() => navigation.replace('main', {screen: 'Home'})}
+        style={{marginTop: 10, width: '50%'}}
+        theme="bw">
+        WELCOME
+      </CustomButton>
 
-      <Pressable
-        style={[styles.ToggleButton, { backgroundColor: theme.primary }]}
+      <CustomButton
         onPress={toggleTheme}
-      >
-        <CustomText
-          style={[styles.ToggleButtonText, { color: theme.text }]}
-        >
-          Current Theme: {theme.text}
-        </CustomText>
-      </Pressable>
+        style={{marginTop: 10}}
+        theme="primary">
+        change theme
+      </CustomButton>
     </View>
   );
 };
@@ -67,27 +54,6 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   Descriptions: {
-    fontSize: fontSizes.body,
-  },
-  ButtonText: {
-    textAlign: 'center',
-    fontSize: fontSizes.button,
-  },
-  Button: {
-    width: '50%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 32,
-    borderRadius: 10,
-    elevation: 10,
-  },
-  ToggleButton: {
-    marginTop: 20,
-    padding: 10,
-    borderRadius: 5,
-  },
-  ToggleButtonText: {
     fontSize: fontSizes.body,
   },
 });

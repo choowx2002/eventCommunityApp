@@ -1,25 +1,40 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import {View, StyleSheet} from 'react-native';
 import CustomText from './CustomText';
 import fontSizes from '../types/fontSize';
+import {useTheme} from '../utils/ThemesChecker';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
-const CustomHeader = ({ title }) => {
+const CustomHeader = ({headerDetails}) => {
+  const {theme} = useTheme();
   return (
-    <View style={styles.headerContainer}>
-      <CustomText style={styles.headerTitle} weight="bold">{title}</CustomText>
+    <View style={[styles.headerContainer, {backgroundColor: theme.background}]}>
+      <CustomText
+        style={[styles.headerTitle]}
+        weight="bold">
+        {headerDetails.headerName}
+      </CustomText>
+
+      <View style={styles.rightIconsContainer}>
+        <Ionicons name="search-outline" color={theme.text} size={26} />
+        <Ionicons name="add-circle-outline" color={theme.text} size={26} />
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  rightIconsContainer:{
+    flexDirection: 'row',
+    gap: 10,
+  },
   headerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     padding: 10,
-    backgroundColor: '#f8f8f8',
+    justifyContent: 'space-between',
   },
   headerTitle: {
-    
     fontSize: fontSizes.header,
   },
 });
