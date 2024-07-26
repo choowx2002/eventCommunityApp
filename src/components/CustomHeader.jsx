@@ -5,6 +5,10 @@ import fontSizes from '../types/fontSize';
 import {useTheme} from '../utils/ThemesChecker';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
+
+
+// by using the details passed from tab nav we get the page name, 
+// what to show or what not to show such as search button/create events and more
 const CustomHeader = ({headerDetails}) => {
   const {theme} = useTheme();
   return (

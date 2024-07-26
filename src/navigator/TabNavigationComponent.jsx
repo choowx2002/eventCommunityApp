@@ -1,38 +1,38 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import HomeScreen from '../screens/HomeScreen';
+import HomeStack from '../navigator/HomeStack';
 import CustomHeader from '../components/CustomHeader';
-import { useTheme } from '../utils/ThemesChecker';
+import {useTheme} from '../utils/ThemesChecker';
 
 const Tab = createBottomTabNavigator();
 
 const App = () => {
-  const { theme } = useTheme();
+  const {theme} = useTheme();
   //list out the things in bottom tab
   const menuItems = [
     {
-      screenName: 'Home',
+      screenName: 'HomeStack',
       iconName: 'home',
-      component: HomeScreen,
+      component: HomeStack,
       headerName: 'Home',
     },
     {
       screenName: 'Events',
       iconName: 'planet',
-      component: HomeScreen,
+      component: HomeStack,
       headerName: 'Events',
     },
     {
       screenName: 'Notifications',
       iconName: 'notifications',
-      component: HomeScreen,
+      component: HomeStack,
       headerName: 'Notifications',
     },
     {
       screenName: 'Profile',
       iconName: 'person',
-      component: HomeScreen,
+      component: HomeStack,
       headerName: 'Profile',
     },
   ];
@@ -46,11 +46,13 @@ const App = () => {
           backgroundColor: theme.background,
           elevation: 0,
         },
-        header: ({ route }) => {
+        header: ({route}) => {
+          // using custom header for diff tabs screen
           const item = menuItems.find(menu => menu.screenName === route.name);
           return <CustomHeader headerDetails={item} />;
         },
       }}>
+      {/* literate the menu items and show in bottom tab */}
       {menuItems.map((item, index) => (
         <Tab.Screen
           key={index}

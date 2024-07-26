@@ -1,6 +1,8 @@
 import {StyleSheet} from 'react-native';
 import {useTheme} from '../utils/ThemesChecker';
 
+
+// for the style that will change by theme
 export const themeStyles = () => {
   const {theme} = useTheme();
   return StyleSheet.create({
@@ -26,6 +28,8 @@ export const themeStyles = () => {
   });
 };
 
+
+// for the style that can global use and should not use for color or fontsize
 export const globalStyle = StyleSheet.create({
   Button: {
     flexDirection: 'row',
