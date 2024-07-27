@@ -6,6 +6,7 @@ import TabNavigationComponent from './src/navigator/TabNavigationComponent';
 import {getData, setValue} from './src/utils/StorageHelper';
 import {ThemeProvider} from './src/utils/ThemesChecker';
 import { SafeAreaView } from 'react-native';
+import { screens } from './src/types/screensConfig';
 
 const Stack = createStackNavigator();
 
@@ -35,10 +36,17 @@ const App = () => {
       <SafeAreaView style={{flex: 1}}>
         <NavigationContainer>
           <Stack.Navigator
-            screenOptions={{headerShown: false}}
             initialRouteName={isFirstTime ? 'welcome' : 'main'}>
-            <Stack.Screen name="welcome" component={WelcomeScreen} />
-            <Stack.Screen name="main" component={TabNavigationComponent} />
+            <Stack.Screen name="welcome" component={WelcomeScreen} options={{headerShown: false}} />
+            <Stack.Screen name="main" component={TabNavigationComponent} options={{headerShown: false}} />
+            {screens.map(({ name, component, options }) => (
+              <Stack.Screen
+                key={name}
+                name={name}
+                component={component}
+                options={options}
+              />
+            ))}
           </Stack.Navigator>
         </NavigationContainer>
       </SafeAreaView>

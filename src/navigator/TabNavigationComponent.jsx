@@ -1,7 +1,7 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import HomeStack from '../navigator/HomeStack';
+import HomeScreen from '../screens/HomeScreen';
 import CustomHeader from '../components/CustomHeader';
 import {useTheme} from '../utils/ThemesChecker';
 
@@ -14,25 +14,25 @@ const App = () => {
     {
       screenName: 'HomeStack',
       iconName: 'home',
-      component: HomeStack,
+      component: HomeScreen,
       headerName: 'Home',
     },
     {
       screenName: 'Events',
       iconName: 'planet',
-      component: HomeStack,
+      component: HomeScreen,
       headerName: 'Events',
     },
     {
       screenName: 'Notifications',
       iconName: 'notifications',
-      component: HomeStack,
+      component: HomeScreen,
       headerName: 'Notifications',
     },
     {
       screenName: 'Profile',
       iconName: 'person',
-      component: HomeStack,
+      component: HomeScreen,
       headerName: 'Profile',
     },
   ];
