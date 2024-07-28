@@ -24,7 +24,7 @@ export const screens = [
     component: EventsDetails,
     options: {
       title: 'Event Details',
-      headerShown: true,
+      headerShown: false,
     },
   },
   {

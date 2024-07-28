@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {useTheme} from '../utils/ThemesChecker';
+import {useTheme} from '../utils/themesChecker';
 import {
   ActivityIndicator,
   StyleSheet,
