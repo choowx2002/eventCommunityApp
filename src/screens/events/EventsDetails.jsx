@@ -122,12 +122,13 @@ const fetchEventDetails = eventId => {
 
 const EventsDetails = ({navigation}) => {
   const route = useRoute();
-  const {theme} = useTheme();
-  const [eventDetails, setEventDetails] = useState(null);
-  const {isVisible, showLoadingModal, hideLoadingModal} = loadingHook();
-  const [isSticky, setIsSticky] = useState(false);
-  const [containerY, setContainerY] = useState(null);
-  const [alertState, setAlertState] = useState(false);
+  const {theme} = useTheme();//theme color
+  const [eventDetails, setEventDetails] = useState(null);//store event details from api
+  const {isVisible, showLoadingModal, hideLoadingModal} = loadingHook();//get loading modal hook
+  const [isSticky, setIsSticky] = useState(false);// set style
+  const [containerY, setContainerY] = useState(null);// get position for styling purpose 
+  const [alertState, setAlertState] = useState(false);//for alert modal shown
+  const [isJoin, setIsJoin] = useState(true);
 
   useEffect(() => {
     showLoadingModal();
@@ -156,13 +157,16 @@ const EventsDetails = ({navigation}) => {
     setIsSticky(scrollOffsetY > containerY - 20);
   };
 
+  //function to show alert
   const showAlert = () => {
     console.log('click button')
     setAlertState(true);
   };
 
+  //function to hide alert
   const hideAlert = () => {
     setAlertState(false);
+    setIsJoin(!isJoin)
     navigation.pop()
   };
 
@@ -260,19 +264,19 @@ const EventsDetails = ({navigation}) => {
           {/* button for join */}
           <CustomButton
             style={styles.button}
-            theme="primary"
+            theme={isJoin?'danger':'primary'}
             onPress={showAlert}
           >
-            JOIN
+            {isJoin?'LEAVE':'JOIN'}
           </CustomButton>
 
           {/* back button */}
           <BackButton navigation={navigation} />
           
+          {/* promp when click join/leave */}
           <CustomModel
-            title={`Are you sure to join ${eventDetails.title}?`}
-            message = "aaaaaaaaaaaaaaaaa ssssssssss"
-            themeColor = 'secondary'
+            title={isJoin?`Are you sure to leave ${eventDetails.title}`:`Are you sure to join ${eventDetails.title}?`}
+            themeColor = {isJoin?'danger':'bw'}
             isVisible={alertState}
             onClose={hideAlert}
             onConfirm={hideAlert}
