@@ -2,7 +2,7 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import CustomText from '../components/CustomText';
 import fontSizes from '../types/fontSize';
-import {useTheme} from '../utils/ThemesChecker';
+import {useTheme} from '../utils/themesChecker';
 import CustomButton from '../components/CustomButton';
 
 const WelcomeScreen = ({navigation}) => {
@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
   },
   Title: {
     textAlign: 'center',
-    fontSize: fontSizes.title,
+    fontSize: fontSizes.xxxlarge,
     marginBottom: 20,
   },
   Descriptions: {

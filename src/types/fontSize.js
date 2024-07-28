@@ -6,8 +6,6 @@ const fontSizes = {
     xlarge: 20,
     xxlarge: 24,
     xxxlarge: 32,
-    title: 40,
-    subtitle: 32,
     caption: 12,
     button: 14,
     body: 16,

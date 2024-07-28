@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Dimensions, TouchableOpacity, Image, StyleSheet} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {useTheme} from '../utils/ThemesChecker';
+import {useTheme} from '../utils/themesChecker';
 import Carousel from 'react-native-snap-carousel';
 import CustomText from '../components/CustomText';
 import fontSizes from '../types/fontSize';
@@ -61,7 +61,7 @@ const HomeScreen = ({navigation}) => {
       <Image
         style={{
           width: '100%',
-          height: (viewportWidth - 20) / 2,
+          height: (viewportWidth - 10) / 2,
         }}
         source={{
           uri: item.imageUrl,
@@ -120,7 +120,7 @@ const HomeScreen = ({navigation}) => {
         data={events}
         renderItem={swiperChild}
         sliderWidth={viewportWidth}
-        itemWidth={viewportWidth - 20}
+        itemWidth={viewportWidth - 10}
         autoplay={true}
         autoplayDelay={10000}
       />
@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   swiperHeadar: {
-    marginHorizontal: 20,
+    marginHorizontal: 10,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',

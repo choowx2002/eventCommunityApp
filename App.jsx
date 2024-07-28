@@ -3,8 +3,8 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import WelcomeScreen from './src/screens/WelcomeScreen';
 import TabNavigationComponent from './src/navigator/TabNavigationComponent';
-import {getData, setValue} from './src/utils/StorageHelper';
-import {ThemeProvider} from './src/utils/ThemesChecker';
+import {getData, setValue} from './src/utils/storageHelper';
+import {ThemeProvider} from './src/utils/themesChecker';
 import { SafeAreaView } from 'react-native';
 import { screens } from './src/types/screensConfig';
 
