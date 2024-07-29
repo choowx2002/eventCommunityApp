@@ -42,7 +42,6 @@ const App = () => {
       initialRouteName="Home"
       screenOptions={{
         tabBarStyle: {
-          position: 'absolute',
           backgroundColor: theme.background,
           elevation: 0,
         },

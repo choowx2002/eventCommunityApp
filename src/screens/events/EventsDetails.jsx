@@ -128,7 +128,7 @@ const EventsDetails = ({navigation}) => {
   const [isSticky, setIsSticky] = useState(false);// set style
   const [containerY, setContainerY] = useState(null);// get position for styling purpose 
   const [alertState, setAlertState] = useState(false);//for alert modal shown
-  const [isJoin, setIsJoin] = useState(true);
+  const [isJoin, setIsJoin] = useState(false);
 
   useEffect(() => {
     showLoadingModal();
