@@ -42,11 +42,13 @@ export const globalStyle = StyleSheet.create({
     borderRadius: 10,
     elevation: 10,
   },
-  backButton: {
+  backFloatButton: {
     position: 'absolute',
     top: 10,
     left: 10,
+  },
+  backButton: {
     borderRadius: 50,
     padding: 5,
-  },
+  }
 });

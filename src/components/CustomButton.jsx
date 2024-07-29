@@ -23,7 +23,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
  */
 const CustomButton = ({
   theme,
-  fontSize,
+  textSize,
   iconEnd = false,
   icon,
   children,
@@ -51,7 +51,7 @@ const CustomButton = ({
   return (
     <Pressable style={[buttonTheme, globalStyle.Button, style]} {...props}>
       {icon && !iconEnd && <View style={{marginRight: 8}}>{icon}</View>}
-      <CustomText weight="bold" style={[buttonTheme, {fontSize: fontSize}]}>
+      <CustomText weight="bold" style={[buttonTheme, {fontSize: textSize}]}>
         {children}
       </CustomText>
       {icon && iconEnd && <View style={{marginRight: 8}}>{icon}</View>}
@@ -59,21 +59,27 @@ const CustomButton = ({
   );
 };
 
-
-// custom button for back button 
+// custom button for back button
 // need to pass the navigation props in parameter
-export const BackButton = ({navigation}) => {
-
-  const themeStyle = themeStyles().bwButton2
+export const BackButton = ({
+  navigation,
+  float = true,
+  showBg = true,
+  ...props
+}) => {
+  const themeStyle = themeStyles().bwButton2;
 
   return (
     <Pressable
       style={[
+        float ? globalStyle.backFloatButton : '',
         globalStyle.backButton,
-        themeStyle
+        themeStyle,
+        !showBg && {backgroundColor: 'transparent'},
       ]}
+      {...props}
       onPress={() => navigation.goBack()}>
-      <Ionicons name="arrow-back" size={24} color={themeStyle.color} />
+      <Ionicons name="arrow-back" size={26} color={themeStyle.color} />
     </Pressable>
   );
 };

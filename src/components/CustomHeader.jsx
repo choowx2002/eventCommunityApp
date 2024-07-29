@@ -4,13 +4,14 @@ import CustomText from './CustomText';
 import fontSizes from '../types/fontSize';
 import {useTheme} from '../utils/themesChecker';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-
-
+import { useNavigation } from '@react-navigation/native';
 
 // by using the details passed from tab nav we get the page name, 
 // what to show or what not to show such as search button/create events and more
 const CustomHeader = ({headerDetails}) => {
   const {theme} = useTheme();
+  const navigation = useNavigation();
+
   return (
     <View style={[styles.headerContainer, {backgroundColor: theme.background}]}>
       <CustomText
@@ -20,7 +21,7 @@ const CustomHeader = ({headerDetails}) => {
       </CustomText>
 
       <View style={styles.rightIconsContainer}>
-        <Ionicons name="search-outline" color={theme.text} size={26} />
+        <Ionicons name="search-outline" color={theme.text} size={26} onPress={()=> navigation.navigate('search')} />
         <Ionicons name="add-circle-outline" color={theme.text} size={26} />
       </View>
     </View>
