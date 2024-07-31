@@ -16,7 +16,9 @@ const mockEventsData = [
     title: 'Healing Through Music Workshop',
     desc: 'Join us for an interactive workshop exploring the healing power of music.',
     longDescription: `Join us for an \n
-    immersive experience at the "Healing Through Music Workshop," where participants will explore the transformative power of music in promoting emotional and mental well-being. This interactive workshop is designed for individuals seeking to understand how music can be used as a therapeutic tool. Attendees will engage in various activities, including group music-making, guided listening sessions, and reflective discussions. Participants will learn techniques to harness the benefits of music therapy for personal growth and healing. This workshop is suitable for all ages and backgrounds, whether you are a seasoned musician or simply curious about the healing arts.`,
+    immersive experience at the "Healing Through Music Workshop," where participants will explore the transformative power of music in promoting emotional and mental well-being. This interactive workshop is designed for individuals seeking to understand how music can be used as a therapeutic tool. Attendees will engage in various activities, including group music-making, guided listening sessions, and reflective discussions. Participants will learn techniques to harness the benefits of music therapy for personal growth and healing. This workshop is suitable for all ages and backgrounds, whether you are a seasoned musician or simply curious about the healing arts.
+        immersive experience at the "Healing Through Music Workshop," where participants will explore the transformative power of music in promoting emotional and mental well-being. This interactive workshop is designed for individuals seeking to understand how music can be used as a therapeutic tool. Attendees will engage in various activities, including group music-making, guided listening sessions, and reflective discussions. Participants will learn techniques to harness the benefits of music therapy for personal growth and healing. This workshop is suitable for all ages and backgrounds, whether you are a seasoned musician or simply curious about the healing arts.
+    `,
     starttime: '2024-08-05T10:00:00Z',
     endtime: '2024-08-05T12:00:00Z',
     startdate: '2024-08-05',
@@ -171,10 +173,10 @@ const EventsDetails = ({navigation}) => {
   };
 
   return (
-    <View style={{backgroundColor: theme.cardBackground}}>
+    <View style={{flex: 1,backgroundColor: theme.cardBackground}}>
       <LoadingModal text="loading" isVisible={isVisible} />
       {eventDetails && (
-        <View>
+        <View style={{flex: 1}}>
           <ScrollView
             stickyHeaderIndices={[1]}
             contentContainerStyle={{paddingBottom: 80}}
