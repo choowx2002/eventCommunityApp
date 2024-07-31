@@ -18,7 +18,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
  * @param {string} theme - bw(default), primary, secondary, danger
  * @param {React.Element} icon - Icon component to render inside the button
  * @param {boolean} iconEnd - Icon placement end if true
- * @param fontSize - use text size from fontSize.js
+ * @param textSize - use text size from fontSize.js
  * @returns - button ui
  */
 const CustomButton = ({
@@ -60,11 +60,20 @@ const CustomButton = ({
 };
 
 // custom button for back button
-// need to pass the navigation props in parameter
+// 
+/**
+ * A customizable back button component.
+ * 
+ * @param navigation - need to pass the navigation props in parameter
+ * @param float - true(default)/false - float left top.
+ * @param showBg - true(default)/false - show background.
+ * @param onPressFc- The function to execute when trigger onPress. (default is goBack())
+ */
 export const BackButton = ({
   navigation,
   float = true,
   showBg = true,
+  onPressFc = () => navigation.goBack(),
   ...props
 }) => {
   const themeStyle = themeStyles().bwButton2;
@@ -78,7 +87,7 @@ export const BackButton = ({
         !showBg && {backgroundColor: 'transparent'},
       ]}
       {...props}
-      onPress={() => navigation.goBack()}>
+      onPress={onPressFc}>
       <Ionicons name="arrow-back" size={26} color={themeStyle.color} />
     </Pressable>
   );

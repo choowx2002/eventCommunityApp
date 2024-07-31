@@ -13,11 +13,15 @@ import Carousel from 'react-native-snap-carousel';
 import CustomText from '../components/CustomText';
 import fontSizes from '../types/fontSize';
 import Geolocation from '@react-native-community/geolocation';
+import { getLocationAddress } from '../services/api';
 
 const {width: viewportWidth} = Dimensions.get('window'); // used to get the vw of window
 
 // Geolocation.setRNConfiguration(config);
-Geolocation.getCurrentPosition(info => console.log(info));
+Geolocation.getCurrentPosition(info => {
+    console.log(info)
+    getLocationAddress(info.coords.latitude, info.coords.longitude)
+  });
 
 const HomeScreen = ({navigation}) => {
   const {theme} = useTheme();

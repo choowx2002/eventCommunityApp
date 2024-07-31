@@ -15,6 +15,7 @@ import fontSizes from '../../types/fontSize';
 import {FlatList} from 'react-native-gesture-handler';
 import {formatDate} from '../../utils/dateTimeFormatter';
 import CustomText from '../../components/CustomText';
+import { globalStyle } from '../../styles/globalStyles';
 
 const fakeEvents = [
   {
@@ -63,19 +64,14 @@ const SeacrhScreen = ({navigation}) => {
 
   //styles
   const styles = StyleSheet.create({
-    searchContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-    },
     searchInputBox: {
       flex: 1,
       flexDirection: 'row',
       alignItems: 'center',
       marginHorizontal: 10,
-      marginVertical: 5,
       paddingHorizontal: 10,
       gap: 5,
-      borderWidth: 0.5,
+      borderWidth: 1,
       borderRadius: 30,
       borderColor: theme.text,
       backgroundColor: theme.cardBackground,
@@ -89,7 +85,6 @@ const SeacrhScreen = ({navigation}) => {
       marginVertical: 5,
       paddingVertical: 5,
       paddingHorizontal: 20,
-      marginRight: 10,
       elevation: 0,
       lineHeight: '100%',
     },
@@ -99,6 +94,7 @@ const SeacrhScreen = ({navigation}) => {
       borderRadius: 10,
     },
     eventItem: {
+      backgroundColor: theme.cardBackground,
       marginBottom: 10,
       paddingHorizontal: 10,
       paddingVertical: 5,
@@ -172,8 +168,8 @@ const SeacrhScreen = ({navigation}) => {
   };
 
   return (
-    <View style={{flex: 1}}>
-      <View style={[styles.searchContainer]}>
+    <View style={{flex: 1, backgroundColor: theme.background}}>
+      <View style={[globalStyle.header, {}]}>
         <BackButton navigation={navigation} float={false} showBg={false} />
         <View style={styles.searchInputBox}>
           <Ionicons name="search-outline" color={theme.text} size={18} />
