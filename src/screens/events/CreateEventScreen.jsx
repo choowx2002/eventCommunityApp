@@ -1,4 +1,11 @@
-import {StyleSheet, ScrollView, View, Image, Pressable, ToastAndroid} from 'react-native';
+import {
+  StyleSheet,
+  ScrollView,
+  View,
+  Image,
+  Pressable,
+  ToastAndroid,
+} from 'react-native';
 import React, {useState} from 'react';
 import {useTheme} from '../../utils/themesChecker';
 import CustomButton, {BackButton} from '../../components/CustomButton';
@@ -10,6 +17,7 @@ import CustomInput from '../../components/CustomInput';
 import {launchImageLibrary} from 'react-native-image-picker';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {Picker} from '@react-native-picker/picker';
+import CustomModel from '../../components/AlertModal';
 
 const categories = [
   {name: 'Badminton', id: '1'},
@@ -20,6 +28,7 @@ const categories = [
 
 const CreateEventScreen = ({navigation}) => {
   const {theme} = useTheme();
+  const [alertState, setAlertState] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [formValues, handleFormValueChange, validateForm] = formData({
     data: {
@@ -33,7 +42,7 @@ const CreateEventScreen = ({navigation}) => {
       postcode: '',
       description: '',
       imagePath: '',
-      limit:'10',
+      limit: '10',
     },
     requiredData: [
       'title',
@@ -135,16 +144,22 @@ const CreateEventScreen = ({navigation}) => {
   };
 
   //show create toast
-  const showToast = (message) => {
+  const showToast = message => {
     ToastAndroid.show(message, ToastAndroid.SHORT);
   };
 
-  //create event
-  const createEvent = () => {
+  //validate event form
+  const validateEventForm = () => {
     console.log(formValues);
     if (!validateForm()) return showToast('Form is not completed!');
-    showToast('Event created successfully!')
-    navigation.goBack()
+    setAlertState(true);
+  };
+
+  //create event and route
+  const createEvent = () => {
+    setAlertState(false);
+    showToast('Event created successfully!');
+    navigation.goBack();
   };
 
   return (
@@ -384,9 +399,19 @@ const CreateEventScreen = ({navigation}) => {
           handleFormValueChange={handleFormValueChange}
         />
       </ScrollView>
-      <CustomButton style={styles.button} theme="primary" onPress={createEvent}>
+      <CustomButton
+        style={styles.button}
+        theme="primary"
+        onPress={validateEventForm}>
         Create
       </CustomButton>
+      <CustomModel
+        title={`Are you sure to create this event?`}
+        themeColor={'bw'}
+        isVisible={alertState}
+        onClose={createEvent}
+        onConfirm={createEvent}
+      />
     </View>
   );
 };
