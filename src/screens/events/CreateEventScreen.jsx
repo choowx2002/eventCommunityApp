@@ -1,4 +1,4 @@
-import {StyleSheet, ScrollView, View, Image, Pressable} from 'react-native';
+import {StyleSheet, ScrollView, View, Image, Pressable, ToastAndroid} from 'react-native';
 import React, {useState} from 'react';
 import {useTheme} from '../../utils/themesChecker';
 import CustomButton, {BackButton} from '../../components/CustomButton';
@@ -134,11 +134,16 @@ const CreateEventScreen = ({navigation}) => {
     setSelectedImage(null);
   };
 
+  //show create toast
+  const showToast = (message) => {
+    ToastAndroid.show(message, ToastAndroid.SHORT);
+  };
+
   //create event
   const createEvent = () => {
     console.log(formValues);
-    if (!validateForm()) return;
-    console.log('validate')
+    if (!validateForm()) return showToast('Form is not completed!');
+    showToast('Event created successfully!')
     navigation.goBack()
   };
 
