@@ -1,7 +1,7 @@
 import {lazy} from 'react';
-import SeacrhScreen from '../screens/events/SeacrhScreen';
+import SearchScreen from '../screens/events/SearchScreen';
 import CreateEventScreen from '../screens/events/CreateEventScreen';
-
+import PersonalEventList from '../screens/events/PersonalEventList';
 const EventsDetails = lazy(() => import('../screens/events/EventsDetails'));
 const EventsList = lazy(() => import('../screens/events/EventsList'));
 
@@ -36,7 +36,7 @@ export const screens = [
   },
   {
     name: 'search',
-    component: SeacrhScreen,
+    component: SearchScreen,
     options: {
       headerShown: false
     }
@@ -47,5 +47,12 @@ export const screens = [
     options: {
       headerShown: false
     }
+  },
+  {
+    name:'personalEList',
+    component: PersonalEventList,
+    options:{
+      headerShown: false
+    },
   }
 ];

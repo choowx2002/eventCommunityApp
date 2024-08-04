@@ -47,7 +47,7 @@ const fakeEvents = [
   },
 ];
 
-const SeacrhScreen = ({navigation}) => {
+const SearchScreen = ({navigation}) => {
   const {theme} = useTheme();
   const [searchTerm, setSearchTerm] = useState('');
   const [searched, setSearched] = useState(false);
@@ -226,4 +226,4 @@ const SeacrhScreen = ({navigation}) => {
   );
 };
 
-export default SeacrhScreen;
+export default SearchScreen;
