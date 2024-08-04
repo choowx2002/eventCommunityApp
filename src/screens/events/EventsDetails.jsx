@@ -1,4 +1,4 @@
-import {View, Image, StyleSheet, ScrollView} from 'react-native';
+import {View, Image, StyleSheet, ScrollView, ToastAndroid} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useRoute} from '@react-navigation/native';
 import {LoadingModal, loadingHook} from '../../components/LoadingModal';
@@ -141,7 +141,9 @@ const EventsDetails = ({navigation}) => {
           setEventDetails(event); // Set fetched event details
         })
         .catch(error => {
-          console.error('Error fetching event details:', error);
+          // console.error('Error fetching event details:', error);
+          navigation.goBack();
+          ToastAndroid.show("Please Try Again", ToastAndroid.SHORT);
         })
         .finally(() => hideLoadingModal());
     }
