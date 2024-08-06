@@ -258,10 +258,6 @@ const EventsDetails = ({navigation}) => {
               <CustomText style={{lineHeight: 24}}>
                 {eventDetails.longDescription}
               </CustomText>
-              {/* //testing purpose */}
-              {/* <CustomText style={{lineHeight: 24}}>
-                {eventDetails.longDescription}
-              </CustomText> */}
             </View>
           </ScrollView>
 

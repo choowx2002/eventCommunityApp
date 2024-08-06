@@ -93,4 +93,47 @@ export const BackButton = ({
   );
 };
 
+
+/**
+ * Floating Action Button (FAB)
+ *
+ * @param {string} theme - primary, secondary, danger
+ * @param {React.Element} icon - Icon component to render inside the button
+ * @param {function} onPress - Function to execute when button is pressed
+ * @param {boolean} visible - Visibility of the FAB button (default true)
+ * @returns - FAB UI component
+ */
+export const FabButton = ({theme, icon, onPress, visible = true, style, ...props}) => {
+  if (!visible) return null;
+
+  let buttonTheme;
+  switch (theme) {
+    case 'primary':
+      buttonTheme = themeStyles().primaryButton;
+      break;
+    case 'secondary':
+      buttonTheme = themeStyles().secondaryButton;
+      break;
+    case 'danger':
+      buttonTheme = themeStyles().dangerButton;
+      break;
+    case 'bw2':
+      buttonTheme = themeStyles().bwButton2;
+      break;
+    case 'bw':
+    default:
+      buttonTheme = themeStyles().bwButton;
+  }
+
+  return (
+    <Pressable style={[globalStyle.fab, buttonTheme, style]} onPress={onPress} {...props}>
+      {icon ? (
+        <View>{icon}</View>
+      ) : (
+        <Ionicons name="add-outline" size={26} color={buttonTheme.color} />
+      )}
+    </Pressable>
+  );
+};
+
 export default CustomButton;

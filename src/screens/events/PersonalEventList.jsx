@@ -194,10 +194,6 @@ const PersonalEventList = ({navigation}) => {
       backgroundColor: theme.background,
       flex: 1,
     },
-    headerTitle: {
-      fontSize: fontSizes.xxlarge,
-      lineHeight: 30,
-    },
     noEventsText: {
       fontSize: fontSizes.xxlarge,
       textAlign: 'center',
@@ -245,7 +241,7 @@ const PersonalEventList = ({navigation}) => {
       case 'detail':
         if (id === null)
           return ToastAndroid.show('Please Try Again', ToastAndroid.SHORT);
-        navigation.navigate(listType === 'manage' ? 'create' : 'eDetails', {
+        navigation.navigate(listType === 'manage' ? 'manageEvent' : 'eDetails', {
           eventId: id,
         });
         break;
@@ -325,7 +321,7 @@ const PersonalEventList = ({navigation}) => {
     <View style={styles.page}>
       <View style={globalStyle.header}>
         <BackButton navigation={navigation} float={false} showBg={false} />
-        <CustomText weight="bold" style={styles.headerTitle}>
+        <CustomText weight="bold" style={globalStyle.headerTitle}>
           {constantText.title}
         </CustomText>
       </View>

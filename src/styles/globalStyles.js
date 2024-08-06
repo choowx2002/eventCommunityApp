@@ -56,10 +56,28 @@ export const globalStyle = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 5,
-    marginVertical: 5,
-    marginRight: 10,
+    paddingVertical: 5,
+    paddingRight: 10,
   },
   smallText: {
     fontSize: fontSizes.small
-  }
+  },
+  centerText:{
+    textAlign: 'center',
+  },
+  headerTitle: {
+    fontSize: fontSizes.xxlarge,
+    lineHeight: 30,
+  },
+  fab: {
+    position: 'absolute',
+    bottom: 16,
+    right: 16,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 5,
+  },
 });
