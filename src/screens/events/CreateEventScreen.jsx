@@ -5,6 +5,7 @@ import {
   Image,
   Pressable,
   ToastAndroid,
+  Alert,
 } from 'react-native';
 import React, {useState} from 'react';
 import {useTheme} from '../../utils/themesChecker';
@@ -151,7 +152,7 @@ const CreateEventScreen = ({navigation}) => {
   //validate event form
   const validateEventForm = () => {
     console.log(formValues);
-    if (!validateForm()) return showToast('Form is not completed!');
+    if (!validateForm()) return Alert.alert('Invalid Form!', 'Please check your form.');
     setAlertState(true);
   };
 

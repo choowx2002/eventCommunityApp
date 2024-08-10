@@ -1,4 +1,4 @@
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, ToastAndroid, Alert} from 'react-native';
 import React, {useState, useEffect} from 'react';
 import {globalStyle} from '../../styles/globalStyles';
 import CustomButton, {BackButton} from '../../components/CustomButton';
@@ -9,6 +9,7 @@ import CustomInput from '../../components/CustomInput';
 import {formData} from '../../components/FormHook';
 import fontSizes from '../../types/fontSize';
 import CustomModel from '../../components/AlertModal';
+import {send_notification} from '../../services/socket';
 
 const NewNotificationScreen = ({navigation}) => {
   const {theme} = useTheme();
@@ -16,7 +17,7 @@ const NewNotificationScreen = ({navigation}) => {
   const [eventId, setEventId] = useState(null);
   const [alertAction, setAlertAction] = useState('');
   const [alertState, setAlertState] = useState(false); //for alert modal shown
-  const [formValues, handleFormValueChange, validateForm] = formData({
+  const [formValues, handleFormValueChange, validateForm, getErrors] = formData({
     data: {
       title: '',
       message: '',
@@ -44,46 +45,81 @@ const NewNotificationScreen = ({navigation}) => {
     },
   });
 
-  const showAlert = (action) => {
-    setAlertAction(action)
+  const showAlert = action => {
+    setAlertAction(action);
     setAlertState(true);
   };
 
   //function to hide alert
-  const hideAlert = (proceed) => {
+  const hideAlert = proceed => {
     switch (alertAction.action) {
-        case 'back':
-            if(proceed) navigation.goBack()
-            break;
-        case 'submit':
-            if(proceed) submitMessage()
-            break;
-        default:
-            break;
+      case 'back':
+        if (proceed) navigation.goBack();
+        break;
+      case 'submit':
+        if (proceed) submitMessage();
+        break;
+      default:
+        break;
     }
     setAlertState(false);
   };
 
-  const validateMessageForm = () => {
-    console.log(formValues);
-    if (!validateForm()) return;
-    showAlert({action: 'submit', title: 'Are you sure to export CSV?', theme: 'primary'})
+  //check the form is valid or not
+  const validateMessageForm = async () => {
+    if (!validateForm().isValid) {
+      Alert.alert('Invalid Form!', 'Please check your form.');//create an alert for user
+    } else {
+      showAlert({//double confirm to send notification
+        action: 'submit',
+        title: 'Are you sure to send this notification?',
+        theme: 'primary',
+      });
+    }
   };
 
-  const goBack = () =>{
+  const goBack = () => {
     console.log(formValues);
-    if(formValues.data.title || formValues.data.message) showAlert({action: 'back', title: 'Are you sure to cancel this notification?', theme: 'danger'})
-    else navigation.goBack()
-  }
+    if (formValues.data.title || formValues.data.message)
+      showAlert({
+        action: 'back',
+        title: 'Are you sure to cancel this notification?',
+        theme: 'danger',
+      });
+    else navigation.goBack();
+  };
 
+  //send message
   const submitMessage = () => {
-    navigation.goBack();
+    send_notification({
+      eventId: eventId,
+      title: formValues.data.title,
+      message: formValues.data.message,
+    })
+      .then(() => {
+        ToastAndroid.show(
+          'Notification successfully sent.',
+          ToastAndroid.SHORT,
+        );
+        navigation.goBack();
+      })
+      .catch(() => {
+        ToastAndroid.show(
+          'Notification failed sent. Please send again.',
+          ToastAndroid.SHORT,
+        );
+      });
   };
 
   return (
     <View style={[dynamicStyles.page, styles.page]}>
       <View style={[globalStyle.header, dynamicStyles.header]}>
-        <BackButton onPressFc={goBack} navigation={navigation} float={false} showBg={false} />
+        <BackButton
+          onPressFc={goBack}
+          navigation={navigation}
+          float={false}
+          showBg={false}
+        />
         <CustomText weight="bold" style={globalStyle.headerTitle}>
           New Notification
         </CustomText>
@@ -132,17 +168,20 @@ const NewNotificationScreen = ({navigation}) => {
             })}
         </View>
 
-        <CustomButton style={styles.submitButton} theme={'primary'} onPress={validateMessageForm}>
+        <CustomButton
+          style={styles.submitButton}
+          theme={'primary'}
+          onPress={validateMessageForm}>
           Send Message
         </CustomButton>
       </View>
       <CustomModel
-            title={alertAction?.title}
-            themeColor={alertAction?.theme}
-            isVisible={alertState}
-            onClose={()=>hideAlert(false)}
-            onConfirm={()=>hideAlert(true)}
-          />
+        title={alertAction?.title}
+        themeColor={alertAction?.theme}
+        isVisible={alertState}
+        onClose={() => hideAlert(false)}
+        onConfirm={() => hideAlert(true)}
+      />
     </View>
   );
 };
@@ -159,8 +198,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   submitButton: {
-    marginBottom : 10,
+    marginBottom: 10,
     marginHorizontal: 10,
-  }
+  },
 });
 export default NewNotificationScreen;

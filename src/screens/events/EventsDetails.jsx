@@ -8,7 +8,9 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useTheme} from '../../utils/themesChecker';
 import {formatDate, formatTime} from '../../utils/dateTimeFormatter';
 import CustomButton, {BackButton} from '../../components/CustomButton';
-import CustomModel from '../../components/AlertModal'
+import CustomModel from '../../components/AlertModal';
+import {insertEvent, removeEvents} from '../../services/sqliteServices';
+import { subscribe_notification, unsubscribe_notification } from '../../services/socket';
 
 const mockEventsData = [
   {
@@ -124,12 +126,12 @@ const fetchEventDetails = eventId => {
 
 const EventsDetails = ({navigation}) => {
   const route = useRoute();
-  const {theme} = useTheme();//theme color
-  const [eventDetails, setEventDetails] = useState(null);//store event details from api
-  const {isVisible, showLoadingModal, hideLoadingModal} = loadingHook();//get loading modal hook
-  const [isSticky, setIsSticky] = useState(false);// set style
-  const [containerY, setContainerY] = useState(null);// get position for styling purpose 
-  const [alertState, setAlertState] = useState(false);//for alert modal shown
+  const {theme} = useTheme(); //theme color
+  const [eventDetails, setEventDetails] = useState(null); //store event details from api
+  const {isVisible, showLoadingModal, hideLoadingModal} = loadingHook(); //get loading modal hook
+  const [isSticky, setIsSticky] = useState(false); // set style
+  const [containerY, setContainerY] = useState(null); // get position for styling purpose
+  const [alertState, setAlertState] = useState(false); //for alert modal shown
   const [isJoin, setIsJoin] = useState(false);
 
   useEffect(() => {
@@ -143,7 +145,7 @@ const EventsDetails = ({navigation}) => {
         .catch(error => {
           // console.error('Error fetching event details:', error);
           navigation.goBack();
-          ToastAndroid.show("Please Try Again", ToastAndroid.SHORT);
+          ToastAndroid.show('Please Try Again', ToastAndroid.SHORT);
         })
         .finally(() => hideLoadingModal());
     }
@@ -163,19 +165,63 @@ const EventsDetails = ({navigation}) => {
 
   //function to show alert
   const showAlert = () => {
-    console.log('click button')
+    console.log('click button');
     setAlertState(true);
   };
 
+  //add event details to joined_events table
+  const insertEventCache = async () => {
+    const event = {
+      id: eventDetails.ids,
+      title: eventDetails.title,
+      desc: eventDetails.desc,
+      start_time: eventDetails.starttime,
+      end_time: eventDetails.endDate,
+      start_date: eventDetails.startdate,
+      end_date: eventDetails.endDate,
+      image_path: eventDetails.imagePath,
+      admin_id: eventDetails.adminId,
+      participants_limit: eventDetails.participantsLimit,
+      address: eventDetails.address,
+      postcode: eventDetails.postcode,
+      state: eventDetails.state,
+      city: eventDetails.city,
+      category_id: eventDetails.categoryID,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      delete_at: null,
+    };
+    if (await insertEvent(event)) {
+      subscribe_notification(eventDetails.ids.toString())
+      console.log('Event was successfully inserted.');
+    } else {
+      console.log('Failed to insert the event.');
+    }
+  };
+
+  //remove events form joined_events table
+  const removeEvent = () => {
+    removeEvents(eventDetails.ids).then((removed)=>{
+      if(removed){
+        unsubscribe_notification(eventDetails.ids.toString())
+      }
+    })
+  }
+
   //function to hide alert
   const hideAlert = () => {
+    if(!isJoin){
+      insertEventCache()
+    }else {
+      removeEvent();
+    }
     setAlertState(false);
-    setIsJoin(!isJoin)
-    navigation.pop()
+    setIsJoin(!isJoin);
+    navigation.pop();
   };
 
   return (
-    <View style={{flex: 1,backgroundColor: theme.cardBackground}}>
+    <View style={{flex: 1, backgroundColor: theme.cardBackground}}>
       <LoadingModal text="loading" isVisible={isVisible} />
       {eventDetails && (
         <View style={{flex: 1}}>
@@ -264,19 +310,22 @@ const EventsDetails = ({navigation}) => {
           {/* button for join */}
           <CustomButton
             style={styles.button}
-            theme={isJoin?'danger':'primary'}
-            onPress={showAlert}
-          >
-            {isJoin?'LEAVE':'JOIN'}
+            theme={isJoin ? 'danger' : 'primary'}
+            onPress={showAlert}>
+            {isJoin ? 'LEAVE' : 'JOIN'}
           </CustomButton>
 
           {/* back button */}
           <BackButton navigation={navigation} />
-          
+
           {/* promp when click join/leave */}
           <CustomModel
-            title={isJoin?`Are you sure to leave ${eventDetails.title}`:`Are you sure to join ${eventDetails.title}?`}
-            themeColor = {isJoin?'danger':'bw'}
+            title={
+              isJoin
+                ? `Are you sure to leave ${eventDetails.title}`
+                : `Are you sure to join ${eventDetails.title}?`
+            }
+            themeColor={isJoin ? 'danger' : 'bw'}
             isVisible={alertState}
             onClose={hideAlert}
             onConfirm={hideAlert}
