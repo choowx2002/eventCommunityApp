@@ -1,5 +1,6 @@
 import {StyleSheet} from 'react-native';
 import {useTheme} from '../utils/themesChecker';
+import fontSizes from '../types/fontSize';
 
 // for the style that will change by theme
 export const themeStyles = () => {
@@ -50,5 +51,33 @@ export const globalStyle = StyleSheet.create({
   backButton: {
     borderRadius: 50,
     padding: 5,
-  }
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+    paddingVertical: 5,
+    paddingRight: 10,
+  },
+  smallText: {
+    fontSize: fontSizes.small
+  },
+  centerText:{
+    textAlign: 'center',
+  },
+  headerTitle: {
+    fontSize: fontSizes.xxlarge,
+    lineHeight: 30,
+  },
+  fab: {
+    position: 'absolute',
+    bottom: 16,
+    right: 16,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 5,
+  },
 });

@@ -3,7 +3,7 @@ const colors = {
     isDarkMode: false,
     text: '#06080f',
     background: '#f1f2fa',
-    cardBackground: '#f6f6f6',
+    cardBackground: '#F0F8FF',
     primary: '#3850c7',
     secondary: '#8c9be5',
     accent: '#6479e5',
