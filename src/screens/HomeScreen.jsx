@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Dimensions,
@@ -13,82 +13,66 @@ import Carousel from 'react-native-snap-carousel';
 import CustomText from '../components/CustomText';
 import fontSizes from '../types/fontSize';
 import Geolocation from '@react-native-community/geolocation';
-import { getLocationAddress } from '../services/api';
+import {get, getHostName, getLocationAddress} from '../services/api';
+import {format, parse} from 'date-fns';
+
 
 const {width: viewportWidth} = Dimensions.get('window'); // used to get the vw of window
 
 // Geolocation.setRNConfiguration(config);
-Geolocation.getCurrentPosition(info => {
-    console.log(info)
-    getLocationAddress(info.coords.latitude, info.coords.longitude)
-  });
 
 const HomeScreen = ({navigation}) => {
   const {theme} = useTheme();
+  const [upEvents, setUpEvents] = useState([]);
+  const [nearEvents, setNearEvents] = useState([]);
+  const [catsEvents, setCatsEvents] = useState([]);
 
-  const events = [
-    {
-      id: '1',
-      title: 'Music Therapy Workshop',
-      participants: '50/100',
-      dateTime: '2024-08-15 10:00 AM',
-      location: 'Community Center',
-      imageUrl: 'https://picsum.photos/500/250',
-    },
-    {
-      id: '2',
-      title: 'Group Session',
-      participants: '20/30',
-      dateTime: '2024-08-20 02:00 PM',
-      location: 'Library Hall',
-      imageUrl: 'https://picsum.photos/600/250',
-    },
-    {
-      id: '3',
-      title: 'One-on-One Therapy',
-      participants: '1/1',
-      dateTime: '2024-08-25 11:00 AM',
-      location: 'Therapy Room 3',
-      imageUrl: 'https://picsum.photos/500/240',
-    },
-  ];
+  const _getEvents = () => {
+    get('/events/', {limit: 5}).then(res => {
+      if (res?.data.events.length > 0) setUpEvents(res.data.events);
+    });
+    Geolocation.getCurrentPosition(async info => {
+      // console.log(info);
+      const state = await getLocationAddress(
+        info.coords.latitude,
+        info.coords.longitude,
+      );
+      console.log('state', state);
+      get('/events/state/name', {state: state, limit: 3}).then(res => {
+        if (res?.data.events.length > 0) setNearEvents(res.events);
+      });
+    });
+    const cat_ids = [1, 2, 3];
+    let interestEvents = [];
+    let promises = [];
+    for (const id of cat_ids) {
+      promises.push(
+        new Promise(async (resolve) => {
+          const res = await get('/events/category/id', {
+            category_id: id,
+            limit: 3,
+          });
+          if (res?.data.events.length > 0){
+            interestEvents.push(res.data)
+            resolve();
+          } 
+          else resolve();
+        }),
+      );
+    }
+    Promise.all(promises)
+    .then(() => {
+      setCatsEvents(interestEvents);
+    })
+  };
 
-  const userInterest = [
-    {name: 'Badminton', id: '1'},
-    {name: 'Music', id: '2'},
-    {name: 'Marathon', id: '3'},
-    {name: 'E-sport', id: '4'},
-  ];
-
-  const interestEvent = [
-    {
-      category_id: 1,
-      category_name: 'Category 1',
-      events: [
-        {id: 1, title: 'Event 1', imageUrl: 'https://picsum.photos/600/300'},
-        {id: 2, title: 'Event 2', imageUrl: 'https://picsum.photos/600/300'},
-      ],
-    },
-    {
-      category_id: 2,
-      category_name: 'Category 2',
-      events: [
-        {id: 3, title: 'Event 3', imageUrl: 'https://picsum.photos/600/300'},
-        {id: 4, title: 'Event 4', imageUrl: ''},
-      ],
-    },
-    {
-      category_id: 3,
-      category_name: 'Category 3',
-      events: [
-        {id: 5, title: 'Event 5', imageUrl: 'https://picsum.photos/600/300'},
-      ],
-    },
-  ];
+  useEffect(() => {
+    _getEvents();
+  }, []);
 
   //navigate to event detail page with id
   const navigateToEventsDetails = id => {
-    navigation.navigate('eDetails', {eventId: id});
+    navigation.navigate('eDetails', {eventId: id, refresh: _getEvents});
   };
 
   //the child template in carousel components for upcoming banner
@@ -112,8 +96,8 @@ const HomeScreen = ({navigation}) => {
           height: (viewportWidth - 10) / 2,
         }}
         source={
-          item.imageUrl
-            ? {uri: item.imageUrl}
+          item.image_path
+            ? {uri: `${getHostName()}${item.image_path}`}
             : require('../assets/images/example.jpeg')
         }
       />
@@ -128,7 +112,11 @@ const HomeScreen = ({navigation}) => {
             width: '100%',
           }}>
           <CustomText weight={'light'} style={{fontSize: fontSizes.regular}}>
-            {item.dateTime}
+            {format(item.start_date, 'yyyy-MM-dd')}{' '}
+            {format(
+              parse(item.start_time, 'HH:mm:ss', new Date()),
+              'hh:mm a',
+            )}
           </CustomText>
           <View
             style={{
@@ -142,7 +130,7 @@ const HomeScreen = ({navigation}) => {
               size={fontSizes.regular}
             />
             <CustomText weight={'light'} style={{fontSize: fontSizes.regular}}>
-              {item.participants}
+              {item.participants}/{item.participants_limit}
             </CustomText>
           </View>
         </View>
@@ -171,8 +159,8 @@ const HomeScreen = ({navigation}) => {
           height: (viewportWidth * 0.75) / 2,
         }}
         source={
-          item.imageUrl
-            ? {uri: item.imageUrl}
+          item.image_path
+            ? {uri: `${getHostName()}${item.image_path}`}
             : require('../assets/images/example.jpeg')
         }
       />
@@ -201,7 +189,7 @@ const HomeScreen = ({navigation}) => {
         </View>
         <Carousel
           loop={true}
-          data={events}
+          data={upEvents}
           renderItem={_bannerChild}
           sliderWidth={viewportWidth}
           itemWidth={viewportWidth - 10}
@@ -211,42 +199,44 @@ const HomeScreen = ({navigation}) => {
       </View>
 
       {/* events nearby user (need to check permission>location) */}
-      <View style={styles.moduleContainer}>
-        <View style={styles.swiperHeadar}>
-          <CustomText weight="bold" style={{fontSize: fontSizes.header}}>
-            Nearby Events
-          </CustomText>
-          <CustomText
-            weight="light"
-            onPress={() => navigation.navigate('Events')}>
-            View All
-          </CustomText>
+      {nearEvents?.length > 0 && (
+        <View style={styles.moduleContainer}>
+          <View style={styles.swiperHeadar}>
+            <CustomText weight="bold" style={{fontSize: fontSizes.header}}>
+              Nearby Events
+            </CustomText>
+            <CustomText
+              weight="light"
+              onPress={() => navigation.navigate('Events')}>
+              View All
+            </CustomText>
+          </View>
+          <Carousel
+            data={nearEvents}
+            renderItem={_slideChild}
+            sliderWidth={viewportWidth}
+            itemWidth={viewportWidth * 0.75}
+            contentContainerCustomStyle={styles.carouselContainerLeft}
+            inactiveSlideScale={1}
+            inactiveSlideOpacity={1}
+          />
         </View>
-        <Carousel
-          data={events}
-          renderItem={_slideChild}
-          sliderWidth={viewportWidth}
-          itemWidth={viewportWidth * 0.75}
-          contentContainerCustomStyle={styles.carouselContainerLeft}
-          inactiveSlideScale={1}
-          inactiveSlideOpacity={1}
-        />
-      </View>
+      )}
 
       {/* categories slider */}
-      {interestEvent.length > 0 &&
-        interestEvent.map((item, key) => {
+      {catsEvents.length > 0 &&
+        catsEvents.map((item, key) => {
           return (
             <View style={styles.moduleContainer} key={key}>
               <View style={styles.swiperHeadar}>
                 <CustomText weight="bold" style={{fontSize: fontSizes.header}}>
-                  {item.category_name}
+                  {item.category.name}
                 </CustomText>
                 <CustomText
                   weight="light"
                   onPress={() =>
                     navigation.navigate('Events', {
-                      category: {id: category_id, name: category_name},
+                      category: {id: item.category.id, name: item.category.name},
                     })
                   }>
                   View All
