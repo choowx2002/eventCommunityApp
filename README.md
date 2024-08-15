@@ -3,7 +3,7 @@ Develop an Event Community App targeted for the Android platform using React Nat
 
 
 ### USAGE
-1. start the backend 
+1. start the backend https://github.com/choowx2002/eventCommunityAppBackend
 2. env file
 ```
 API_PORT // your web based port
