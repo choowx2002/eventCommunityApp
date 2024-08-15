@@ -13,6 +13,7 @@ import {screens} from './src/types/screensConfig';
 import {init_notification} from './src/services/socket';
 import Toast from 'react-native-toast-message';
 import { initSQLiteDB } from './src/services/sqliteServices';
+import { getHostName } from './src/services/api';
 
 const Stack = createStackNavigator();
 
@@ -26,6 +27,7 @@ const App = () => {
         // await setValue('isFirstTime', false);
         initSQLiteDB();//initialize sqlite table
         init_notification();//initialize notification service
+        console.log(getHostName())
         setIsFirstTime(true);
       } else {
         setIsFirstTime(false);

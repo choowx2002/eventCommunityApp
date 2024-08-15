@@ -6,123 +6,26 @@ import CustomText from '../../components/CustomText';
 import fontSizes from '../../types/fontSize';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useTheme} from '../../utils/themesChecker';
-import {formatDate, formatTime} from '../../utils/dateTimeFormatter';
+import {format, parse} from 'date-fns';
 import CustomButton, {BackButton} from '../../components/CustomButton';
 import CustomModel from '../../components/AlertModal';
-import {insertEvent, removeEvents} from '../../services/sqliteServices';
-import { subscribe_notification, unsubscribe_notification } from '../../services/socket';
-
-const mockEventsData = [
-  {
-    ids: 1,
-    title: 'Healing Through Music Workshop',
-    desc: 'Join us for an interactive workshop exploring the healing power of music.',
-    longDescription: `Join us for an \n
-    immersive experience at the "Healing Through Music Workshop," where participants will explore the transformative power of music in promoting emotional and mental well-being. This interactive workshop is designed for individuals seeking to understand how music can be used as a therapeutic tool. Attendees will engage in various activities, including group music-making, guided listening sessions, and reflective discussions. Participants will learn techniques to harness the benefits of music therapy for personal growth and healing. This workshop is suitable for all ages and backgrounds, whether you are a seasoned musician or simply curious about the healing arts.
-        immersive experience at the "Healing Through Music Workshop," where participants will explore the transformative power of music in promoting emotional and mental well-being. This interactive workshop is designed for individuals seeking to understand how music can be used as a therapeutic tool. Attendees will engage in various activities, including group music-making, guided listening sessions, and reflective discussions. Participants will learn techniques to harness the benefits of music therapy for personal growth and healing. This workshop is suitable for all ages and backgrounds, whether you are a seasoned musician or simply curious about the healing arts.
-    `,
-    starttime: '2024-08-05T10:00:00Z',
-    endtime: '2024-08-05T12:00:00Z',
-    startdate: '2024-08-05',
-    endDate: '2024-08-05',
-    imagePath: require('../../assets/images/pic1.jpg'),
-    adminId: 101,
-    participantsLimit: 20,
-    address: '123 Harmony Lane',
-    postcode: '12345',
-    state: 'California',
-    city: 'Los Angeles',
-    categoryID: 1,
-  },
-  {
-    ids: 2,
-    title: 'Mindfulness Music Therapy Session',
-    desc: 'Experience relaxation and mindfulness through guided music therapy.',
-    longDescription: `Experience a 
-    
-    
-    journey of relaxation and self-discovery in our "Mindfulness Music Therapy Session." This guided session combines mindfulness practices with the soothing effects of music therapy, aimed at reducing stress and promoting mental clarity. Participants will engage in mindfulness exercises while listening to calming music, allowing them to connect deeply with their inner selves. The session includes breathing techniques, body scans, and mindful listening, all facilitated by a certified music therapist. This workshop is perfect for anyone looking to enhance their well-being and find a moment of peace in their busy lives.`,
-    starttime: '2024-08-10T14:00:00Z',
-    endtime: '2024-08-10T15:30:00Z',
-    startdate: '2024-08-10',
-    endDate: '2024-08-10',
-    imagePath: require('../../assets/images/pic1.jpg'),
-    adminId: 102,
-    participantsLimit: 15,
-    address: '456 Serenity Ave',
-    postcode: '67890',
-    state: 'New York',
-    city: 'New York',
-    categoryID: 2,
-  },
-  {
-    ids: 3,
-    title: 'Family Music Therapy Day',
-    desc: 'A fun-filled day of music therapy activities for families and children.',
-    longDescription: `Bring the whole family to our "Family Music Therapy Day," a fun-filled event designed to strengthen family bonds through music. This day-long workshop features a variety of activities suitable for children and adults alike, including music games, interactive songs, and creative expression through instruments. Families will have the opportunity to participate in group music-making, fostering cooperation and joy while exploring the therapeutic benefits of music. Participants will also learn how to use music as a tool for communication and emotional expression within the family unit. This event promises to be both entertaining and enriching for families looking to enhance their connections through shared musical experiences.`,
-    starttime: '2024-08-15T11:00:00Z',
-    endtime: '2024-08-15T16:00:00Z',
-    startdate: '2024-08-15',
-    endDate: '2024-08-15',
-    imagePath: require('../../assets/images/pic1.jpg'),
-    adminId: 103,
-    participantsLimit: 30,
-    address: '789 Joyful St',
-    postcode: '54321',
-    state: 'Texas',
-    city: 'Austin',
-    categoryID: 3,
-  },
-  {
-    ids: 4,
-    title: 'Therapeutic Music for Anxiety Relief',
-    desc: 'Learn techniques to use music for managing anxiety in this informative session.',
-    longDescription: `Join us for an informative session on "Therapeutic Music for Anxiety Relief," where participants will discover effective techniques to manage anxiety through music. This workshop will explore the science behind music therapy and its profound impact on mental health. Attendees will learn about various musical interventions, such as guided imagery and music, songwriting, and improvisation, that can be used to alleviate anxiety symptoms. Led by a qualified music therapist, this session will provide practical tools that participants can integrate into their daily lives to promote relaxation and emotional stability. Suitable for anyone experiencing anxiety, this workshop aims to empower individuals to take control of their mental health.`,
-    starttime: '2024-08-20T18:00:00Z',
-    endtime: '2024-08-20T20:00:00Z',
-    startdate: '2024-08-20',
-    endDate: '2024-08-20',
-    imagePath: require('../../assets/images/pic1.jpg'),
-    adminId: 104,
-    participantsLimit: 25,
-    address: '321 Calm Blvd',
-    postcode: '98765',
-    state: 'Florida',
-    city: 'Miami',
-    categoryID: 1,
-  },
-  {
-    ids: 5,
-    title: 'Rhythm and Movement for Well-being',
-    desc: 'A dynamic session combining music and movement for overall wellness.',
-    longDescription: `Unleash your creativity and enhance your overall wellness in our "Rhythm and Movement for Well-being" session. This dynamic workshop combines the expressive elements of music and movement to promote physical health and emotional balance. Participants will engage in rhythmic exercises, dance, and creative movement activities designed to boost mood and increase energy levels. The session will also emphasize the importance of body awareness and self-expression through movement, encouraging participants to reconnect with their physical selves. Led by experienced facilitators, this workshop is ideal for individuals of all fitness levels and backgrounds, offering a joyous experience that uplifts the spirit and revitalizes the body.`,
-    starttime: '2024-08-25T17:00:00Z',
-    endtime: '2024-08-25T19:00:00Z',
-    startdate: '2024-08-25',
-    endDate: '2024-08-25',
-    imagePath: require('../../assets/images/pic1.jpg'),
-    adminId: 105,
-    participantsLimit: 18,
-    address: '654 Energy Rd',
-    postcode: '24680',
-    state: 'Illinois',
-    city: 'Chicago',
-    categoryID: 2,
-  },
-];
-
-// Mock API function
-const fetchEventDetails = eventId => {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      const event = mockEventsData.find(
-        event => event.ids === parseInt(eventId),
-      );
-      if (event) resolve(event);
-      else reject('no data');
-    }, 1000); // Simulate network delay
-  });
-};
+import {
+  checkEventById,
+  insertEvent,
+  removeEvents,
+} from '../../services/sqliteServices';
+import {
+  subscribe_notification,
+  unsubscribe_notification,
+} from '../../services/socket';
+import {
+  checkLatestById,
+  getEventById,
+  getParticipantsById,
+  joinEventById,
+  leaveEventById,
+} from '../../services/eventApi.service';
+import {getHostName} from '../../services/api';
 
 const EventsDetails = ({navigation}) => {
   const route = useRoute();
@@ -133,23 +36,7 @@ const EventsDetails = ({navigation}) => {
   const [containerY, setContainerY] = useState(null); // get position for styling purpose
   const [alertState, setAlertState] = useState(false); //for alert modal shown
   const [isJoin, setIsJoin] = useState(false);
-
-  useEffect(() => {
-    showLoadingModal();
-    const {eventId: routeId} = route.params || {}; // Get eventId from route parameters
-    if (routeId) {
-      fetchEventDetails(routeId)
-        .then(event => {
-          setEventDetails(event); // Set fetched event details
-        })
-        .catch(error => {
-          // console.error('Error fetching event details:', error);
-          navigation.goBack();
-          ToastAndroid.show('Please Try Again', ToastAndroid.SHORT);
-        })
-        .finally(() => hideLoadingModal());
-    }
-  }, [route.params]);
+  const [participants, setParticipants] = useState({})
 
   //get detail layout Y
   const savePosition = event => {
@@ -163,36 +50,114 @@ const EventsDetails = ({navigation}) => {
     setIsSticky(scrollOffsetY > containerY - 20);
   };
 
-  //function to show alert
-  const showAlert = () => {
-    console.log('click button');
-    setAlertState(true);
+  useEffect(() => {
+    showLoadingModal();
+    const {eventId} = route.params || {}; // Get eventId from route parameters
+    if (eventId) {
+      checkEventById(eventId) //check event is that exists in local sqlite
+        .then(({isJoined, event}) => {
+          setIsJoin(isJoined);
+          checkLatestUpdate(eventId, event.updated_at, event); // check update
+        })
+        .catch(err => {
+          if (err?.isJoined === 'false') {
+            // if not exists then we fetch from db
+            fetchEventDetails(eventId);
+          }
+        })
+        .finally(() => hideLoadingModal());
+    }
+  }, [route.params]);
+
+  //check event latest info
+  const checkLatestUpdate = (event_id, updated_at, event) => {
+    const param = {
+      updated_at: updated_at,
+    };
+    checkLatestById(event_id, param)
+      .then(res => {
+        // if is latest then use cache event if not then use return back result
+        // latest is true will only not bring back event to reduce cost
+        setEventDetails(
+          !res?.data?.isLatest && res?.data?.event ? res.data.event : event,
+        );
+        getParticipants(event_id)
+      })
+      .catch(error => console.log(error));
   };
 
+  //get event by id
+  const fetchEventDetails = async eventId => {
+    let uid = 51; // testing purpose
+    const res = await getEventById(eventId, {user_id: uid});
+    if (res?.data?.event) {
+      setEventDetails(res.data.event);
+      getParticipants(eventId)
+      if (res.data?.isJoined) {
+        // check is user exists or not
+        insertEventCache(res.data.event);
+        setIsJoin(res.data?.isJoined);
+      }
+    } else {
+      navigation.goBack();
+      ToastAndroid.show('Please Try Again', ToastAndroid.SHORT);
+    }
+  };
+
+  const getParticipants = eid => {
+    getParticipantsById(eid)
+      .then(res => {
+        setParticipants(res.data)
+      })
+      .catch(error => console.log(error));
+  };
+
+  //join event, send api to db
+  const joinEvent = async () => {
+    if (!eventDetails.id)
+      return ToastAndroid.show(
+        'There are some things wrong please try again',
+        ToastAndroid.SHORT,
+      );
+    const result = await joinEventById({
+      user_id: '51', //testing purpose
+      event_id: eventDetails.id,
+    });
+    if (result.status === 'success') {
+      insertEventCache(eventDetails);
+    } else {
+      console.log(result);
+      ToastAndroid.show(
+        'There are some things wrong please try again',
+        ToastAndroid.SHORT,
+      );
+    }
+  };
   //add event details to joined_events table
-  const insertEventCache = async () => {
+  const insertEventCache = async e => {
     const event = {
-      id: eventDetails.ids,
-      title: eventDetails.title,
-      desc: eventDetails.desc,
-      start_time: eventDetails.starttime,
-      end_time: eventDetails.endDate,
-      start_date: eventDetails.startdate,
-      end_date: eventDetails.endDate,
-      image_path: eventDetails.imagePath,
-      admin_id: eventDetails.adminId,
-      participants_limit: eventDetails.participantsLimit,
-      address: eventDetails.address,
-      postcode: eventDetails.postcode,
-      state: eventDetails.state,
-      city: eventDetails.city,
-      category_id: eventDetails.categoryID,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-      delete_at: null,
+      id: e.id,
+      title: e.title,
+      desc: e.description,
+      start_time: e.start_time,
+      end_time: e.end_time,
+      start_date: e.start_date,
+      end_date: e.end_date,
+      image_path: e.image_path,
+      admin_id: e.admin_id,
+      participants_limit: e.participants_limit,
+      address: e.address,
+      postcode: e.postcode,
+      state: e.state,
+      city: e.city,
+      category_id: e.category_id,
+      created_at: e.created_at,
+      updated_at: e.updated_at,
+      deleted_at: null,
     };
     if (await insertEvent(event)) {
-      subscribe_notification(eventDetails.ids.toString())
+      const result = await subscribe_notification(eventDetails.id.toString());
+      if (result.success) hideAlert();
       console.log('Event was successfully inserted.');
     } else {
       console.log('Failed to insert the event.');
@@ -200,23 +165,36 @@ const EventsDetails = ({navigation}) => {
   };
 
   //remove events form joined_events table
-  const removeEvent = () => {
-    removeEvents(eventDetails.ids).then((removed)=>{
-      if(removed){
-        unsubscribe_notification(eventDetails.ids.toString())
-      }
-    })
-  }
+  const removeEvent = async () => {
+    const res = await leaveEventById({
+      user_id: '51',
+      event_id: eventDetails.id,
+    });
+    if (res.status === 'success') {
+      removeEvents(eventDetails.id).then(removed => {
+        if (removed) {
+          hideAlert();
+          unsubscribe_notification(eventDetails.id.toString());
+        }
+      });
+    } else {
+      console.log(res);
+      ToastAndroid.show(
+        'There are some things wrong please try again',
+        ToastAndroid.SHORT,
+      );
+    }
+  };
+
+  //function to show alert
+  const showAlert = () => {
+    setAlertState(true);
+  };
 
   //function to hide alert
   const hideAlert = () => {
-    if(!isJoin){
-      insertEventCache()
-    }else {
-      removeEvent();
-    }
     setAlertState(false);
-    setIsJoin(!isJoin);
+    if(route.params.refresh) route.params.refresh()
     navigation.pop();
   };
 
@@ -232,7 +210,11 @@ const EventsDetails = ({navigation}) => {
             {/* event banner image */}
             <Image
               style={[styles.image, {backgroundColor: theme.cardBackground}]}
-              source={eventDetails.imagePath}
+              source={
+                eventDetails.image_path
+                  ? {uri: `${getHostName()}${eventDetails.image_path}`}
+                  : require('../../assets/images/example.jpeg')
+              }
               resizeMode="cover"
             />
             <View
@@ -257,8 +239,8 @@ const EventsDetails = ({navigation}) => {
                   size={fontSizes.xlarge}
                 />
                 <CustomText>
-                  {formatDate(eventDetails.startdate)} -{' '}
-                  {formatDate(eventDetails.endDate)}
+                  {format(eventDetails.start_date, 'yyyy-MM-dd')} -{' '}
+                  {format(eventDetails.end_date, 'yyyy-MM-dd')}
                 </CustomText>
               </View>
 
@@ -270,8 +252,15 @@ const EventsDetails = ({navigation}) => {
                   size={fontSizes.xlarge}
                 />
                 <CustomText>
-                  {formatTime(eventDetails.starttime)} -{' '}
-                  {formatTime(eventDetails.endtime)}
+                  {format(
+                    parse(eventDetails.start_time, 'HH:mm:ss', new Date()),
+                    'hh:mm a',
+                  )}{' '}
+                  -{' '}
+                  {format(
+                    parse(eventDetails.end_time, 'HH:mm:ss', new Date()),
+                    'hh:mm a',
+                  )}
                 </CustomText>
               </View>
 
@@ -295,14 +284,17 @@ const EventsDetails = ({navigation}) => {
                   color={theme.text}
                   size={fontSizes.xlarge}
                 />
-                <CustomText>1 / {eventDetails.participantsLimit}</CustomText>
+                <CustomText>
+                  {participants.count} /{' '}
+                  {eventDetails.participants_limit}
+                </CustomText>
               </View>
               <CustomText style={styles.title}>Description</CustomText>
             </View>
             <View style={styles.detailContainer}>
               {/* event description scroll view */}
               <CustomText style={{lineHeight: 24}}>
-                {eventDetails.longDescription}
+                {eventDetails.description}
               </CustomText>
             </View>
           </ScrollView>
@@ -328,7 +320,7 @@ const EventsDetails = ({navigation}) => {
             themeColor={isJoin ? 'danger' : 'bw'}
             isVisible={alertState}
             onClose={hideAlert}
-            onConfirm={hideAlert}
+            onConfirm={isJoin ? removeEvent : joinEvent}
           />
         </View>
       )}

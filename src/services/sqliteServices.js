@@ -55,7 +55,7 @@ export const initSQLiteDB = async () => {
           category_id INTEGER,
           created_at TEXT NOT NULL,
           updated_at TEXT NOT NULL,
-          delete_at TEXT
+          deleted_at TEXT
         );`,
         [],
         () => {
@@ -101,7 +101,7 @@ export const insertEvent = async event => {
               category_id,
               created_at,
               updated_at,
-              delete_at
+              deleted_at
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [
           event.id,
@@ -121,7 +121,7 @@ export const insertEvent = async event => {
           event.category_id,
           event.created_at,
           event.updated_at,
-          event.delete_at,
+          event.deleted_at,
         ],
         () => {
           console.log('Event inserted successfully');
@@ -177,6 +177,28 @@ export const removeEvents = async id => {
         error => {
           console.log('Error removing event: ', error);
           reject(false);
+        },
+      );
+    });
+  });
+};
+
+export const checkEventById = async id => {
+  const db = await connectDB();
+  if (!db || !id) return null;
+
+  return new Promise((resolve, reject) => {
+    db.transaction(tx => {
+      tx.executeSql(
+        `SELECT * FROM joined_events WHERE id = ?`,
+        [id],
+        (tx, results) => {
+          if( results.rows.length>0) resolve({isJoined:true, event: results.rows.item(0)})
+          else reject({isJoined:'false'})
+        },
+        error => {
+          console.log('Error get event: ', error);
+          reject({isJoined:'false'});
         },
       );
     });
