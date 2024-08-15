@@ -1,10 +1,22 @@
 # event-community-app
 Develop an Event Community App targeted for the Android platform using React Native. 
 
-## Discuss Page - excalidraw
-https://excalidraw.com/#room=5d838fa201be178adb7b,6KTrS1-Ul2ZQb_Zezlpjcg
 
-## EXCELLENT CONDITIONS
+### USAGE
+1. start the backend 
+2. env file
+```
+API_PORT // your web based port
+SOCKET_PORT // your socket based port
+HOST //your ip address
+```
+3. start apps
+```
+npm start
+```
+
+
+## EXPECTED EXCELLENT CONDITIONS
 
 ### CODE
 - explain all code snippets in report
@@ -36,4 +48,3 @@ https://excalidraw.com/#room=5d838fa201be178adb7b,6KTrS1-Ul2ZQb_Zezlpjcg
 
 ### DEMO
 - all part no error
-
