@@ -7,7 +7,7 @@ import {
   ToastAndroid,
   Alert,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useTheme} from '../../utils/themesChecker';
 import CustomButton, {BackButton} from '../../components/CustomButton';
 import {globalStyle} from '../../styles/globalStyles';
@@ -19,42 +19,44 @@ import {launchImageLibrary} from 'react-native-image-picker';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {Picker} from '@react-native-picker/picker';
 import CustomModel from '../../components/AlertModal';
+import { getAllCategories } from '../../services/categoryApi.service';
+import { findPostcode } from 'malaysia-postcodes';
+import { uploadImage } from '../../services/api';
+import { createEventApi } from '../../services/eventApi.service';
+import {LoadingModal, loadingHook} from '../../components/LoadingModal';
+import { format, parse } from 'date-fns';
 
-const categories = [
-  {name: 'Badminton', id: '1'},
-  {name: 'Music', id: '2'},
-  {name: 'Marathon', id: '3'},
-  {name: 'E-sport', id: '4'},
-];
 
 const CreateEventScreen = ({navigation}) => {
   const {theme} = useTheme();
   const [alertState, setAlertState] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [categories, setCategories] = useState([])
+  const {isVisible, showLoadingModal, hideLoadingModal} = loadingHook(); //get loading modal hook
   const [formValues, handleFormValueChange, validateForm] = formData({
     data: {
       title: '',
-      categoryId: '1',
-      startDate: '',
-      endDate: '',
-      startTime: '',
-      endTime: '',
+      category_id: '1',
+      start_date: '',
+      end_date: '',
+      start_time: '',
+      end_time: '',
       address: '',
       postcode: '',
       description: '',
-      imagePath: '',
-      limit: '10',
+      image_path: '',
+      participants_limit: '10',
     },
     requiredData: [
       'title',
-      'categoryId',
-      'startDate',
-      'endDate',
-      'startTime',
-      'endTime',
+      'category_id',
+      'start_date',
+      'end_date',
+      'start_time',
+      'end_time',
       'address',
       'postcode',
-      'limit',
+      'participants_limit',
     ],
     error: {},
   });
@@ -117,6 +119,14 @@ const CreateEventScreen = ({navigation}) => {
     },
   });
 
+  useEffect(() => {
+    getAllCategories().then((res)=>{
+      const categories = res?.data?.categories
+      if(categories.length > 0)setCategories(categories)
+    })
+    
+  }, [])
+  
   // get image from gallery
   const _pickImage = async () => {
     const response = await launchImageLibrary({
@@ -131,8 +141,10 @@ const CreateEventScreen = ({navigation}) => {
     } else {
       const imageAsset = response.assets?.[0];
       if (imageAsset && imageAsset.fileSize <= 2097152) {
-        let imageUri = imageAsset.uri;
-        setSelectedImage(imageUri);
+        const imageUri = imageAsset.uri;
+        const imageName = imageAsset.fileName;
+        const imageType = imageAsset.type;
+        setSelectedImage({imageUri,imageName,imageType});
       } else {
         console.log('Image size exceeds 2 MB limit');
       }
@@ -155,16 +167,46 @@ const CreateEventScreen = ({navigation}) => {
     if (!validateForm()) return Alert.alert('Invalid Form!', 'Please check your form.');
     setAlertState(true);
   };
+  
+  //get city and state
+  const getCityState = (postcode) => {
+    const result = findPostcode(postcode)
+    return {state: result.state, city: result.city}
+  }
 
   //create event and route
-  const createEvent = () => {
+  const createEvent = async () => {
+    showLoadingModal()
+    const event = await {
+      "title": formValues.data.title,
+      "description": formValues.data.description,
+      "start_time": formValues.data.start_time,
+      "end_time": formValues.data.end_time,
+      "start_date": format(parse(formValues.data.start_date, 'M/d/yyyy', new Date()), 'yyyy-MM-dd'),
+      "end_date": format(parse(formValues.data.end_date, 'M/d/yyyy', new Date()), 'yyyy-MM-dd'),
+      "image_path": await uploadImage(selectedImage),
+      "admin_id": 51,//testing purpose
+      "participants_limit": formValues.data.participants_limit,
+      "address": formValues.data.address,
+      "postcode": formValues.data.postcode,
+      "state": getCityState(formValues.data.postcode).state,
+      "city": getCityState(formValues.data.postcode).city,
+      "category_id": formValues.data.category_id
+    }
     setAlertState(false);
-    showToast('Event created successfully!');
-    navigation.goBack();
+    createEventApi(event).then(()=>{
+      showToast('Event created successfully!');
+      navigation.goBack();
+    }).catch((err)=>{
+      showToast('Something get wrong. Please try later.');
+    }).finally(()=>{
+      hideLoadingModal()
+    })
   };
 
   return (
     <View style={styles.page}>
+      <LoadingModal text="loading" isVisible={isVisible} />
       <View style={globalStyle.header}>
         <BackButton navigation={navigation} float={false} showBg={false} />
         <CustomText weight="bold" style={styles.headerTitle}>
@@ -178,7 +220,7 @@ const CreateEventScreen = ({navigation}) => {
             {selectedImage ? (
               <View style={styles.image}>
                 <Image
-                  source={{uri: selectedImage}}
+                  source={{uri: selectedImage.imageUri}}
                   style={styles.image}
                   resizeMode="contain"
                 />
@@ -237,9 +279,9 @@ const CreateEventScreen = ({navigation}) => {
           Category:
         </CustomText>
         <Picker
-          selectedValue={formValues.data.categoryId}
+          selectedValue={formValues.data.category_id}
           onValueChange={(itemValue, itemIndex) => {
-            handleFormValueChange('categoryId', itemValue, 'categoryId');
+            handleFormValueChange('category_id', itemValue, 'category_id');
           }}
           dropdownIconColor={theme.text}
           style={styles.pickerBox}>
@@ -259,15 +301,15 @@ const CreateEventScreen = ({navigation}) => {
         {/* limit input */}
         <CustomInput
           label="Participants limit: "
-          formKey="limit"
+          formKey="participants_limit"
           textInputProps={{
             inputMode: 'numeric',
           }}
-          defaultValue={formValues?.data?.limit}
+          defaultValue={formValues?.data?.participants_limit}
           handleFormValueChange={handleFormValueChange}
         />
-        {formValues?.errors?.limit?.length > 0 &&
-          formValues?.errors?.limit?.map((value, key) => {
+        {formValues?.errors?.participants_limit?.length > 0 &&
+          formValues?.errors?.participants_limit?.map((value, key) => {
             return (
               <CustomText style={styles.errorText} weight="semiBold" key={key}>
                 {value}
@@ -283,7 +325,7 @@ const CreateEventScreen = ({navigation}) => {
           <CustomInput
             showLabel={false}
             label="Start Date: "
-            formKey="startDate"
+            formKey="start_date"
             placeholder="Event's start date"
             pickerType={'date'}
             formValues={formValues}
@@ -293,7 +335,7 @@ const CreateEventScreen = ({navigation}) => {
           <CustomInput
             showLabel={false}
             label="End Date: "
-            formKey="endDate"
+            formKey="end_date"
             placeholder="Event's end date"
             pickerType={'date'}
             formValues={formValues}
@@ -318,7 +360,7 @@ const CreateEventScreen = ({navigation}) => {
           <CustomInput
             showLabel={false}
             label="Start Time"
-            formKey="startTime"
+            formKey="start_time"
             placeholder="Event's start time"
             pickerType={'time'}
             formValues={formValues}
@@ -329,7 +371,7 @@ const CreateEventScreen = ({navigation}) => {
             showLabel={false}
             label="End Time"
             formValues={formValues}
-            formKey="endTime"
+            formKey="end_time"
             placeholder="Event's end time"
             pickerType={'time'}
             handleFormValueChange={handleFormValueChange}
@@ -410,7 +452,7 @@ const CreateEventScreen = ({navigation}) => {
         title={`Are you sure to create this event?`}
         themeColor={'bw'}
         isVisible={alertState}
-        onClose={createEvent}
+        onClose={()=>setAlertState(false)}
         onConfirm={createEvent}
       />
     </View>

@@ -34,10 +34,10 @@ export const formData = values => {
     let isValid = true
     let errorList = {}
     formValues.requiredData.forEach(key=>{
-      if(_.isEmpty(formValues.data[key])) {
+      if(_.isEmpty(formValues.data[key].toString())) {
         isValid = false
-        if(key === 'startDate' || key === 'endDate') key = 'date'
-        if(key === 'startTime' || key === 'endTime') key = 'time'
+        if(key === 'start_date' || key === 'end_date') key = 'date'
+        if(key === 'start_time' || key === 'end_time') key = 'time'
         errorList[key] = ['Please fill in the field.']
       }
     })

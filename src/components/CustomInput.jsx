@@ -6,8 +6,9 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import {useTheme} from '../utils/themesChecker';
 import {
   convertDateToTimestamp,
-  convertTimeToTimestamp,
 } from '../utils/dateTimeFormatter';
+import {findPostcode} from 'malaysia-postcodes';
+import {isBefore} from 'date-fns';
 
 /**
  *
@@ -56,7 +57,7 @@ const CustomInput = ({
       fontSize: fontSizes.medium,
       marginBottom: 0,
       paddingTop: 10,
-    }
+    },
   });
 
   /**
@@ -79,31 +80,33 @@ const CustomInput = ({
     const result =
       pickerType === 'date'
         ? currentDateTime.toLocaleDateString()
-        : currentDateTime.toLocaleTimeString();
+        : currentDateTime
     const errorKey = pickerType;
     let errorList = [];
 
-    if (formKey === 'startDate' || formKey === 'endDate') {
-      const startDate =
-        formKey === 'startDate' ? result : formValues.data.startDate;
-      const endDate = formKey === 'endDate' ? result : formValues.data.endDate;
+    if (formKey === 'start_date' || formKey === 'end_date') {
+      const start_date =
+        formKey === 'start_date' ? result : formValues.data.start_date;
+      const end_date =
+        formKey === 'end_date' ? result : formValues.data.end_date;
       if (
-        startDate &&
-        endDate &&
-        convertDateToTimestamp(startDate) > convertDateToTimestamp(endDate)
+        start_date &&
+        end_date &&
+        convertDateToTimestamp(start_date) > convertDateToTimestamp(end_date)
       ) {
         console.log('error!!!');
         errorList.push('Start date must be before end date');
       }
     }
-    if (formKey === 'startTime' || formKey === 'endTime') {
-      const startTime =
-        formKey === 'startTime' ? result : formValues.data.startTime;
-      const endTime = formKey === 'endTime' ? result : formValues.data.endTime;
+    if (formKey === 'start_time' || formKey === 'end_time') {
+      const start_time =
+        formKey === 'start_time' ? result : formValues.data.start_time;
+      const end_time =
+        formKey === 'end_time' ? result : formValues.data.end_time;
       if (
-        startTime &&
-        endTime &&
-        convertTimeToTimestamp(startTime) > convertTimeToTimestamp(endTime)
+        start_time &&
+        end_time &&
+        isBefore(end_time, start_time)
       ) {
         errorList.push('Start time must be before end time');
       }
@@ -115,14 +118,18 @@ const CustomInput = ({
    * do validation for normal text or numeric input
    */
   const validateInput = event => {
-    console.log('run');
+    console.log('check'); //testing purpose
     const value = event.nativeEvent.text;
     let errorList = [];
     switch (formKey) {
       case 'postcode':
-        if (value.length > 0 && value.length < 5)
+        if (value.length > 0 && value.length < 5) {
           errorList.push(`${label.split(':')[0]} must be 5 digits`);
-        //add one more need to check state and city
+        } else {
+          const result = findPostcode(value);
+          if (!result.found)
+            errorList.push(`${label.split(':')[0]} is not valid`);
+        }
         break;
       default:
         break;
