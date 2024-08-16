@@ -5,6 +5,7 @@ import {
   Keyboard,
   Image,
   Pressable,
+  ToastAndroid,
 } from 'react-native';
 import React, {useState} from 'react';
 import CustomButton, {BackButton} from '../../components/CustomButton';
@@ -13,39 +14,11 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useTheme} from '../../utils/themesChecker';
 import fontSizes from '../../types/fontSize';
 import {FlatList} from 'react-native-gesture-handler';
-import {formatDate} from '../../utils/dateTimeFormatter';
 import CustomText from '../../components/CustomText';
 import { globalStyle } from '../../styles/globalStyles';
-
-const fakeEvents = [
-  {
-    id: '1',
-    title: 'Music Therapy Workshop',
-    maxParticipants: 100,
-    currentParticipants: 50,
-    dateTime: '2024-08-05T10:00:00Z',
-    location: 'Community Center',
-    imageUrl: 'https://picsum.photos/500/250',
-  },
-  {
-    id: '2',
-    title: 'Group Session',
-    maxParticipants: 100,
-    currentParticipants: 50,
-    dateTime: '2024-08-05T10:00:00Z',
-    location: 'Library Hall',
-    imageUrl: 'https://picsum.photos/600/250',
-  },
-  {
-    id: '3',
-    title: 'One-on-One Therapy',
-    maxParticipants: 100,
-    currentParticipants: 50,
-    dateTime: '2024-08-05T10:00:00Z',
-    location: 'Therapy Room 3',
-    imageUrl: 'https://picsum.photos/500/240',
-  },
-];
+import { searchEventApi } from '../../services/eventApi.service';
+import { getHostName } from '../../services/api';
+import { format } from 'date-fns';
 
 const SearchScreen = ({navigation}) => {
   const {theme} = useTheme();
@@ -57,9 +30,16 @@ const SearchScreen = ({navigation}) => {
   // get event from api
   const searchEvents = () => {
     Keyboard.dismiss();
-    setEvents(fakeEvents);
+    if(!searchTerm) {
+      ToastAndroid.showWithGravity("Search must not be empty!", ToastAndroid.SHORT,ToastAndroid.TOP)
+      setSearched(false)
+      return
+    }
+
+    searchEventApi({title:searchTerm}).then((res)=>{
+      setEvents(res.data.events);
+    })
     setSearched(true)
-    console.log(searchTerm);
   };
 
   //styles
@@ -134,7 +114,11 @@ const SearchScreen = ({navigation}) => {
         style={styles.eventItem}
         onPress={() => navigation.navigate('eDetails', {eventId: event.id})}>
         <Image
-          source={{uri: event.imageUrl}}
+          source={
+            event.image_path
+            ? {uri: `${getHostName()}${event.image_path}`}
+            : require('../../assets/images/example.jpeg')
+          }
           style={styles.image}
           resizeMode="cover"
         />
@@ -150,7 +134,7 @@ const SearchScreen = ({navigation}) => {
               color={theme.text}
               size={fontSizes.regular}
             />
-            <CustomText>{formatDate(event.dateTime)}</CustomText>
+            <CustomText>{format(event.start_date, 'yyyy-MM-dd')}</CustomText>
           </View>
           <View style={styles.eventMeta}>
             <Ionicons
@@ -159,7 +143,7 @@ const SearchScreen = ({navigation}) => {
               size={fontSizes.regular}
             />
             <CustomText>
-              {event.currentParticipants}/{event.maxParticipants}
+              {event.participants}/{event.participants_limit}
             </CustomText>
           </View>
         </View>

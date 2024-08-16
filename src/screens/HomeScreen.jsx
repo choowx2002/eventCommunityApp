@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {
   View,
   Dimensions,
@@ -6,6 +6,7 @@ import {
   Image,
   StyleSheet,
   ScrollView,
+  RefreshControl,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useTheme} from '../utils/themesChecker';
@@ -15,6 +16,7 @@ import fontSizes from '../types/fontSize';
 import Geolocation from '@react-native-community/geolocation';
 import {get, getHostName, getLocationAddress} from '../services/api';
 import {format, parse} from 'date-fns';
+import { getUserCategories } from '../services/userApi.service';
 
 
 const {width: viewportWidth} = Dimensions.get('window'); // used to get the vw of window
@@ -23,46 +25,53 @@ const {width: viewportWidth} = Dimensions.get('window'); // used to get the vw o
 
 const HomeScreen = ({navigation}) => {
   const {theme} = useTheme();
+  const [refreshing, setRefreshing] = useState(false);
   const [upEvents, setUpEvents] = useState([]);
   const [nearEvents, setNearEvents] = useState([]);
   const [catsEvents, setCatsEvents] = useState([]);
+  const [apiCallMax, setApiCallMax ] = useState(2)
+  const [apiCall, setApiCall] = useState(0)
 
   const _getEvents = () => {
     get('/events/', {limit: 5}).then(res => {
       if (res?.data.events.length > 0) setUpEvents(res.data.events);
-    });
+    }).finally(()=>setApiCall(prevCount => prevCount + 1))
     Geolocation.getCurrentPosition(async info => {
       // console.log(info);
       const state = await getLocationAddress(// open api
         info.coords.latitude,
         info.coords.longitude,
       );
+      ()=>setApiCallMax(prevCount => prevCount + 1)
       console.log('state', state);
       get('/events/state/name', {state: state, limit: 3}).then(res => {
         if (res?.data.events.length > 0) setNearEvents(res.events);
-      });
+      }).finally(()=>setApiCall(prevCount => prevCount + 1))
     });
-    const cat_ids = [1, 2, 3];//testing purpose
-    let interestEvents = [];
-    let promises = [];
-    for (const id of cat_ids) {
-      promises.push(
-        new Promise(async (resolve) => {
-          const res = await get('/events/category/id', {
-            category_id: id,
-            limit: 3,
-          });
-          if (res?.data.events.length > 0){
-            interestEvents.push(res.data)
-            resolve();
-          } 
-          else resolve();
-        }),
-      );
-    }
-    Promise.all(promises)
-    .then(() => {
-      setCatsEvents(interestEvents);
+    getUserCategories(51).then((res)=>{ //testing purpose id
+      if(!res?.data?.categories) return
+      let interestEvents = [];
+      let promises = [];
+      const cat_ids = res.data.categories;
+      for (const {id,name} of cat_ids) {
+        promises.push(
+          new Promise(async (resolve) => {
+            const res = await get('/events/category/id', {
+              category_id: id,
+              limit: 3,
+            });
+            if (res?.data.events.length > 0){
+              interestEvents.push(res.data)
+              resolve();
+            } 
+            else resolve();
+          }),
+        );
+      }
+      Promise.all(promises)
+      .then(() => {
+        setCatsEvents(interestEvents);
+      }).finally(()=>setApiCall(prevCount => prevCount + 1))
     })
   };
 
@@ -172,8 +181,24 @@ const HomeScreen = ({navigation}) => {
     </TouchableOpacity>
   );
 
+  const onRefresh = useCallback(() => {
+    console.log(apiCall,"apiCall")
+    if(!refreshing){
+      setRefreshing(true);
+      _getEvents()
+    }
+    while(apiCall < apiCallMax) {
+      return
+    }
+    setApiCall(0)
+    setRefreshing(false)
+  }, [apiCall]);
+
   return (
     <ScrollView
+    refreshControl={
+      <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+    }
       style={[styles.pageContainer, {backgroundColor: theme.background}]}>
       {/* banner for upcoming events */}
       <View style={styles.moduleContainer}>

@@ -321,7 +321,7 @@ const EventsDetails = ({navigation}) => {
             }
             themeColor={isJoin ? 'danger' : 'bw'}
             isVisible={alertState}
-            onClose={hideAlert}
+            onClose={()=>setAlertState(false)}
             onConfirm={isJoin ? removeEvent : joinEvent}
           />
         </View>

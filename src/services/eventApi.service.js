@@ -29,3 +29,8 @@ export const createEventApi = async(body) => {
     const path = '/events/create'
     return result = await post(path, null, body)
 }
+
+export const searchEventApi = async(param)=>{
+    const path ="/events/search"
+    return result = await get(path, param)
+}
