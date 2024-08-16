@@ -15,6 +15,40 @@ export const getHostName = () =>{
   return `http://${HOST}:${API_PORT}`
 };
 
+//upload image
+export const uploadImage = async (image) => {
+  if(!image) return null;
+  const {imageUri, imageName, imageType} = image
+  const formData = new FormData();
+  formData.append('image', {
+    uri: imageUri,
+    name: imageName ,  
+    type: imageType , 
+  });
+
+  try {
+    const response = await fetch(`${getHostName()}/image/upload`, {
+      method: 'POST',
+      body: formData,
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
+    const result = await response.json();
+    if (response.status === 200) {
+      console.log('File uploaded successfully', result);
+      return result.data.image_path; 
+    } else {
+      console.log('Upload failed: ', result.message);
+      return null; 
+    }
+  } catch (error) {
+    console.log('Error uploading image: ', error);
+    return null;
+  }
+};
+
 // const hostname = 'http://192.168.1.201:3000';
 
 export const get = async (path, params) => {
@@ -80,3 +114,4 @@ export const post = async (path, params, body) => {
 //     console.log('notification', res);
 //   });
 // };
+

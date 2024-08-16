@@ -1,4 +1,4 @@
-import {get, getHostName, post, remove} from '../services/api';
+import {get, post, remove} from '../services/api';
 
 export const getEventById = async (id,param={}) =>{
     const path = '/events/'
@@ -23,4 +23,9 @@ export const checkLatestById = async (id, param) => {
 export const getParticipantsById = async (id) => {
     const path = '/events/participants/'
     return result = await get(path+id, {})
+}
+
+export const createEventApi = async(body) => {
+    const path = '/events/create'
+    return result = await post(path, null, body)
 }

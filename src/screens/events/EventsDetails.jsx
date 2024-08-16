@@ -1,5 +1,5 @@
-import {View, Image, StyleSheet, ScrollView, ToastAndroid} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import {View, LogBox, Image, StyleSheet, ScrollView, ToastAndroid} from 'react-native';
+import React, { useEffect, useState} from 'react';
 import {useRoute} from '@react-navigation/native';
 import {LoadingModal, loadingHook} from '../../components/LoadingModal';
 import CustomText from '../../components/CustomText';
@@ -37,7 +37,9 @@ const EventsDetails = ({navigation}) => {
   const [alertState, setAlertState] = useState(false); //for alert modal shown
   const [isJoin, setIsJoin] = useState(false);
   const [participants, setParticipants] = useState({})
-
+  LogBox.ignoreLogs([
+    'Non-serializable values were found in the navigation state',
+  ]);
   //get detail layout Y
   const savePosition = event => {
     setContainerY(event.nativeEvent.layout.y);
