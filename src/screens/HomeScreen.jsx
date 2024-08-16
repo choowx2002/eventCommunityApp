@@ -33,7 +33,7 @@ const HomeScreen = ({navigation}) => {
     });
     Geolocation.getCurrentPosition(async info => {
       // console.log(info);
-      const state = await getLocationAddress(
+      const state = await getLocationAddress(// open api
         info.coords.latitude,
         info.coords.longitude,
       );
@@ -42,7 +42,7 @@ const HomeScreen = ({navigation}) => {
         if (res?.data.events.length > 0) setNearEvents(res.events);
       });
     });
-    const cat_ids = [1, 2, 3];
+    const cat_ids = [1, 2, 3];//testing purpose
     let interestEvents = [];
     let promises = [];
     for (const id of cat_ids) {

@@ -67,7 +67,7 @@ const NewNotificationScreen = ({navigation}) => {
 
   //check the form is valid or not
   const validateMessageForm = async () => {
-    if (!validateForm().isValid) {
+    if (!validateForm()) {
       Alert.alert('Invalid Form!', 'Please check your form.');//create an alert for user
     } else {
       showAlert({//double confirm to send notification

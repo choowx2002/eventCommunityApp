@@ -59,7 +59,7 @@ const EventsDetails = ({navigation}) => {
       checkEventById(eventId) //check event is that exists in local sqlite
         .then(({isJoined, event}) => {
           setIsJoin(isJoined);
-          checkLatestUpdate(eventId, event.updated_at, event); // check update
+          checkLatestUpdate(eventId, event.updated_at, event); // check update from db
         })
         .catch(err => {
           if (err?.isJoined === 'false') {

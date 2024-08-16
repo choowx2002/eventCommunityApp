@@ -15,7 +15,7 @@ export const getHostName = () =>{
   return `http://${HOST}:${API_PORT}`
 };
 
-//upload image
+//upload image refer createEventScreen.jsx
 export const uploadImage = async (image) => {
   if(!image) return null;
   const {imageUri, imageName, imageType} = image
@@ -50,7 +50,6 @@ export const uploadImage = async (image) => {
 };
 
 // const hostname = 'http://192.168.1.201:3000';
-
 export const get = async (path, params) => {
   const formattedParams = '?' + new URLSearchParams(params).toString();
   const url = getHostName() + path + formattedParams;
