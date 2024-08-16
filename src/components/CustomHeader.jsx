@@ -21,19 +21,29 @@ const CustomHeader = ({headerDetails}) => {
       </CustomText>
 
       <View style={styles.rightIconsContainer}>
-        <Ionicons
-          name="search-outline"
-          color={theme.text}
-          size={26}
-          onPress={() => navigation.navigate('search')}
-          // onPress={() => navigation.navigate('personalEList',{listType: 'manage'})}
-        />
-        <Ionicons
-          name="add-circle-outline"
-          color={theme.text}
-          size={26}
-          onPress={() => navigation.navigate('create')}
-        />
+        {headerDetails.headerName === 'Notifications' ? (  // set custom header for notification screen
+          <Ionicons
+            name="trash-outline"
+            color={theme.text}
+            size={26}
+          />
+        ) : (
+          <>
+            <Ionicons
+              name="search-outline"
+              color={theme.text}
+              size={26}
+              // onPress={() => navigation.navigate('search')}
+              onPress={() => navigation.navigate('personalEList',{listType: 'manage'})}
+            />
+            <Ionicons
+              name="add-circle-outline"
+              color={theme.text}
+              size={26}
+              onPress={() => navigation.navigate('create')}
+            />
+          </>
+        )}
       </View>
     </View>
   );
