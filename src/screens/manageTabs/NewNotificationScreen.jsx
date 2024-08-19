@@ -3,7 +3,7 @@ import React, {useState, useEffect} from 'react';
 import {globalStyle} from '../../styles/globalStyles';
 import CustomButton, {BackButton} from '../../components/CustomButton';
 import CustomText from '../../components/CustomText';
-import {useTheme} from '../../utils/themesChecker';
+import {useTheme} from '../../utils/themesUtil';
 import {useRoute} from '@react-navigation/native';
 import CustomInput from '../../components/CustomInput';
 import {formData} from '../../components/FormHook';

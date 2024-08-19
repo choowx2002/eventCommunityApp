@@ -1,7 +1,7 @@
 import Toast from 'react-native-toast-message';
 import io from 'socket.io-client';
 import {getSubscribeEventsId} from './sqliteServices';
-import { getData, setValue } from '../utils/storageHelper';
+import { getData, setValue } from '../utils/storageHelperUtil';
 import { SOCKET_PORT, HOST } from '@env';
 
 const SOCKET_URI_Ethernet = `http://${HOST}:${SOCKET_PORT}`;

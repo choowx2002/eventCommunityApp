@@ -3,7 +3,7 @@ import React from 'react';
 import {FlatList} from 'react-native-gesture-handler';
 import {formatDistance, parseISO} from 'date-fns';
 import CustomText from '../../components/CustomText';
-import {useTheme} from '../../utils/themesChecker';
+import {useTheme} from '../../utils/themesUtil';
 import fontSizes from '../../types/fontSize';
 import {globalStyle} from '../../styles/globalStyles';
 

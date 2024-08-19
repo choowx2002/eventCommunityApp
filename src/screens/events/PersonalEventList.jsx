@@ -1,6 +1,6 @@
 import {View, StyleSheet, Pressable, ToastAndroid} from 'react-native';
 import React, {useEffect, useState} from 'react';
-import {useTheme} from '../../utils/themesChecker';
+import {useTheme} from '../../utils/themesUtil';
 import {globalStyle} from '../../styles/globalStyles';
 import CustomButton, {BackButton} from '../../components/CustomButton';
 import CustomText from '../../components/CustomText';

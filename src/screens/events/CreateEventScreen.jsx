@@ -8,7 +8,7 @@ import {
   Alert,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
-import {useTheme} from '../../utils/themesChecker';
+import {useTheme} from '../../utils/themesUtil';
 import CustomButton, {BackButton} from '../../components/CustomButton';
 import {globalStyle} from '../../styles/globalStyles';
 import CustomText from '../../components/CustomText';

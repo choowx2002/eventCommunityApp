@@ -4,7 +4,7 @@ import CustomText from '../../components/CustomText';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { formatDate, formatTime } from '../../utils/dateTimeFormatter';
 import fontSizes from '../../types/fontSize';
-import { useTheme } from '../../utils/themesChecker';
+import { useTheme } from '../../utils/themesUtil';
 
 const DetailTab = ({eventDetails, participants}) => {
   const {theme} = useTheme()

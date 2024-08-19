@@ -3,7 +3,7 @@ import {View, StyleSheet, TextInput} from 'react-native';
 import fontSizes from '../types/fontSize';
 import CustomText from './CustomText';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import {useTheme} from '../utils/themesChecker';
+import {useTheme} from '../utils/themesUtil';
 import {
   convertDateToTimestamp,
 } from '../utils/dateTimeFormatter';

@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
-import { useTheme } from '../utils/themesChecker';
+import { useTheme } from '../utils/themesUtil';
 import CustomText from '../components/CustomText';
 import fontSizes from '../types/fontSize';
 
