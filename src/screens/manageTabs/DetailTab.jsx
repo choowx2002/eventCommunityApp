@@ -2,12 +2,12 @@ import {View, StyleSheet} from 'react-native';
 import React from 'react';
 import CustomText from '../../components/CustomText';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { formatDate, formatTime } from '../../utils/dateTimeFormatter';
+import {format, parse} from 'date-fns';
 import fontSizes from '../../types/fontSize';
-import { useTheme } from '../../utils/themesUtil';
+import {useTheme} from '../../utils/themesUtil';
 
-const DetailTab = ({eventDetails, participants}) => {
-  const {theme} = useTheme()
+const DetailTab = ({eventDetails}) => {
+  const {theme} = useTheme();
   return (
     <View>
       {/* event's title */}
@@ -23,8 +23,8 @@ const DetailTab = ({eventDetails, participants}) => {
           size={fontSizes.xlarge}
         />
         <CustomText>
-          {formatDate(eventDetails.startdate)} -{' '}
-          {formatDate(eventDetails.endDate)}
+          {format(eventDetails.start_date, 'yyyy-MM-dd')} -{' '}
+          {format(eventDetails.end_date, 'yyyy-MM-dd')}
         </CustomText>
       </View>
 
@@ -32,8 +32,15 @@ const DetailTab = ({eventDetails, participants}) => {
       <View style={styles.info}>
         <Ionicons name={'time'} color={theme.text} size={fontSizes.xlarge} />
         <CustomText>
-          {formatTime(eventDetails.starttime)} -{' '}
-          {formatTime(eventDetails.endtime)}
+          {format(
+            parse(eventDetails.start_time, 'HH:mm:ss', new Date()),
+            'hh:mm a',
+          )}{' '}
+          -{' '}
+          {format(
+            parse(eventDetails.end_time, 'HH:mm:ss', new Date()),
+            'hh:mm a',
+          )}
         </CustomText>
       </View>
 
@@ -45,8 +52,8 @@ const DetailTab = ({eventDetails, participants}) => {
           size={fontSizes.xlarge}
         />
         <CustomText style={{lineHeight: 20}}>
-          {eventDetails.address}, {eventDetails.postcode}, {eventDetails.city},{' '}
-          {eventDetails.state}
+        {eventDetails.address}, {eventDetails.postcode},{' '}
+        {eventDetails.city}, {eventDetails.state}
         </CustomText>
       </View>
 
@@ -54,7 +61,8 @@ const DetailTab = ({eventDetails, participants}) => {
       <View style={styles.info}>
         <Ionicons name={'person'} color={theme.text} size={fontSizes.xlarge} />
         <CustomText>
-          {participants.length} / {eventDetails.participantsLimit}
+        {eventDetails.participants} /{' '}
+        {eventDetails.participants_limit}
         </CustomText>
       </View>
       <CustomText style={styles.title}>Description</CustomText>
@@ -62,7 +70,7 @@ const DetailTab = ({eventDetails, participants}) => {
       <View style={styles.detailContainer}>
         {/* event description scroll view */}
         <CustomText style={{lineHeight: 24}}>
-          {eventDetails.longDescription}
+          {eventDetails.description}
         </CustomText>
       </View>
     </View>
@@ -89,6 +97,6 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     marginHorizontal: 10,
   },
-})
+});
 
 export default DetailTab;

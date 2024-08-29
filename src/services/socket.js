@@ -55,7 +55,7 @@ export const unsubscribe_notification = async id => {
 export const send_notification = data => {
   return new Promise((resolve, reject) => {
     try {
-      // Emit an event to subscribe to notifications
+      // Emit an event to notifications
       socket.emit('send_notification', data, response => {
         if (response.success) {
           console.log('Successfully send notifications');
