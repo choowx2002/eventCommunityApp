@@ -9,7 +9,7 @@ import {
   RefreshControl,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {useTheme} from '../utils/themesChecker';
+import {useTheme} from '../utils/themesUtil';
 import Carousel from 'react-native-snap-carousel';
 import CustomText from '../components/CustomText';
 import fontSizes from '../types/fontSize';

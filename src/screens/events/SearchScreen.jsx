@@ -11,7 +11,7 @@ import React, {useState} from 'react';
 import CustomButton, {BackButton} from '../../components/CustomButton';
 import {getFontFamily} from '../../types/customFonts';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {useTheme} from '../../utils/themesChecker';
+import {useTheme} from '../../utils/themesUtil';
 import fontSizes from '../../types/fontSize';
 import {FlatList} from 'react-native-gesture-handler';
 import CustomText from '../../components/CustomText';

@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {useTheme} from '../utils/themesChecker';
+import {useTheme} from '../utils/themesUtil';
 import {StyleSheet, View, Modal, Dimensions} from 'react-native';
 import CustomText from './CustomText';
 import fontSizes from '../types/fontSize';

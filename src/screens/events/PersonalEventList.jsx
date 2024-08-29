@@ -1,6 +1,6 @@
-import {View, StyleSheet, Pressable, ToastAndroid} from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {useTheme} from '../../utils/themesChecker';
+import {Alert, RefreshControl, View, StyleSheet, Pressable, ToastAndroid} from 'react-native';
+import React, {useEffect, useState,useCallback} from 'react';
+import {useTheme} from '../../utils/themesUtil';
 import {globalStyle} from '../../styles/globalStyles';
 import CustomButton, {BackButton} from '../../components/CustomButton';
 import CustomText from '../../components/CustomText';
@@ -10,6 +10,8 @@ import {useRoute} from '@react-navigation/native';
 import {LoadingModal, loadingHook} from '../../components/LoadingModal';
 import {getFontFamily} from '../../types/customFonts';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import {getUserEvents} from '../../services/userApi.service';
+import {format, parse} from 'date-fns';
 
 const groups = {
   active: {
@@ -153,14 +155,6 @@ const events = [
 ];
 
 // Mock API function
-const fetchEventDetails = () => {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      resolve(events);
-      // resolve([]); // to show empty data situation
-    }, 1000);
-  });
-};
 
 const PersonalEventList = ({navigation}) => {
   const route = useRoute();
@@ -169,6 +163,8 @@ const PersonalEventList = ({navigation}) => {
   const [constantText, setConstantText] = useState(groups['active']);
   const [events, setEvents] = useState([]);
   const {isVisible, showLoadingModal, hideLoadingModal} = loadingHook();
+  const [refreshing, setRefreshing] = useState(false);
+  const [apiCall, setApiCall] = useState(0)
 
   // set the type of list page
   // if no type or wrong declare will show toast and route back
@@ -179,14 +175,7 @@ const PersonalEventList = ({navigation}) => {
       return ToastAndroid.show('Please Try Again', ToastAndroid.SHORT);
     }
     setConstantText(groups[listType]);
-    fetchEventDetails()
-      .then(event => {
-        setEvents(event); // Set fetched event details
-      })
-      .catch(error => {
-        console.error('Error fetching event details:', error);
-      })
-      .finally(() => hideLoadingModal());
+    _fetchEventDetails(listType== 'manage'?'own':listType);
   }, [listType]);
 
   const styles = StyleSheet.create({
@@ -228,8 +217,24 @@ const PersonalEventList = ({navigation}) => {
     },
     eventParticipants: {
       textAlign: 'right',
+      alignItems:'flex-end'
     },
   });
+
+  const _fetchEventDetails = (eventType) => {
+    getUserEvents({userId: 51, eventType}) //testing purpose
+      .then(res => {
+        console.log(JSON.stringify(res));
+        setEvents(res.data.userEvents);
+      })
+      .catch(() => {
+        Alert.alert('There are something wrong. QAQ');
+      })
+      .finally(() => {
+        setApiCall(1)
+        hideLoadingModal();
+      });
+  };
 
   /**
    *
@@ -241,9 +246,13 @@ const PersonalEventList = ({navigation}) => {
       case 'detail':
         if (id === null)
           return ToastAndroid.show('Please Try Again', ToastAndroid.SHORT);
-        navigation.navigate(listType === 'manage' ? 'manageEvent' : 'eDetails', {
-          eventId: id,
-        });
+        console.log(action,id)
+        navigation.navigate(
+          listType === 'manage' ? 'manageEvent' : 'eDetails',
+          {
+            eventId: id,
+          },
+        );
         break;
       case 'list':
         navigation.navigate(listType === 'manage' ? 'create' : 'eList');
@@ -252,6 +261,19 @@ const PersonalEventList = ({navigation}) => {
         break;
     }
   };
+
+  //refresh the manage list
+  const onRefresh = useCallback(() => {
+    if(!refreshing){
+      setRefreshing(true);
+      _fetchEventDetails(listType== 'manage'?'own':listType)
+    }
+    while(apiCall < 1) {
+      return
+    }
+    setApiCall(0)
+    setRefreshing(false)
+  }, [apiCall]);
 
   //used for render items
   const EventItem = ({event}) => {
@@ -274,7 +296,8 @@ const PersonalEventList = ({navigation}) => {
             size={fontSizes.regular}
           />
           <CustomText>
-            {event.startDate} - {event.endDate}
+            {format(event.start_date, 'yyyy-MM-dd')} -{' '}
+            {format(event.end_date, 'yyyy-MM-dd')}
           </CustomText>
         </View>
 
@@ -286,30 +309,33 @@ const PersonalEventList = ({navigation}) => {
             size={fontSizes.regular}
           />
           <CustomText>
-            {event.startTime} - {event.endTime}
+            {format(parse(event.start_time, 'HH:mm:ss', new Date()), 'hh:mm a')}{' '}
+            - {format(parse(event.end_time, 'HH:mm:ss', new Date()), 'hh:mm a')}
           </CustomText>
         </View>
 
         <View style={styles.eventInfo}>
           {/* show event's location state/city */}
-          <View style={styles.eventMeta}>
+          <View style={[styles.eventMeta,{width: '75%'}]}>
             <Ionicons
               name={'location-outline'}
               color={theme.text}
               size={fontSizes.regular}
             />
-            <CustomText>{event.location}</CustomText>
+            <CustomText numberOfLines={2}>
+              {event.address}, {event.postcode}, {event.city}, {event.state}
+            </CustomText>
           </View>
 
           {/* show event's participants */}
-          <View style={[styles.eventParticipants, styles.eventMeta]}>
+          <View style={[styles.eventMeta,styles.eventParticipants]}>
             <Ionicons
               name={'person-outline'}
               color={theme.text}
               size={fontSizes.regular}
             />
             <CustomText>
-              {event.currentParticipants}/{event.maxParticipants}
+              {event.participants}/{event.participants_limit}
             </CustomText>
           </View>
         </View>
@@ -337,6 +363,9 @@ const PersonalEventList = ({navigation}) => {
             data={events}
             renderItem={({item}) => <EventItem event={item} />}
             keyExtractor={item => item.id}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
           />
         ) : (
           <View style={styles.noEventsBox}>

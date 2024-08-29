@@ -5,7 +5,7 @@ import {LoadingModal, loadingHook} from '../../components/LoadingModal';
 import CustomText from '../../components/CustomText';
 import fontSizes from '../../types/fontSize';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {useTheme} from '../../utils/themesChecker';
+import {useTheme} from '../../utils/themesUtil';
 import {format, parse} from 'date-fns';
 import CustomButton, {BackButton} from '../../components/CustomButton';
 import CustomModel from '../../components/AlertModal';

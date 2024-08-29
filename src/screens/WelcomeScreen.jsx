@@ -2,7 +2,7 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import CustomText from '../components/CustomText';
 import fontSizes from '../types/fontSize';
-import {useTheme} from '../utils/themesChecker';
+import {useTheme} from '../utils/themesUtil';
 import CustomButton from '../components/CustomButton';
 
 const WelcomeScreen = ({navigation}) => {

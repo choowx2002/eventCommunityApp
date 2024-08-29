@@ -3,28 +3,30 @@ import React, {useState, useEffect} from 'react';
 import {globalStyle} from '../../styles/globalStyles';
 import CustomButton, {BackButton} from '../../components/CustomButton';
 import CustomText from '../../components/CustomText';
-import {useTheme} from '../../utils/themesChecker';
+import {useTheme} from '../../utils/themesUtil';
 import {useRoute} from '@react-navigation/native';
 import CustomInput from '../../components/CustomInput';
 import {formData} from '../../components/FormHook';
 import fontSizes from '../../types/fontSize';
 import CustomModel from '../../components/AlertModal';
 import {send_notification} from '../../services/socket';
-
+import {createNotification} from '../../services/notificationApi.service';
 const NewNotificationScreen = ({navigation}) => {
   const {theme} = useTheme();
   const route = useRoute();
   const [eventId, setEventId] = useState(null);
   const [alertAction, setAlertAction] = useState('');
   const [alertState, setAlertState] = useState(false); //for alert modal shown
-  const [formValues, handleFormValueChange, validateForm, getErrors] = formData({
-    data: {
-      title: '',
-      message: '',
+  const [formValues, handleFormValueChange, validateForm, getErrors] = formData(
+    {
+      data: {
+        title: '',
+        message: '',
+      },
+      requiredData: ['title', 'message'],
+      error: {},
     },
-    requiredData: ['title', 'message'],
-    error: {},
-  });
+  );
 
   useEffect(() => {
     const {eventId: routeId} = route.params || {}; // Get eventId from route parameters
@@ -68,9 +70,10 @@ const NewNotificationScreen = ({navigation}) => {
   //check the form is valid or not
   const validateMessageForm = async () => {
     if (!validateForm()) {
-      Alert.alert('Invalid Form!', 'Please check your form.');//create an alert for user
+      Alert.alert('Invalid Form!', 'Please check your form.'); //create an alert for user
     } else {
-      showAlert({//double confirm to send notification
+      showAlert({
+        //double confirm to send notification
         action: 'submit',
         title: 'Are you sure to send this notification?',
         theme: 'primary',
@@ -91,22 +94,33 @@ const NewNotificationScreen = ({navigation}) => {
 
   //send message
   const submitMessage = () => {
-    send_notification({
-      eventId: eventId,
+    const body = {
+      event_id: eventId,
       title: formValues.data.title,
       message: formValues.data.message,
-    })
-      .then(() => {
-        ToastAndroid.show(
-          'Notification successfully sent.',
-          ToastAndroid.SHORT,
-        );
-        navigation.goBack();
+    };
+    createNotification(body)
+      .then(res => {
+        if (res.status == 'success') {
+          send_notification(body).then(() => {
+            ToastAndroid.show(
+              'Notification successfully sent.',
+              ToastAndroid.SHORT,
+            );
+            if(route.params.refresh) route.params.refresh()
+            navigation.goBack();
+          }).catch((error) => {
+            if(error?.error) return ToastAndroid.show(
+              error.error,
+              ToastAndroid.LONG,
+            );
+          });
+        }
       })
-      .catch(() => {
-        ToastAndroid.show(
-          'Notification failed sent. Please send again.',
-          ToastAndroid.SHORT,
+      .catch((error) => {
+        if(error?.message) return ToastAndroid.show(
+          error.message,
+          ToastAndroid.LONG,
         );
       });
   };

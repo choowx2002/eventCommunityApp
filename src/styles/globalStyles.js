@@ -1,5 +1,5 @@
 import {StyleSheet} from 'react-native';
-import {useTheme} from '../utils/themesChecker';
+import {useTheme} from '../utils/themesUtil';
 import fontSizes from '../types/fontSize';
 
 // for the style that will change by theme
