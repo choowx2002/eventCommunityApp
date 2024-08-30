@@ -33,8 +33,8 @@ const CustomHeader = ({headerDetails}) => {
               name="search-outline"
               color={theme.text}
               size={26}
-              // onPress={() => navigation.navigate('search')}
-              onPress={() => navigation.navigate('personalEList',{listType: 'manage'})}
+              onPress={() => navigation.navigate('search')}
+              // onPress={() => navigation.navigate('personalEList',{listType: 'manage'})}
             />
             <Ionicons
               name="add-circle-outline"

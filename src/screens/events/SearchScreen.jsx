@@ -6,6 +6,7 @@ import {
   Image,
   Pressable,
   ToastAndroid,
+  Dimensions,
 } from 'react-native';
 import React, {useState} from 'react';
 import CustomButton, {BackButton} from '../../components/CustomButton';
@@ -15,31 +16,36 @@ import {useTheme} from '../../utils/themesUtil';
 import fontSizes from '../../types/fontSize';
 import {FlatList} from 'react-native-gesture-handler';
 import CustomText from '../../components/CustomText';
-import { globalStyle } from '../../styles/globalStyles';
-import { searchEventApi } from '../../services/eventApi.service';
-import { getHostName } from '../../services/api';
-import { format } from 'date-fns';
+import {globalStyle} from '../../styles/globalStyles';
+import {searchEventApi} from '../../services/eventApi.service';
+import {getHostName} from '../../services/api';
+import {format} from 'date-fns';
 
 const SearchScreen = ({navigation}) => {
   const {theme} = useTheme();
   const [searchTerm, setSearchTerm] = useState('');
   const [searched, setSearched] = useState(false);
   const [isFocus, setIsFocus] = useState(true);
-  const [events, setEvents] = useState([])
+  const [events, setEvents] = useState([]);
+  const deviceWidth = Dimensions.get('window').width;
 
   // get event from api
   const searchEvents = () => {
     Keyboard.dismiss();
-    if(!searchTerm) {
-      ToastAndroid.showWithGravity("Search must not be empty!", ToastAndroid.SHORT,ToastAndroid.TOP)
-      setSearched(false)
-      return
+    if (!searchTerm) {
+      ToastAndroid.showWithGravity(
+        'Search must not be empty!',
+        ToastAndroid.SHORT,
+        ToastAndroid.TOP,
+      );
+      setSearched(false);
+      return;
     }
 
-    searchEventApi({title:searchTerm}).then((res)=>{
+    searchEventApi({title: searchTerm}).then(res => {
       setEvents(res.data.events);
-    })
-    setSearched(true)
+    });
+    setSearched(true);
   };
 
   //styles
@@ -69,8 +75,8 @@ const SearchScreen = ({navigation}) => {
       lineHeight: '100%',
     },
     image: {
-      width: '100%',
-      aspectRatio: 1 / 0.5,
+      width: deviceWidth - 20,
+      height: deviceWidth * 0.5,
       borderRadius: 10,
     },
     eventItem: {
@@ -104,7 +110,7 @@ const SearchScreen = ({navigation}) => {
       fontSize: fontSizes.xxlarge,
       textAlign: 'center',
       marginHorizontal: 30,
-    }
+    },
   });
 
   //used for render items
@@ -116,11 +122,10 @@ const SearchScreen = ({navigation}) => {
         <Image
           source={
             event.image_path
-            ? {uri: `${getHostName()}${event.image_path}`}
-            : require('../../assets/images/example.jpeg')
+              ? {uri: `${getHostName()}${event.image_path}`}
+              : require('../../assets/images/example.jpeg')
           }
-          style={styles.image}
-          resizeMode="cover"
+          style={styles.image}          
         />
         <CustomText
           style={[styles.title, getFontFamily('bold')]}
@@ -197,13 +202,17 @@ const SearchScreen = ({navigation}) => {
           renderItem={({item}) => <EventItem event={item} />}
           keyExtractor={item => item.id}
         />
-      ) : searched?(
+      ) : searched ? (
         <View style={styles.noEventsBox}>
-          <CustomText weight='italic' style={styles.noEventsText}>No Similar Events. Try Others =。=?</CustomText>
+          <CustomText weight="italic" style={styles.noEventsText}>
+            No Similar Events. Try Others =。=?
+          </CustomText>
         </View>
-      ):(
+      ) : (
         <View style={styles.noEventsBox}>
-          <CustomText weight='italic' style={styles.noEventsText}>Search Some Events!</CustomText>
+          <CustomText weight="italic" style={styles.noEventsText}>
+            Search Some Events!
+          </CustomText>
         </View>
       )}
     </View>
