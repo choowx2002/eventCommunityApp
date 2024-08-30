@@ -17,6 +17,11 @@ import Geolocation from '@react-native-community/geolocation';
 import {get, getHostName, getLocationAddress} from '../services/api';
 import {format, parse} from 'date-fns';
 import {getUserCategories} from '../services/userApi.service';
+import {
+  getEventByCatId,
+  getEventByState,
+  getEvents,
+} from '../services/eventApi.service';
 
 const {width: viewportWidth} = Dimensions.get('window'); // used to get the vw of window
 
@@ -32,7 +37,7 @@ const HomeScreen = ({navigation}) => {
   const [apiCall, setApiCall] = useState(0);
 
   const _getEvents = () => {
-    get('/events/', {limit: 5})
+    getEvents()
       .then(res => {
         if (res?.data.events.length > 0) setUpEvents(res.data.events);
       })
@@ -48,19 +53,18 @@ const HomeScreen = ({navigation}) => {
           );
           () => setApiCallMax(prevCount => prevCount + 1);
           console.log('state', state);
-          get('/events/state/name', {state: state, limit: 3})
-            .then(res => {
-              if (res?.data.events.length > 0) setNearEvents(res.events);
-            })
-            .finally(() => setApiCall(prevCount => prevCount + 1));
-        } catch {}
+          const result = await getEventByState({state: state, limit: 3});
+          if (result?.data?.events?.length > 0) setNearEvents(res.events);
+        } finally {
+          setApiCall(prevCount => prevCount + 1);
+        }
       },
       err => {},
       {
         enableHighAccuracy: true,
         timeout: 5000,
         maximumAge: 0,
-      }
+      },
     );
     getUserCategories(51).then(res => {
       //testing purpose id
@@ -71,7 +75,7 @@ const HomeScreen = ({navigation}) => {
       for (const {id, name} of cat_ids) {
         promises.push(
           new Promise(async resolve => {
-            const res = await get('/events/category/id', {
+            const res = await getEventByCatId({
               category_id: id,
               limit: 3,
             });

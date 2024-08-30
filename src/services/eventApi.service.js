@@ -34,3 +34,18 @@ export const searchEventApi = async(param)=>{
     const path ="/events/search"
     return result = await get(path, param)
 }
+
+export const getEventByState = async(param)=>{
+    const path = '/events/state/name'
+    return result = await get(path,param)
+}
+
+export const getEvents = async()=>{
+    const path = '/events/'
+    return result = await get(path,{})
+}
+
+export const getEventByCatId = async(param)=>{
+    const path = '/events/category/id'
+    return result = await get(path,param)
+}
