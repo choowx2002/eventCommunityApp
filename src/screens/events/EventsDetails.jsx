@@ -7,7 +7,7 @@ import fontSizes from '../../types/fontSize';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useTheme} from '../../utils/themesUtil';
 import {format, parse} from 'date-fns';
-import CustomButton, {BackButton} from '../../components/CustomButton';
+import CustomButton, {BackButton, NaviagteMapButton} from '../../components/CustomButton';
 import CustomModel from '../../components/AlertModal';
 import {
   checkEventById,
@@ -157,9 +157,10 @@ const EventsDetails = ({navigation}) => {
       updated_at: e.updated_at,
       deleted_at: null,
     };
-    if (await insertEvent(event)) {
-      const result = await subscribe_notification(eventDetails.id.toString());
-      if (result.success) hideAlert();
+    const isInsert = await insertEvent(event);
+    if (isInsert) {
+      const result = await subscribe_notification(e.id.toString());
+      if (alertState && result.success) hideAlert();
       console.log('Event was successfully inserted.');
     } else {
       console.log('Failed to insert the event.');
@@ -311,6 +312,9 @@ const EventsDetails = ({navigation}) => {
 
           {/* back button */}
           <BackButton navigation={navigation} />
+
+          {/* map button */}
+          <NaviagteMapButton navigation={navigation} data={eventDetails} />
 
           {/* promp when click join/leave */}
           <CustomModel

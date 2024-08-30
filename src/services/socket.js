@@ -117,7 +117,7 @@ export const init_notification = async () => {
 
 //check permission and will return boolean to represent is granted or not
 const _checkNotificationPermission = async () => {
-  return false //testing purpose comment if want try with sokcet IO
+  // return false //testing purpose comment if want try with sokcet IO
   let enableNotification = await getData('enableNotification')
   if(enableNotification === null) {
     setValue("enableNotification",'1')

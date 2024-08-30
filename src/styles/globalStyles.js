@@ -48,6 +48,11 @@ export const globalStyle = StyleSheet.create({
     top: 10,
     left: 10,
   },
+  rTopFloatButton: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+  },
   backButton: {
     borderRadius: 50,
     padding: 5,

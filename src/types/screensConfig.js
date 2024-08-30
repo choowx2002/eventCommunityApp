@@ -1,11 +1,11 @@
-import {lazy} from 'react';
 import SearchScreen from '../screens/events/SearchScreen';
 import CreateEventScreen from '../screens/events/CreateEventScreen';
 import PersonalEventList from '../screens/events/PersonalEventList';
 import ManageEventScreen from '../screens/events/ManageEventScreen';
 import NewNotificationScreen from '../screens/manageTabs/NewNotificationScreen';
-const EventsDetails = lazy(() => import('../screens/events/EventsDetails'));
-const EventsList = lazy(() => import('../screens/events/EventsList'));
+import MapView from '../screens/MapView';
+import EventsDetails from '../screens/events/EventsDetails';
+import EventsList from '../screens/events/EventsList';
 
 // Define the configuration for event-related screens
 // The name of the screen for navigation
@@ -67,6 +67,13 @@ export const screens = [
   {
     name:'newNotification',
     component: NewNotificationScreen,
+    options:{
+      headerShown: false
+    },
+  },
+  {
+    name:'map',
+    component: MapView,
     options:{
       headerShown: false
     },

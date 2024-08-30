@@ -16,8 +16,7 @@ import fontSizes from '../types/fontSize';
 import Geolocation from '@react-native-community/geolocation';
 import {get, getHostName, getLocationAddress} from '../services/api';
 import {format, parse} from 'date-fns';
-import { getUserCategories } from '../services/userApi.service';
-
+import {getUserCategories} from '../services/userApi.service';
 
 const {width: viewportWidth} = Dimensions.get('window'); // used to get the vw of window
 
@@ -29,50 +28,66 @@ const HomeScreen = ({navigation}) => {
   const [upEvents, setUpEvents] = useState([]);
   const [nearEvents, setNearEvents] = useState([]);
   const [catsEvents, setCatsEvents] = useState([]);
-  const [apiCallMax, setApiCallMax ] = useState(2)
-  const [apiCall, setApiCall] = useState(0)
+  const [apiCallMax, setApiCallMax] = useState(2);
+  const [apiCall, setApiCall] = useState(0);
 
   const _getEvents = () => {
-    get('/events/', {limit: 5}).then(res => {
-      if (res?.data.events.length > 0) setUpEvents(res.data.events);
-    }).finally(()=>setApiCall(prevCount => prevCount + 1))
-    Geolocation.getCurrentPosition(async info => {
-      // console.log(info);
-      const state = await getLocationAddress(// open api
-        info.coords.latitude,
-        info.coords.longitude,
-      );
-      ()=>setApiCallMax(prevCount => prevCount + 1)
-      console.log('state', state);
-      get('/events/state/name', {state: state, limit: 3}).then(res => {
-        if (res?.data.events.length > 0) setNearEvents(res.events);
-      }).finally(()=>setApiCall(prevCount => prevCount + 1))
-    });
-    getUserCategories(51).then((res)=>{ //testing purpose id
-      if(!res?.data?.categories) return
+    get('/events/', {limit: 5})
+      .then(res => {
+        if (res?.data.events.length > 0) setUpEvents(res.data.events);
+      })
+      .finally(() => setApiCall(prevCount => prevCount + 1));
+    Geolocation.getCurrentPosition(
+      async info => {
+        // console.log(info);
+        try {
+          const state = await getLocationAddress(
+            // open api
+            info.coords.latitude,
+            info.coords.longitude,
+          );
+          () => setApiCallMax(prevCount => prevCount + 1);
+          console.log('state', state);
+          get('/events/state/name', {state: state, limit: 3})
+            .then(res => {
+              if (res?.data.events.length > 0) setNearEvents(res.events);
+            })
+            .finally(() => setApiCall(prevCount => prevCount + 1));
+        } catch {}
+      },
+      err => {},
+      {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0,
+      }
+    );
+    getUserCategories(51).then(res => {
+      //testing purpose id
+      if (!res?.data?.categories) return;
       let interestEvents = [];
       let promises = [];
       const cat_ids = res.data.categories;
-      for (const {id,name} of cat_ids) {
+      for (const {id, name} of cat_ids) {
         promises.push(
-          new Promise(async (resolve) => {
+          new Promise(async resolve => {
             const res = await get('/events/category/id', {
               category_id: id,
               limit: 3,
             });
-            if (res?.data.events.length > 0){
-              interestEvents.push(res.data)
+            if (res?.data.events.length > 0) {
+              interestEvents.push(res.data);
               resolve();
-            } 
-            else resolve();
+            } else resolve();
           }),
         );
       }
       Promise.all(promises)
-      .then(() => {
-        setCatsEvents(interestEvents);
-      }).finally(()=>setApiCall(prevCount => prevCount + 1))
-    })
+        .then(() => {
+          setCatsEvents(interestEvents);
+        })
+        .finally(() => setApiCall(prevCount => prevCount + 1));
+    });
   };
 
   useEffect(() => {
@@ -122,10 +137,7 @@ const HomeScreen = ({navigation}) => {
           }}>
           <CustomText weight={'light'} style={{fontSize: fontSizes.regular}}>
             {format(item.start_date, 'yyyy-MM-dd')}{' '}
-            {format(
-              parse(item.start_time, 'HH:mm:ss', new Date()),
-              'hh:mm a',
-            )}
+            {format(parse(item.start_time, 'HH:mm:ss', new Date()), 'hh:mm a')}
           </CustomText>
           <View
             style={{
@@ -182,23 +194,23 @@ const HomeScreen = ({navigation}) => {
   );
 
   const onRefresh = useCallback(() => {
-    console.log(apiCall,"apiCall")
-    if(!refreshing){
+    console.log(apiCall, 'apiCall');
+    if (!refreshing) {
       setRefreshing(true);
-      _getEvents()
+      _getEvents();
     }
-    while(apiCall < apiCallMax) {
-      return
+    while (apiCall < apiCallMax) {
+      return;
     }
-    setApiCall(0)
-    setRefreshing(false)
+    setApiCall(0);
+    setRefreshing(false);
   }, [apiCall]);
 
   return (
     <ScrollView
-    refreshControl={
-      <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-    }
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
       style={[styles.pageContainer, {backgroundColor: theme.background}]}>
       {/* banner for upcoming events */}
       <View style={styles.moduleContainer}>
@@ -261,7 +273,10 @@ const HomeScreen = ({navigation}) => {
                   weight="light"
                   onPress={() =>
                     navigation.navigate('Events', {
-                      category: {id: item.category.id, name: item.category.name},
+                      category: {
+                        id: item.category.id,
+                        name: item.category.name,
+                      },
                     })
                   }>
                   View All

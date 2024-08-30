@@ -93,6 +93,31 @@ export const BackButton = ({
   );
 };
 
+export const NaviagteMapButton = ({
+  navigation,
+  float = true,
+  showBg = true,
+  data,
+  onPressFc = () => navigation.navigate('map',{data}),
+  ...props
+}) => {
+  const themeStyle = themeStyles().bwButton2;
+
+  return (
+    <Pressable
+      style={[
+        float ? globalStyle.rTopFloatButton : '',
+        globalStyle.backButton,
+        themeStyle,
+        !showBg && {backgroundColor: 'transparent'},
+      ]}
+      {...props}
+      onPress={onPressFc}>
+      <Ionicons name="navigate-circle-outline" size={26} color={themeStyle.color} />
+    </Pressable>
+  );
+};
+
 
 /**
  * Floating Action Button (FAB)
