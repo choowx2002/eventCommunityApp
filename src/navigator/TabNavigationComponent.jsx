@@ -4,6 +4,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import HomeScreen from '../screens/HomeScreen';
 import NotificationScreen from '../screens/NotificationScreen';
 import CustomHeader from '../components/CustomHeader';
+import EventsScreen from '../screens/EventsScreen';
 import {useTheme} from '../utils/themesUtil';
 
 const Tab = createBottomTabNavigator();
@@ -21,7 +22,7 @@ const App = () => {
     {
       screenName: 'Events',
       iconName: 'planet',
-      component: HomeScreen,
+      component: EventsScreen,
       headerName: 'Events',
     },
     {
