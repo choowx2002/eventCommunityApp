@@ -42,30 +42,28 @@ const HomeScreen = ({navigation}) => {
         if (res?.data.events.length > 0) setUpEvents(res.data.events);
       })
       .finally(() => setApiCall(prevCount => prevCount + 1));
-    Geolocation.getCurrentPosition(
-      async info => {
-        // console.log(info);
-        try {
-          const state = await getLocationAddress(
-            // open api
-            info.coords.latitude,
-            info.coords.longitude,
-          );
-          () => setApiCallMax(prevCount => prevCount + 1);
-          console.log('state', state);
-          const result = await getEventByState({state: state, limit: 3});
-          if (result?.data?.events?.length > 0) setNearEvents(res.events);
-        } finally {
-          setApiCall(prevCount => prevCount + 1);
+    Geolocation.requestAuthorization(() => {
+      Geolocation.getCurrentPosition(
+        async info => {
+          try {
+            const state = await getLocationAddress(
+              info.coords.latitude,
+              info.coords.longitude,
+            );
+            setApiCallMax(prevCount => prevCount + 1);
+            console.log('state1', state);
+            const result = await getEventByState({state: state, limit: 3});
+            if (result?.data?.events?.length > 0)
+              setNearEvents(result.data.events);
+          } finally {
+            setApiCall(prevCount => prevCount + 1);
+          }
+        },
+        err => {
+          console.log(err);
         }
-      },
-      err => {},
-      {
-        enableHighAccuracy: true,
-        timeout: 5000,
-        maximumAge: 0,
-      },
-    );
+      );
+    });
     getUserCategories(51).then(res => {
       //testing purpose id
       if (!res?.data?.categories) return;
