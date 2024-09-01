@@ -1,8 +1,8 @@
 import {View, StyleSheet} from 'react-native';
 import React from 'react';
-import CustomText from '../../components/CustomText';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {format, parse} from 'date-fns';
+import CustomText from '../../components/CustomText';
 import fontSizes from '../../types/fontSize';
 import {useTheme} from '../../utils/themesUtil';
 

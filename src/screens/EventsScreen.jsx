@@ -201,7 +201,7 @@ const EventsScreen = ({ navigation }) => {
                 );
             })}
 
-            <CustomText>{route.params?.type === "all" || !route.params.type ? "All Events" : route.params?.type === "Location" ? "Nearby Events" : route.params.value.name}</CustomText>
+            <CustomText>{route.params?.type === "all" || !route.params?.type ? "All Events" : route.params?.type === "Location" ? "Nearby Events" : route.params.value.name}</CustomText>
             <FlatList
 
                 style={styles.flatList}

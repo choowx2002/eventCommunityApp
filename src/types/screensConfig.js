@@ -5,7 +5,6 @@ import ManageEventScreen from '../screens/events/ManageEventScreen';
 import NewNotificationScreen from '../screens/manageTabs/NewNotificationScreen';
 import MapView from '../screens/MapView';
 import EventsDetails from '../screens/events/EventsDetails';
-import EventsList from '../screens/events/EventsList';
 
 // Define the configuration for event-related screens
 // The name of the screen for navigation
@@ -30,11 +29,6 @@ export const screens = [
       title: 'Event Details',
       headerShown: false,
     },
-  },
-  {
-    name: 'eList',
-    component: EventsList,
-    options: {},
   },
   {
     name: 'search',

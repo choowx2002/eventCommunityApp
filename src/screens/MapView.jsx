@@ -1,38 +1,32 @@
-import {StyleSheet, Text, View, Dimensions} from 'react-native';
+import {StyleSheet, View, Dimensions} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useRoute} from '@react-navigation/native';
 import Geolocation from '@react-native-community/geolocation';
 import {createMapLink} from 'react-native-open-maps';
 import {WebView} from 'react-native-webview';
-import CustomText from '../components/CustomText';
-import fontSizes from '../types/fontSize';
-import {useTheme} from '../utils/themesUtil';
+//components
 import {BackButton} from '../components/CustomButton';
 import {LoadingModal} from '../components/LoadingModal';
+import CustomText from '../components/CustomText';
+// others
+import fontSizes from '../types/fontSize';
+import {useTheme} from '../utils/themesUtil';
 
 const MapView = ({navigation}) => {
   const {theme} = useTheme();
+  const route = useRoute();
   const deviceHeight = Dimensions.get('window').height;
   const deviceWidth = Dimensions.get('window').width;
   const [currentP, setCurrentP] = useState('');
   const [isVisible, setisVisible] = useState(true);
   const [geo, setGeo] = useState(false);
-  const getDirectionLink = current => {
-    const address = route.params.data;
-    if(!current) return createMapLink({ provider: 'yandex', query: `${address.address}, ${address.postcode}, ${address.city}, ${address.state}` });
-    return createMapLink({
-      provider: 'yandex',
-      start: current,
-      end: `${address.address}, ${address.postcode}, ${address.city}, ${address.state}`,
-      travelType: 'drive',
-    });
-  };
-  const route = useRoute();
+
   useEffect(() => {
     if (!route.params.data) return;
     getUserLocation();
   }, []);
 
+  //get user location
   const getUserLocation = async () => {
     Geolocation.getCurrentPosition(async info => {
       try {
@@ -48,6 +42,18 @@ const MapView = ({navigation}) => {
       timeout: 5000,
       maximumAge: 0,
     },);
+  };
+
+  //create map link
+  const getDirectionLink = current => {
+    const address = route.params.data;
+    if(!current) return createMapLink({ provider: 'yandex', query: `${address.address}, ${address.postcode}, ${address.city}, ${address.state}` });
+    return createMapLink({
+      provider: 'yandex',
+      start: current,
+      end: `${address.address}, ${address.postcode}, ${address.city}, ${address.state}`,
+      travelType: 'drive',
+    });
   };
 
   return (

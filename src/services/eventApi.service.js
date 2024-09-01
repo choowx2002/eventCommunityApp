@@ -1,8 +1,8 @@
 import {get, post, remove} from '../services/api';
 
 export const getEventById = async (id,param={}) =>{
-    const path = '/events/'
-    return result = await get(path+id,param)
+    const path = `/events/${id}`
+    return result = await get(path,param)
 }
 
 export const joinEventById = async (body)=>{

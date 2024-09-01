@@ -4,11 +4,8 @@ import fontSizes from '../types/fontSize';
 import CustomText from './CustomText';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {useTheme} from '../utils/themesUtil';
-import {
-  convertDateToTimestamp,
-} from '../utils/dateTimeFormatter';
 import {findPostcode} from 'malaysia-postcodes';
-import {isBefore} from 'date-fns';
+import {isBefore,  parse} from 'date-fns';
 
 /**
  *
@@ -94,7 +91,7 @@ const CustomInput = ({
         end_date &&
         convertDateToTimestamp(start_date) > convertDateToTimestamp(end_date)
       ) {
-        console.log('error!!!');
+        console.log('error!!!',start_date,end_date);
         errorList.push('Start date must be before end date');
       }
     }
@@ -184,5 +181,9 @@ const CustomInput = ({
     </View>
   );
 };
+
+const convertDateToTimestamp = (dateString) => {
+  return parse(dateString, 'M/d/yyyy', new Date())
+}
 
 export default CustomInput;
