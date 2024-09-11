@@ -27,7 +27,7 @@ const CustomModel = ({
   okText = 'Confirm',
   cancelText = 'Cancel',
   imageShown,
-  themeColor='bw',
+  themeColor='dw',
   isVisible = true,
   ...props
 }) => {
@@ -43,12 +43,12 @@ const CustomModel = ({
         <View
           style={[
             style.modalBox,
-            {maxWidth: (vw * 4) / 5, backgroundColor: theme.cardBackground},
+            {maxWidth: (vw * 4) / 5, backgroundColor: theme.background, borderRadius: 10},
           ]}>
-          <CustomText weight="bold" style={{fontSize: fontSizes.xlarge}}>
+          <CustomText weight="bold" style={[{fontSize: fontSizes.xlarge,}, {color:theme.tertiaryText}]}>
             {title}
           </CustomText>
-          <CustomText>
+          <CustomText style={[{colors: theme.tertiaryText}]}>
             {message}
           </CustomText>
           <View style={style.buttonBox}>
@@ -82,6 +82,7 @@ const style = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: 20,
     paddingVertical: 10,
+
   },
   buttonBox: {
     flexDirection: 'row-reverse',

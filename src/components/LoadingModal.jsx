@@ -40,7 +40,7 @@ const LoadingModal = ({isVisible, text, ...props}) => {
         <View
           style={[
             loadingStyle.loadingBox,
-            {width: (vw * 50) / 100, backgroundColor: theme.cardBackground},
+            {width: (vw * 50) / 100, backgroundColor: theme.background},
           ]}>
           <ActivityIndicator size="large" color={theme.primary} />
           {text && (

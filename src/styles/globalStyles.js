@@ -22,12 +22,12 @@ export const themeStyles = () => {
 
 
     bwButton: {
-      backgroundColor: theme.primary,
-      color: theme.chengeTheme,
+      backgroundColor: theme.primaryBG,
+      color: theme.primaryText,
     },
     bwButton2: {
-      backgroundColor: theme.cardBackground,
-      color: theme.themedText,
+      backgroundColor: theme.background,
+      color: theme.primaryBG,
     },
     dangerButton: {
       backgroundColor: theme.dangerBg,

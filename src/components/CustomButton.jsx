@@ -3,6 +3,7 @@ import React from 'react';
 import { themeStyles, globalStyle } from '../styles/globalStyles';
 import CustomText from './CustomText';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { useTheme } from '../utils/themesUtil';
 
 // Example
 //  <CustomButton
@@ -80,6 +81,7 @@ export const BackButton = ({
   ...props
 }) => {
   const themeStyle = themeStyles().tertiaryButton;
+  const { theme } = useTheme();
 
   return (
     <Pressable
@@ -91,7 +93,7 @@ export const BackButton = ({
       ]}
       {...props}
       onPress={onPressFc}>
-      <Ionicons name="arrow-back" size={26} color={themeStyle.primary} />
+      <Ionicons name="arrow-back-outline" size={26} style={{color: theme.primaryBG}} />
     </Pressable>
   );
 };
@@ -105,6 +107,7 @@ export const NaviagteMapButton = ({
   ...props
 }) => {
   const themeStyle = themeStyles().bwButton2;
+  const { theme } = useTheme();
 
   return (
     <Pressable
@@ -116,7 +119,7 @@ export const NaviagteMapButton = ({
       ]}
       {...props}
       onPress={onPressFc}>
-      <Ionicons name="navigate-circle-outline" size={26} color={themeStyle.primary} />
+      <Ionicons name="navigate-circle-outline" size={26} color={themeStyle.primary} style={{color: theme.primaryBG}} />
     </Pressable>
   );
 };

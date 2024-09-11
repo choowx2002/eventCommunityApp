@@ -17,6 +17,8 @@ const colors = {
     themedBackground: '#1c95ff',
 
     background: '#ffffff',
+    
+    inputBackground: '#ffffff',
 
     accent: '#s1439fa',
 
@@ -43,10 +45,12 @@ const colors = {
 
     background: '#121212',
 
+    inputBackground: '#ffffff',
+
     accent: '#ffaf45',
 
-    dangerText: '#ff0000',
-    dangerBg: '#ffffff',
+    dangerText: '#ffffff',
+    dangerBg: '#ff0000',
   },
 };
 

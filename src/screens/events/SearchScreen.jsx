@@ -24,8 +24,8 @@ const SearchScreen = ({ navigation }) => {
 
   const themeStyles = StyleSheet.create({
     searchInputBox: {
-      borderColor: theme.primaryText,
-      backgroundColor: theme.description,
+      borderColor: theme.primaryBG,
+      backgroundColor: theme.inputBackground,
     },
     inputBox: {
       color: theme.primaryText,
@@ -49,7 +49,7 @@ const SearchScreen = ({ navigation }) => {
     }
 
     searchEventApi({ title: searchTerm }).then((res) => {
-      if(!res) return 
+      if (!res) return
       setEvents(res.data.events);
     });
     setSearched(true);
@@ -112,7 +112,7 @@ const SearchScreen = ({ navigation }) => {
           />
           {isFocus && <Ionicons name="close-outline" color={theme.primaryText} size={18} onPress={() => setSearchTerm('')} />}
         </View>
-        <CustomButton theme="primary" style={styles.searchButton} textSize={fontSizes.small} onPress={searchEvents}>
+        <CustomButton theme="primary" style={[styles.searchButton]} textSize={fontSizes.small} onPress={searchEvents}>
           SEARCH
         </CustomButton>
       </View>
@@ -126,13 +126,13 @@ const SearchScreen = ({ navigation }) => {
         />
       ) : searched ? (
         <View style={styles.noEventsBox}>
-          <CustomText weight="italic" style={[styles.noEventsText, theme.description]}>
+          <CustomText weight="italic" style={[styles.noEventsText, { color: theme.tertiaryText }]}>
             No Similar Events. Try Others =。=?
           </CustomText>
         </View>
       ) : (
         <View style={styles.noEventsBox}>
-          <CustomText weight="italic" style={[styles.noEventsText, theme.description]}>
+          <CustomText weight="italic" style={[styles.noEventsText, { color: theme.tertiaryText }]}>
             Search Some Events!
           </CustomText>
         </View>
