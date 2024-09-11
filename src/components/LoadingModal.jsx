@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import {useTheme} from '../utils/themesUtil';
 import {
   ActivityIndicator,
   StyleSheet,
@@ -9,6 +8,7 @@ import {
 } from 'react-native';
 import CustomText from './CustomText';
 import fontSizes from '../types/fontSize';
+import {useTheme} from '../utils/themesUtil';
 
 // Custom hook for managing loading modal visibility
 const loadingHook = () => {

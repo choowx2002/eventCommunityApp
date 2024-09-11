@@ -2,28 +2,28 @@ import { API_PORT, HOST } from '@env';
 export const getLocationAddress = async (latitude, longitude) => {
   try {
     const response = await fetch(
-      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`,
+      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
     );
     const json = await response.json();
-    return json.address.state??json.address.city
+    return json.address.state ?? json.address.city;
   } catch (error) {
     console.error(error);
   }
 };
 
-export const getHostName = () =>{
-  return `http://${HOST}:${API_PORT}`
+export const getHostName = () => {
+  return `http://${HOST}:${API_PORT}`;
 };
 
 //upload image refer createEventScreen.jsx
 export const uploadImage = async (image) => {
-  if(!image) return null;
-  const {imageUri, imageName, imageType} = image
+  if (!image) return null;
+  const { imageUri, imageName, imageType } = image;
   const formData = new FormData();
   formData.append('image', {
     uri: imageUri,
-    name: imageName ,  
-    type: imageType , 
+    name: imageName,
+    type: imageType,
   });
 
   try {
@@ -38,10 +38,10 @@ export const uploadImage = async (image) => {
     const result = await response.json();
     if (response.status === 200) {
       console.log('File uploaded successfully', result);
-      return result.data.image_path; 
+      return result.data.image_path;
     } else {
       console.log('Upload failed: ', result.message);
-      return null; 
+      return null;
     }
   } catch (error) {
     console.log('Error uploading image: ', error);
@@ -50,61 +50,76 @@ export const uploadImage = async (image) => {
 };
 
 // const hostname = 'http://192.168.1.201:3000';
-export const get = async (path, params) => {
+export const get = async (path, params = {}) => {
   const formattedParams = '?' + new URLSearchParams(params).toString();
   const url = getHostName() + path + formattedParams;
-  console.log('url', url);
+  console.log('get req url', url);
 
   try {
     const response = await fetch(url);
+    if (!response.ok) {
+      const errorResponse = await response.json();
+      throw new Error(errorResponse.error || `HTTP error! Status: ${response.status}`);
+    }
     const responseData = await response.json();
     console.log('result', JSON.stringify(responseData));
     return responseData;
   } catch (error) {
-    console.error(error);
+    console.log('Fetch Error:', error.message);
+    return null;
   }
 };
 
 export const remove = async (path, params) => {
   const formattedParams = '?' + new URLSearchParams(params).toString();
   const url = getHostName() + path + formattedParams;
-  console.log('url', url);
+  console.log('delete url', url);
 
   try {
-    const response = await fetch(url,{
-      method: "DELETE",
+    const response = await fetch(url, {
+      method: 'DELETE',
       headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      }
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
     });
+    if (!response.ok) {
+      const errorResponse = await response.json();
+      throw new Error(errorResponse.error || `HTTP error! Status: ${response.status}`);
+    }
     const responseData = await response.json();
     console.log('result', JSON.stringify(responseData));
     return responseData;
   } catch (error) {
-    console.error(error);
+    console.log('Fetch Error:', error.message);
+    return null;
   }
 };
 
 export const post = async (path, params, body) => {
-  const formattedParams = !params? "" :'?' + new URLSearchParams(params).toString();
+  const formattedParams = !params ? '' : '?' + new URLSearchParams(params).toString();
   const url = getHostName() + path + formattedParams;
-  console.log('url', url, body);
+  console.log('post url', url, body);
 
   try {
-    const response = await fetch(url,{
-      method: "POST",
+    const response = await fetch(url, {
+      method: 'POST',
       headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(body),
     });
+    if (!response.ok) {
+      const errorResponse = await response.json();
+      throw new Error(errorResponse.error || `HTTP error! Status: ${response.status}`);
+    }
     const responseData = await response.json();
     console.log('result', responseData);
     return responseData;
   } catch (error) {
-    console.error(error);
+    console.log('Fetch Error:', error.message);
+    return null;
   }
 };
 
@@ -113,4 +128,3 @@ export const post = async (path, params, body) => {
 //     console.log('notification', res);
 //   });
 // };
-

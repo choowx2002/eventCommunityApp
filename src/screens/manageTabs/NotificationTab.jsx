@@ -1,15 +1,14 @@
-import {StyleSheet, View,RefreshControl} from 'react-native';
+import { StyleSheet, View, RefreshControl, ScrollView } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import {FlatList} from 'react-native-gesture-handler';
-import {formatDistance, parseISO} from 'date-fns';
+import { formatDistance, parseISO } from 'date-fns';
 import CustomText from '../../components/CustomText';
-import {useTheme} from '../../utils/themesUtil';
+import { useTheme } from '../../utils/themesUtil';
 import fontSizes from '../../types/fontSize';
-import {globalStyle} from '../../styles/globalStyles';
+import { globalStyle } from '../../styles/globalStyles';
 
-const NotificationTab = ({notificationList,onRefresh }) => {
-  const {theme} = useTheme();
-  const [refreshing, setRefreshing] = useState(false)
+const NotificationTab = ({ notificationList, onRefresh }) => {
+  const { theme } = useTheme();
+  const [refreshing, setRefreshing] = useState(false);
 
   const dynamicStyles = StyleSheet.create({
     noticeBox: {
@@ -18,49 +17,42 @@ const NotificationTab = ({notificationList,onRefresh }) => {
   });
 
   useEffect(() => {
-    if(refreshing)setRefreshing(false)
-  }, [notificationList])
-  
+    if (refreshing) setRefreshing(false);
+  }, [notificationList]);
 
-  const refresh =()=>{
-    if(refreshing) return
-    setRefreshing(true)
-    onRefresh()
-  }
+  const refresh = () => {
+    if (refreshing) return;
+    setRefreshing(true);
+    onRefresh();
+  };
 
-  const _renderItem = ({item}) => (
-    <View style={[dynamicStyles.noticeBox, styles.noticeBox]}>
+  const _renderItem = ({ item }) => (
+    <View style={[dynamicStyles.noticeBox, styles.noticeBox]} key={item.id.toString()}>
       <CustomText weight="bold" numberOfLines={1} style={styles.noticeTitle}>
         {item.title}
       </CustomText>
       <CustomText numberOfLines={2}>{item.message}</CustomText>
-      <CustomText style={styles.time}>
-        {formatDistance(parseISO(item.created_at), new Date())} ago
-      </CustomText>
+      <CustomText style={styles.time}>{formatDistance(parseISO(item.created_at), new Date())} ago</CustomText>
     </View>
   );
 
   return (
-    <View>
+    <ScrollView style={styles.page} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={refresh} />}>
       {notificationList.length > 0 ? (
-        <FlatList
-          data={notificationList}
-          renderItem={_renderItem}
-          keyExtractor={(item) => item.id.toString()}
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={refresh} />
-          }
-        />
+        notificationList.map((item) => {
+          return _renderItem({ item });
+        })
       ) : (
-        <CustomText style={globalStyle.centerText}>
-          No Notification Yet.
-        </CustomText>
+        <CustomText style={globalStyle.centerText}>No Notification Yet.</CustomText>
       )}
-    </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
+  page:{
+    height:"90%",
+  },
   noticeBox: {
     marginBottom: 10,
     paddingHorizontal: 10,
@@ -75,7 +67,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
     textAlign: 'right',
     fontSize: fontSizes.small,
-  }
+  },
 });
 
 export default NotificationTab;

@@ -1,38 +1,34 @@
-import {View, StyleSheet, ToastAndroid, Alert} from 'react-native';
-import React, {useState, useEffect} from 'react';
-import {globalStyle} from '../../styles/globalStyles';
-import CustomButton, {BackButton} from '../../components/CustomButton';
+import { View, StyleSheet, ToastAndroid, Alert } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { useRoute } from '@react-navigation/native';
+//components
+import CustomButton, { BackButton } from '../../components/CustomButton';
 import CustomText from '../../components/CustomText';
-import {useTheme} from '../../utils/themesUtil';
-import {useRoute} from '@react-navigation/native';
 import CustomInput from '../../components/CustomInput';
-import {formData} from '../../components/FormHook';
-import fontSizes from '../../types/fontSize';
 import CustomModel from '../../components/AlertModal';
-import {send_notification} from '../../services/socket';
-import {createNotification} from '../../services/notificationApi.service';
-const NewNotificationScreen = ({navigation}) => {
-  const {theme} = useTheme();
+import { formData } from '../../components/FormHook';
+//others
+import { globalStyle } from '../../styles/globalStyles';
+import { useTheme } from '../../utils/themesUtil';
+import fontSizes from '../../types/fontSize';
+import { send_notification } from '../../services/socket';
+import { createNotification } from '../../services/notificationApi.service';
+
+const NewNotificationScreen = ({ navigation }) => {
+  const { theme } = useTheme();
   const route = useRoute();
   const [eventId, setEventId] = useState(null);
   const [alertAction, setAlertAction] = useState('');
   const [alertState, setAlertState] = useState(false); //for alert modal shown
-  const [formValues, handleFormValueChange, validateForm, getErrors] = formData(
-    {
-      data: {
-        title: '',
-        message: '',
-      },
-      requiredData: ['title', 'message'],
-      error: {},
+  const [formValues, handleFormValueChange, validateForm] = formData({
+    data: {
+      title: '',
+      message: '',
     },
-  );
-
-  useEffect(() => {
-    const {eventId: routeId} = route.params || {}; // Get eventId from route parameters
-    if (!routeId) return navigation.goBack();
-    setEventId(routeId);
-  }, [route.params]);
+    requiredData: ['title', 'message'],
+    error: {},
+  });
+  LogBox.ignoreLogs(['Non-serializable values were found in the navigation state']); //ignore warning
 
   const dynamicStyles = StyleSheet.create({
     header: {
@@ -47,13 +43,28 @@ const NewNotificationScreen = ({navigation}) => {
     },
   });
 
-  const showAlert = action => {
+  //show toast
+  const showErrorToast = (message, goBack = fasle, isRefresh = false) => {
+    if (goBack) {
+      if (route.params.refresh && isRefresh) route.params.refresh();
+      navigation.goBack();
+    }
+    ToastAndroid.show(message, ToastAndroid.SHORT);
+  };
+
+  useEffect(() => {
+    const { eventId: routeId } = route.params || {}; // Get eventId from route parameters
+    if (!routeId) return showErrorToast('Please Try Again Later(ง •_•)ง', true);
+    setEventId(routeId);
+  }, [route.params]);
+
+  const showAlert = (action) => {
     setAlertAction(action);
     setAlertState(true);
   };
 
   //function to hide alert
-  const hideAlert = proceed => {
+  const hideAlert = (proceed) => {
     switch (alertAction.action) {
       case 'back':
         if (proceed) navigation.goBack();
@@ -100,40 +111,31 @@ const NewNotificationScreen = ({navigation}) => {
       message: formValues.data.message,
     };
     createNotification(body)
-      .then(res => {
+      .then((res) => {
+        if (!res) return showErrorToast('Please Try Again Later(ง •_•)ง');
         if (res.status == 'success') {
-          send_notification(body).then(() => {
-            ToastAndroid.show(
-              'Notification successfully sent.',
-              ToastAndroid.SHORT,
-            );
-            if(route.params.refresh) route.params.refresh()
-            navigation.goBack();
-          }).catch((error) => {
-            if(error?.error) return ToastAndroid.show(
-              error.error,
-              ToastAndroid.LONG,
-            );
-          });
+          send_notification(body)
+            .then(() => {
+              return showErrorToast('Notification successfully sent.', true, true);
+            })
+            .catch((error) => {
+              if (error?.error) {
+                console.log('error: ', error);
+                showErrorToast(error.error);
+              }
+            });
         }
       })
       .catch((error) => {
-        if(error?.message) return ToastAndroid.show(
-          error.message,
-          ToastAndroid.LONG,
-        );
+        console.log('error: ', error);
+        return showErrorToast('Somethings Get Wrong.σ(ﾟ･ﾟ*)･･･');
       });
   };
 
   return (
     <View style={[dynamicStyles.page, styles.page]}>
       <View style={[globalStyle.header, dynamicStyles.header]}>
-        <BackButton
-          onPressFc={goBack}
-          navigation={navigation}
-          float={false}
-          showBg={false}
-        />
+        <BackButton onPressFc={goBack} navigation={navigation} float={false} showBg={false} />
         <CustomText weight="bold" style={globalStyle.headerTitle}>
           New Notification
         </CustomText>
@@ -149,10 +151,7 @@ const NewNotificationScreen = ({navigation}) => {
           {formValues?.errors?.title?.length > 0 &&
             formValues?.errors?.title?.map((value, key) => {
               return (
-                <CustomText
-                  style={[styles.errorText, dynamicStyles.errorText]}
-                  weight="semiBold"
-                  key={key}>
+                <CustomText style={[styles.errorText, dynamicStyles.errorText]} weight="semiBold" key={key}>
                   {value}
                 </CustomText>
               );
@@ -172,20 +171,14 @@ const NewNotificationScreen = ({navigation}) => {
           {formValues?.errors?.message?.length > 0 &&
             formValues?.errors?.message?.map((value, key) => {
               return (
-                <CustomText
-                  style={[styles.errorText, dynamicStyles.errorText]}
-                  weight="semiBold"
-                  key={key}>
+                <CustomText style={[styles.errorText, dynamicStyles.errorText]} weight="semiBold" key={key}>
                   {value}
                 </CustomText>
               );
             })}
         </View>
 
-        <CustomButton
-          style={styles.submitButton}
-          theme={'primary'}
-          onPress={validateMessageForm}>
+        <CustomButton style={styles.submitButton} theme={'primary'} onPress={validateMessageForm}>
           Send Message
         </CustomButton>
       </View>
