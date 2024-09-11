@@ -61,7 +61,7 @@ const App = () => {
           component={item.component}
           options={{
             tabBarShowLabel: false,
-            tabBarActiveTintColor: theme.primary,
+            tabBarActiveTintColor: theme.primaryBG,
             tabBarIcon: ({color}) => (
               <Ionicons name={item.iconName} color={color} size={26} />
             ),

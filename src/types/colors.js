@@ -1,25 +1,52 @@
 const colors = {
   light: {
     isDarkMode: false,
-    text: '#06080f',
-    background: '#f1f2fa',
-    cardBackground: '#F0F8FF',
-    primary: '#3850c7',
-    secondary: '#8c9be5',
-    accent: '#6479e5',
-    dangerBg: '#ff0e0e',
-    dangerText: '#f6f6f6'
+    description: '#1c95ff',
+
+    primaryText: '#ffffff',
+    primaryBG: '#1c95ff',
+
+    secondaryText: '#1c95ff',
+    secondaryBG: '#ffffff',
+
+    tertiaryText: '#121212',
+    tertiaryBG: '#ff9100',
+
+    themedText: '#1c95ff',
+
+    themedBackground: '#1c95ff',
+
+    background: '#ffffff',
+
+    accent: '#s1439fa',
+
+    dangerText: '#ffffff',
+    dangerBg: '#ff0000',
+
   },
   dark: {
     isDarkMode: true,
-    text: '#f0f2f9',
-    background: '#05070f',
-    cardBackground: '#1f1f21',
-    primary: '#3850c7',
-    secondary: '#1a2974',
-    accent: '#1a2f99',
-    dangerBg: '#ff0e0e',
-    dangerText: '#f6f6f6'
+    description: '#ffffff',
+
+    primaryText: '#121212',
+    primaryBG: '#ff9100',
+
+    secondaryText: '#ff9100',
+    secondaryBG: '#121212',
+
+    tertiaryText: '#ffffff',
+    tertiaryBG: '#1c95ff',
+
+    themedText: '#222222',
+
+    themedBackground: '#ff9100',
+
+    background: '#121212',
+
+    accent: '#ffaf45',
+
+    dangerText: '#ff0000',
+    dangerBg: '#ffffff',
   },
 };
 

@@ -12,7 +12,7 @@ const NotificationTab = ({ notificationList, onRefresh }) => {
 
   const dynamicStyles = StyleSheet.create({
     noticeBox: {
-      backgroundColor: theme.cardBackground,
+      backgroundColor: theme.background,
     },
   });
 
@@ -28,11 +28,11 @@ const NotificationTab = ({ notificationList, onRefresh }) => {
 
   const _renderItem = ({ item }) => (
     <View style={[dynamicStyles.noticeBox, styles.noticeBox]} key={item.id.toString()}>
-      <CustomText weight="bold" numberOfLines={1} style={styles.noticeTitle}>
+      <CustomText weight="bold" numberOfLines={1} style={[styles.noticeTitle, {colors: theme.tertiaryText}]}>
         {item.title}
       </CustomText>
-      <CustomText numberOfLines={2}>{item.message}</CustomText>
-      <CustomText style={styles.time}>{formatDistance(parseISO(item.created_at), new Date())} ago</CustomText>
+      <CustomText numberOfLines={2} style={{colors: theme.tertiaryText}}>{item.message}</CustomText>
+      <CustomText style={[styles.time, {colors: theme.tertiaryText}]}>{formatDistance(parseISO(item.created_at), new Date())} ago</CustomText>
     </View>
   );
 
@@ -43,7 +43,7 @@ const NotificationTab = ({ notificationList, onRefresh }) => {
           return _renderItem({ item });
         })
       ) : (
-        <CustomText style={globalStyle.centerText}>No Notification Yet.</CustomText>
+        <CustomText style={[globalStyle.centerText, , {colors: theme.tertiaryText}]}>No Notification Yet.</CustomText>
       )}
     </ScrollView>
   );

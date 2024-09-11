@@ -10,6 +10,9 @@ import CustomText from '../components/CustomText';
 import { format } from 'date-fns';
 import { getAllCategories } from '../services/categoryApi.service';
 import CustomButton from '../components/CustomButton';
+import colors from '../types/colors';
+import { themeStyles } from '../styles/globalStyles';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const EventsScreen = ({ navigation }) => {
     const { theme } = useTheme();
@@ -18,33 +21,17 @@ const EventsScreen = ({ navigation }) => {
     const [eventsCategories, setEventsCategories] = useState([]);
     //styles
     const styles = StyleSheet.create({
-        searchInputBox: {
-            flex: 1,
+        blackBG: {
+            backgroundColor: theme.background,
+        },
+        selections: {
             flexDirection: 'row',
-            alignItems: 'center',
-            marginHorizontal: 10,
-            paddingHorizontal: 10,
-            gap: 5,
-            borderWidth: 1,
-            borderRadius: 30,
-            borderColor: theme.text,
-            backgroundColor: theme.cardBackground,
-        },
-        inputBox: {
-            flex: 1,
-            color: theme.text,
-            paddingVertical: 5,
-        },
-        searchButton: {
-            marginVertical: 5,
-            paddingVertical: 5,
-            paddingHorizontal: 20,
-            elevation: 0,
-            lineHeight: '100%',
         },
         eventItem: {
-            backgroundColor: theme.cardBackground,
-            marginBottom: 10,
+            backgroundColor: theme.background,
+            //marginBottom: 3,
+            borderWidth: 0.5,
+            borderColor: theme.primaryBG,
             paddingHorizontal: 10,
             paddingVertical: 5,
         },
@@ -63,6 +50,7 @@ const EventsScreen = ({ navigation }) => {
         },
         flatList: {
             paddingBottom: 50,
+            height: '100%',
         },
         noEventsBox: {
             justifyContent: 'center',
@@ -136,7 +124,7 @@ const EventsScreen = ({ navigation }) => {
                             return obj
                     });
                 }
-                if(newRes.length > 0) res = newRes;
+                if (newRes.length > 0) res = newRes;
                 res = res.sort(() => Math.random() - 0.5).slice(0, sliceNum);
                 if (sliceNum === 5) res = [route.params.value, ...res]
                 setEventsCategories(res);
@@ -156,7 +144,7 @@ const EventsScreen = ({ navigation }) => {
                 onPress={() => navigation.navigate('eDetails', { eventId: event.id })}>
 
                 <CustomText
-                    style={[styles.title, getFontFamily('bold')]}
+                    style={[styles.title, getFontFamily('bold'), { color: theme.tertiaryText }]}
                     numberOfLines={1}>
                     {event.title}
                 </CustomText>
@@ -164,18 +152,18 @@ const EventsScreen = ({ navigation }) => {
                     <View style={styles.eventMeta}>
                         <Ionicons
                             name={'calendar'}
-                            color={theme.text}
+                            color={theme.primaryBG}
                             size={fontSizes.regular}
                         />
-                        <CustomText>{format(event.start_date, 'yyyy-MM-dd')}</CustomText>
+                        <CustomText style={{ color: theme.tertiaryText }}>{format(event.start_date, 'yyyy-MM-dd')}</CustomText>
                     </View>
                     <View style={styles.eventMeta}>
                         <Ionicons
                             name={'person'}
-                            color={theme.text}
+                            color={theme.primaryBG}
                             size={fontSizes.regular}
                         />
-                        <CustomText>
+                        <CustomText style={{ color: theme.tertiaryText }}>
                             {event.participants}/{event.participants_limit}
                         </CustomText>
                     </View>
@@ -184,29 +172,32 @@ const EventsScreen = ({ navigation }) => {
         );
     };
     return (
-        <View>
-            <Text>EventsList</Text>
-            {eventsCategories.length > 0 && eventsCategories.map((category) => {
-                return (
-                    <CustomButton key={category.id} onPress={() => navigation.navigate('Events',
-                        {
-                            type: "Categories", value: {
-                                id: category.id,
-                                name: category.name,
-                            }
-                        })
-                    }>
-                        {category.name}
-                    </CustomButton>
-                );
-            })}
-
-            <CustomText>{route.params?.type === "all" || !route.params?.type ? "All Events" : route.params?.type === "Location" ? "Nearby Events" : route.params.value.name}</CustomText>
+        <View style={styles.blackBG}>
+            <ScrollView style={[styles.selections, {marginBottom: 5}]}
+                horizontal
+                showsHorizontalScrollIndicator={false}
+            >
+                {eventsCategories.length > 0 && eventsCategories.map((category) => {
+                    return (
+                        <CustomButton style={[{width: 'auto',marginHorizontal: 2}]} theme="primary" key={category.id} onPress={() => navigation.navigate('Events',
+                            {
+                                type: "Categories", value: {
+                                    id: category.id,
+                                    name: category.name,
+                                }
+                            })
+                        } >
+                            {category.name}
+                        </CustomButton>
+                    );
+                })}
+            </ScrollView>
+            <CustomText style={[{ color: theme.description }, {paddingLeft: 3}]}>{route.params?.type === "all" || !route.params?.type ? "All Events" : route.params?.type === "Location" ? "Nearby Events" : route.params.value.name}</CustomText>
             <FlatList
 
                 style={styles.flatList}
                 data={eventsData}
-                renderItem={({ item }) => <EventItem event={item} />}
+                renderItem={({ item }) => <EventItem event={item} />}// rmb uncomment this
                 keyExtractor={item => item.id}
             />
         </View>

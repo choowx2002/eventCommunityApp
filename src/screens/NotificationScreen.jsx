@@ -53,11 +53,11 @@ const NotificationScreen = () => {
   const { theme } = useTheme();
 
   const renderItem = ({ item }) => (
-    <TouchableOpacity style={[styles.item, { backgroundColor: theme.cardBackground }]}>
+    <TouchableOpacity style={[styles.item, { backgroundColor: theme.themedBackground }]}>
       <View style={styles.textContainer}>
-        <CustomText weight='bold' style={[{fontSize: fontSizes.header}, { color: theme.text }]}>{item.title}</CustomText>
-        <CustomText weight='regular' style={[{ color: theme.text }]}>{item.dateTime}</CustomText>
-        <CustomText weight='light' style={[{ color: theme.text }]}>{item.message}</CustomText>
+        <CustomText weight='bold' style={[{fontSize: fontSizes.header}, { color: theme.primaryText }]}>{item.title}</CustomText>
+        <CustomText weight='regular' style={[{ color: theme.primaryText }]}>{item.dateTime}</CustomText>
+        <CustomText weight='light' style={[{ color: theme.primaryText }]}>{item.message}</CustomText>
       </View>
     </TouchableOpacity>
   );

@@ -1,6 +1,6 @@
-import {Pressable, View} from 'react-native';
+import { Pressable, View } from 'react-native';
 import React from 'react';
-import {themeStyles, globalStyle} from '../styles/globalStyles';
+import { themeStyles, globalStyle } from '../styles/globalStyles';
 import CustomText from './CustomText';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
@@ -38,6 +38,9 @@ const CustomButton = ({
     case 'secondary':
       buttonTheme = themeStyles().secondaryButton;
       break;
+    case 'tertiary':
+      buttonTheme = themeStyles().tertiaryButton;
+      break;
     case 'danger':
       buttonTheme = themeStyles().dangerButton;
       break;
@@ -50,11 +53,11 @@ const CustomButton = ({
   }
   return (
     <Pressable style={[buttonTheme, globalStyle.Button, style]} {...props}>
-      {icon && !iconEnd && <View style={{marginRight: 8}}>{icon}</View>}
-      <CustomText weight="bold" style={[buttonTheme, {fontSize: textSize}]}>
+      {icon && !iconEnd && <View style={{ marginRight: 8 }}>{icon}</View>}
+      <CustomText weight="bold" style={[buttonTheme, { fontSize: textSize }]}>
         {children}
       </CustomText>
-      {icon && iconEnd && <View style={{marginRight: 8}}>{icon}</View>}
+      {icon && iconEnd && <View style={{ marginRight: 8 }}>{icon}</View>}
     </Pressable>
   );
 };
@@ -76,7 +79,7 @@ export const BackButton = ({
   onPressFc = () => navigation.goBack(),
   ...props
 }) => {
-  const themeStyle = themeStyles().bwButton2;
+  const themeStyle = themeStyles().tertiaryButton;
 
   return (
     <Pressable
@@ -84,11 +87,11 @@ export const BackButton = ({
         float ? globalStyle.backFloatButton : '',
         globalStyle.backButton,
         themeStyle,
-        !showBg && {backgroundColor: 'transparent'},
+        !showBg && { backgroundColor: 'transparent' },
       ]}
       {...props}
       onPress={onPressFc}>
-      <Ionicons name="arrow-back" size={26} color={themeStyle.color} />
+      <Ionicons name="arrow-back" size={26} color={themeStyle.primary} />
     </Pressable>
   );
 };
@@ -98,7 +101,7 @@ export const NaviagteMapButton = ({
   float = true,
   showBg = true,
   data,
-  onPressFc = () => navigation.navigate('map',{data}),
+  onPressFc = () => navigation.navigate('map', { data }),
   ...props
 }) => {
   const themeStyle = themeStyles().bwButton2;
@@ -109,11 +112,11 @@ export const NaviagteMapButton = ({
         float ? globalStyle.rTopFloatButton : '',
         globalStyle.backButton,
         themeStyle,
-        !showBg && {backgroundColor: 'transparent'},
+        !showBg && { backgroundColor: 'transparent' },
       ]}
       {...props}
       onPress={onPressFc}>
-      <Ionicons name="navigate-circle-outline" size={26} color={themeStyle.color} />
+      <Ionicons name="navigate-circle-outline" size={26} color={themeStyle.primary} />
     </Pressable>
   );
 };
@@ -122,13 +125,13 @@ export const NaviagteMapButton = ({
 /**
  * Floating Action Button (FAB)
  *
- * @param {string} theme - primary, secondary, danger
+ * @param {string} theme - primary, secondary, tertiary, danger
  * @param {React.Element} icon - Icon component to render inside the button
  * @param {function} onPress - Function to execute when button is pressed
  * @param {boolean} visible - Visibility of the FAB button (default true)
  * @returns - FAB UI component
  */
-export const FabButton = ({theme, icon, onPress, visible = true, style, ...props}) => {
+export const FabButton = ({ theme, icon, onPress, visible = true, style, ...props }) => {
   if (!visible) return null;
 
   let buttonTheme;
@@ -138,6 +141,9 @@ export const FabButton = ({theme, icon, onPress, visible = true, style, ...props
       break;
     case 'secondary':
       buttonTheme = themeStyles().secondaryButton;
+      break;
+    case 'tertiary':
+      buttonTheme = themeStyles().tertiaryButton;
       break;
     case 'danger':
       buttonTheme = themeStyles().dangerButton;

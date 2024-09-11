@@ -6,28 +6,38 @@ import fontSizes from '../types/fontSize';
 export const themeStyles = () => {
   const {theme} = useTheme();
   return StyleSheet.create({
+
+    primaryButton: {
+      backgroundColor: theme.primaryBG,
+      color: theme.primaryText,
+    },
+    secondaryButton: {
+      backgroundColor: theme.secondaryBG,
+      color: theme.secondaryText,
+    },
+    tertiaryButton: {
+      backgroundColor: theme.tertiaryBG,
+      color: theme.tertiaryText,
+    },
+
+
     bwButton: {
-      backgroundColor: theme.text,
-      color: theme.cardBackground,
+      backgroundColor: theme.primary,
+      color: theme.chengeTheme,
     },
     bwButton2: {
       backgroundColor: theme.cardBackground,
-      color: theme.text,
-    },
-    primaryButton: {
-      backgroundColor: theme.primary,
-      color: theme.text,
-    },
-    secondaryButton: {
-      backgroundColor: theme.secondary,
-      color: theme.text,
+      color: theme.themedText,
     },
     dangerButton: {
       backgroundColor: theme.dangerBg,
       color: theme.dangerText,
     },
-    textColor: {
+    Description: {
       color: theme.text,
+    },
+    textColor: {
+      color: theme.themedText,
     },
   });
 };

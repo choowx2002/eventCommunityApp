@@ -4,6 +4,8 @@ import CustomText from '../components/CustomText';
 import fontSizes from '../types/fontSize';
 import {useTheme} from '../utils/themesUtil';
 import CustomButton from '../components/CustomButton';
+import { themeStyles } from '../styles/globalStyles';
+import colors from '../types/colors';
 
 const WelcomeScreen = ({navigation}) => {
   const {theme, toggleTheme} = useTheme();
@@ -15,10 +17,10 @@ const WelcomeScreen = ({navigation}) => {
           height: '50%',
           marginHorizontal: '10%',
         }}>
-        <CustomText style={[styles.Title]} weight="semiBoldItalic">
+        <CustomText style={[styles.Title, {color: theme.description}]}>
           Welcome To EMC
         </CustomText>
-        <CustomText style={[styles.Descriptions]}>
+        <CustomText style={[styles.Descriptions, {color: theme.description}]} >
           Join a vibrant community where events come to life. Explore local and
           global events, share your experiences, and connect with others who
           share your passions. Together, we make every event memorable!
@@ -28,15 +30,15 @@ const WelcomeScreen = ({navigation}) => {
       <CustomButton
         onPress={() => navigation.replace('main', {screen: 'Home'})}
         style={{marginTop: 10, width: '50%'}}
-        theme="bw">
+        theme="primary">
         WELCOME
       </CustomButton>
 
       <CustomButton
         onPress={toggleTheme}
         style={{marginTop: 10}}
-        theme="primary">
-        change theme
+        theme="tertiary">
+        Change Theme
       </CustomButton>
     </View>
   );
@@ -55,6 +57,7 @@ const styles = StyleSheet.create({
   },
   Descriptions: {
     fontSize: fontSizes.body,
+    textAlign: 'justify',
   },
 });
 
