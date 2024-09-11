@@ -173,8 +173,8 @@ const EventsScreen = ({ navigation }) => {
     };
     return (
         <View style={styles.blackBG}>
-            <ScrollView style={[styles.selections, {marginBottom: 5}]}
-                horizontal
+            <ScrollView style={{paddingBottom: 20}}>
+            <ScrollView horizontal
                 showsHorizontalScrollIndicator={false}
             >
                 {eventsCategories.length > 0 && eventsCategories.map((category) => {
@@ -192,6 +192,8 @@ const EventsScreen = ({ navigation }) => {
                     );
                 })}
             </ScrollView>
+            </ScrollView>
+
             <CustomText style={[{ color: theme.description }, {paddingLeft: 3}]}>{route.params?.type === "all" || !route.params?.type ? "All Events" : route.params?.type === "Location" ? "Nearby Events" : route.params.value.name}</CustomText>
             <FlatList
 
