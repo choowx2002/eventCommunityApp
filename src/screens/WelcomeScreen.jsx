@@ -54,7 +54,7 @@ const WelcomeScreen = ({ navigation }) => {
         {/* Second Page: Image and Description */}
         <View key="2" style={styles.page}>
           <Image
-            source={require('../img/welcomescreen.jpg')}
+            source={require('../assets/images/welcomescreen.jpg')}
             style={styles.image}
             resizeMode="cover"
           />
