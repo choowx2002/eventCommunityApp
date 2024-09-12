@@ -5,6 +5,7 @@ import ManageEventScreen from '../screens/events/ManageEventScreen';
 import NewNotificationScreen from '../screens/manageTabs/NewNotificationScreen';
 import MapView from '../screens/MapView';
 import EventsDetails from '../screens/events/EventsDetails';
+import NotificationDetailsScreen from '../screens/NotificationDetailsScreen.jsx';
 
 // Define the configuration for event-related screens
 // The name of the screen for navigation
@@ -70,6 +71,13 @@ export const screens = [
     component: MapView,
     options:{
       headerShown: false
+    },
+  },
+  {
+    name: 'notificationDetails',
+    component: NotificationDetailsScreen,
+    options: {
+      title: 'Notification Details',
     },
   }
 ];
