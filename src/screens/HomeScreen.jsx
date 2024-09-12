@@ -37,11 +37,12 @@ const HomeScreen = ({ navigation }) => {
         async (info) => {
           try {
             const state = await getLocationAddress(info.coords.latitude, info.coords.longitude);
-            setApiCallMax((prevCount) => prevCount + 1);
-            console.log('state1', state);
-            setCurrentState(state);
-            const result = await getEventByState({ state: state, limit: 3 });
-            if (result?.data?.events?.length > 0) setNearEvents(result.data.events);
+            if(state) {
+              setApiCallMax((prevCount) => prevCount + 1);
+              setCurrentState(state);
+              const result = await getEventByState({ state: state, limit: 3 });
+              if (result?.data?.events?.length > 0) setNearEvents(result.data.events);
+            }
           } finally {
             setApiCall((prevCount) => prevCount + 1);
           }

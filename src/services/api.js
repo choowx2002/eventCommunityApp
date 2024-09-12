@@ -8,6 +8,7 @@ export const getLocationAddress = async (latitude, longitude) => {
     return json.address.state ?? json.address.city;
   } catch (error) {
     console.error(error);
+    return null
   }
 };
 
@@ -49,7 +50,6 @@ export const uploadImage = async (image) => {
   }
 };
 
-// const hostname = 'http://192.168.1.201:3000';
 export const get = async (path, params = {}) => {
   const formattedParams = '?' + new URLSearchParams(params).toString();
   const url = getHostName() + path + formattedParams;
@@ -123,8 +123,29 @@ export const post = async (path, params, body) => {
   }
 };
 
-// const createNotifications = body => {
-//   post('/notification/create', {}, body).then(res => {
-//     console.log('notification', res);
-//   });
-// };
+export const put = async (path, params, body) => {
+  const formattedParams = !params ? '' : '?' + new URLSearchParams(params).toString();
+  const url = getHostName() + path + formattedParams;
+  console.log('put url', url, body);
+
+  try {
+    const response = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    });
+    if (!response.ok) {
+      const errorResponse = await response.json();
+      throw new Error(errorResponse.error || `HTTP error! Status: ${response.status}`);
+    }
+    const responseData = await response.json();
+    console.log('result', responseData);
+    return responseData;
+  } catch (error) {
+    console.log('Fetch Error:', error.message);
+    return null;
+  }
+};
