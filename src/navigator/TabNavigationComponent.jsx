@@ -62,9 +62,12 @@ const App = () => {
           options={{
             tabBarShowLabel: false,
             tabBarActiveTintColor: theme.primary,
-            tabBarIcon: ({color}) => (
+            tabBarIcon: ({ color }) => (
               <Ionicons name={item.iconName} color={color} size={26} />
             ),
+            ...(item.screenName === 'Notifications' && {
+              header: () => null,  // Hide header for the Notifications screen
+            }),
           }}
         />
       ))}

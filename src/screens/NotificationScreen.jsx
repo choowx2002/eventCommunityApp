@@ -1,74 +1,181 @@
-import React from 'react';
-import { View, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useState, useCallback, useEffect } from 'react';
+import { View, FlatList, TouchableOpacity, StyleSheet, RefreshControl } from 'react-native';
 import { useTheme } from '../utils/themesUtil';
 import CustomText from '../components/CustomText';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import fontSizes from '../types/fontSize';
+import { getNotificationByUserId } from '../services/notificationApi.service';
+import { getEventById } from '../services/eventApi.service';
+import { formatDistance, parseISO } from 'date-fns';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useFocusEffect } from '@react-navigation/native';
+import CustomModal from '../components/AlertModal';
 
-const notifications = [
-  {
-    id: '1',
-    title: 'Placeholder 1',
-    dateTime: '2024-08-24 10:00 AM',
-    message: 'This is a placeholder message 1.',
-  },
-  {
-    id: '2',
-    title: 'Placeholder 2',
-    dateTime: '2024-08-24 05:00 PM',
-    message: 'This is a placeholder message 2.',
-  },
-  {
-    id: '3',
-    title: 'Placeholder 3',
-    dateTime: '2024-08-25 11:00 AM',
-    message: 'This is a placeholder message 3.',
-  },
-  {
-    id: '4',
-    title: 'Placeholder 4',
-    dateTime: '2024-08-26 09:00 AM',
-    message: 'This is a placeholder message 4.',
-  },
-  {
-    id: '5',
-    title: 'Placeholder 5',
-    dateTime: '2024-08-27 02:00 PM',
-    message: 'This is a placeholder message 5.',
-  },
-  {
-    id: '6',
-    title: 'Placeholder 6',
-    dateTime: '2024-08-27 02:00 PM',
-    message: 'This is a placeholder message 6.',
-  },
-  {
-    id: '7',
-    title: 'Placeholder 7',
-    dateTime: '2024-08-27 02:00 PM',
-    message: 'This is a placeholder message 7.',
-  },
-];
-
-const NotificationScreen = () => {
+const NotificationScreen = ({ navigation }) => {
   const { theme } = useTheme();
+  const [notifications, setNotifications] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
+  const [error, setError] = useState(null);
+  const [clearTime, setClearTime] = useState(null);
+  const [isModalVisible, setModalVisible] = useState(false);
+  const CLEAR_TIME_KEY = 'notification_clear_time';
 
+  // Retrieve clear time on app start
+  useEffect(() => {
+    const loadClearTime = async () => {
+      try {
+        const storedTime = await AsyncStorage.getItem(CLEAR_TIME_KEY);
+        if (storedTime) {
+          setClearTime(new Date(storedTime));
+        }
+      } catch (error) {
+        console.error('Error retrieving clear time', error);
+      }
+    };
+
+    loadClearTime();
+  }, []);
+
+  // Fetch notifications
+  const fetchNotifications = async () => {
+    try {
+      const userId = '43'; // Replace with actual user ID
+      const response = await getNotificationByUserId(userId);
+      let notifications = response.data.notifications || [];
+
+      // Sort notifications by created_at date (most recent first)
+      notifications = notifications.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+      const notificationsWithEvents = await Promise.all(
+        notifications.map(async (notification) => {
+          if (!notification.eventTitle) {
+            const eventResponse = await getEventById(notification.event_id);
+            const eventTitle = eventResponse.data?.event?.title || 'Unknown Event';
+            return { ...notification, eventTitle };
+          }
+          return notification;
+        })
+      );
+
+      // Filter notifications based on clearTime stored in memory
+      if (clearTime) {
+        const filteredNotifications = notificationsWithEvents.filter(
+          (notification) => new Date(notification.created_at) > clearTime
+        );
+        setNotifications(filteredNotifications);
+      } else {
+        setNotifications(notificationsWithEvents);
+      }
+    } catch (err) {
+      setError('Failed to load notifications');
+    }
+  };
+
+  // Clear notifications and update clearTime
+  const clearNotifications = async () => {
+    const currentTime = new Date();
+    setClearTime(currentTime);
+    await AsyncStorage.setItem(CLEAR_TIME_KEY, currentTime.toISOString());
+    setNotifications([]);
+    setModalVisible(false);
+  };
+
+  const confirmClearNotifications = () => {
+    setModalVisible(true);
+  };
+
+  // Refetch notifications when the screen gains focus
+  useFocusEffect(
+    useCallback(() => {
+      fetchNotifications();
+    }, [clearTime])
+  );
+
+  // Handle pull-to-refresh
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await fetchNotifications();
+    setRefreshing(false);
+  };
+
+  // Navigate to NotificationDetails screen with the notification details
+  const openNotificationDetails = (notification) => {
+    navigation.navigate('notificationDetails', { notification });
+  };
+
+  // Render notification item
   const renderItem = ({ item }) => (
-    <TouchableOpacity style={[styles.item, { backgroundColor: theme.cardBackground }]}>
+    <TouchableOpacity
+      style={[styles.item, { backgroundColor: theme.cardBackground }]}
+      onPress={() => openNotificationDetails(item)}
+    >
       <View style={styles.textContainer}>
-        <CustomText weight='bold' style={[{fontSize: fontSizes.header}, { color: theme.text }]}>{item.title}</CustomText>
-        <CustomText weight='regular' style={[{ color: theme.text }]}>{item.dateTime}</CustomText>
-        <CustomText weight='light' style={[{ color: theme.text }]}>{item.message}</CustomText>
+        <CustomText weight="bold" style={[{ fontSize: fontSizes.header }, { color: theme.text }]}>
+          {item.title}
+        </CustomText>
+        <CustomText weight="regular" style={[{ color: theme.text }]}>{`From ${item.eventTitle}`}</CustomText>
+        {/* Limit message to one line and truncate with "..." */}
+        <CustomText
+          weight="light"
+          style={[{ color: theme.text }]}
+          numberOfLines={1}
+          ellipsizeMode="tail"
+        >
+          {item.message}
+        </CustomText>
+        <CustomText style={styles.time}>
+          {formatDistance(parseISO(item.created_at), new Date())} ago
+        </CustomText>
       </View>
     </TouchableOpacity>
   );
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
-      <FlatList
-        data={notifications}
-        renderItem={renderItem}
-        keyExtractor={item => item.id}
+      <View style={[styles.headerContainer, { backgroundColor: theme.background }]}>
+        <CustomText style={[styles.headerTitle]} weight="bold">
+          Notifications ({notifications.length})
+        </CustomText>
+        <Ionicons
+          name="trash-outline"
+          color={theme.text}
+          size={26}
+          onPress={confirmClearNotifications}
+        />
+      </View>
+
+      <CustomModal
+        title="Confirm Clear"
+        message="Are you sure you want to clear all notifications?"
+        isVisible={isModalVisible}
+        onConfirm={clearNotifications}
+        onClose={() => setModalVisible(false)}
+        okText="Confirm"
+        cancelText="Cancel"
       />
+
+      {error ? (
+        <View style={styles.errorContainer}>
+          <CustomText weight="bold" style={[{ fontSize: fontSizes.header }, { color: theme.text }]}>
+            {error}
+          </CustomText>
+        </View>
+      ) : (
+        <FlatList
+          style={{ padding: 10 }}
+          data={notifications}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id.toString()}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+              colors={[theme.text]}
+              tintColor={theme.text}
+            />
+          }
+        />
+      )}
     </View>
   );
 };
@@ -76,7 +183,15 @@ const NotificationScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  headerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     padding: 10,
+  },
+  headerTitle: {
+    fontSize: fontSizes.header,
   },
   item: {
     marginBottom: 10,
@@ -90,7 +205,17 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     justifyContent: 'center',
-  }
+  },
+  time: {
+    marginTop: 5,
+    textAlign: 'right',
+    fontSize: fontSizes.small,
+  },
+  errorContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 1,
+  },
 });
 
 export default NotificationScreen;
