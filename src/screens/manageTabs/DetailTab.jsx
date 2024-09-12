@@ -19,7 +19,7 @@ const DetailTab = ({eventDetails}) => {
       <View style={styles.info}>
         <Ionicons
           name={'calendar'}
-          color={theme.text}
+          color={theme.primaryBG}
           size={fontSizes.xlarge}
         />
         <CustomText>
@@ -30,7 +30,7 @@ const DetailTab = ({eventDetails}) => {
 
       {/* event time */}
       <View style={styles.info}>
-        <Ionicons name={'time'} color={theme.text} size={fontSizes.xlarge} />
+        <Ionicons name={'time'} color={theme.primaryBG} size={fontSizes.xlarge} />
         <CustomText>
           {format(
             parse(eventDetails.start_time, 'HH:mm:ss', new Date()),
@@ -48,7 +48,7 @@ const DetailTab = ({eventDetails}) => {
       <View style={styles.info}>
         <Ionicons
           name={'location'}
-          color={theme.text}
+          color={theme.primaryBG}
           size={fontSizes.xlarge}
         />
         <CustomText style={{lineHeight: 20}}>
@@ -59,7 +59,7 @@ const DetailTab = ({eventDetails}) => {
 
       {/* event participants */}
       <View style={styles.info}>
-        <Ionicons name={'person'} color={theme.text} size={fontSizes.xlarge} />
+        <Ionicons name={'person'} color={theme.primaryBG} size={fontSizes.xlarge} />
         <CustomText>
         {eventDetails.participants} /{' '}
         {eventDetails.participants_limit}

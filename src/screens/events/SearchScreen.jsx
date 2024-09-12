@@ -24,18 +24,18 @@ const SearchScreen = ({ navigation }) => {
 
   const themeStyles = StyleSheet.create({
     searchInputBox: {
-      borderColor: theme.text,
-      backgroundColor: theme.cardBackground,
+      borderColor: theme.primaryBG,
+      backgroundColor: theme.inputBackground,
     },
     inputBox: {
-      color: theme.text,
+      color: theme.primaryText,
     },
     image: {
       width: deviceWidth - 20,
       height: deviceWidth * 0.5,
     },
     eventItem: {
-      backgroundColor: theme.cardBackground,
+      backgroundColor: theme.background,
     },
   });
 
@@ -49,7 +49,7 @@ const SearchScreen = ({ navigation }) => {
     }
 
     searchEventApi({ title: searchTerm }).then((res) => {
-      if(!res) return 
+      if (!res) return
       setEvents(res.data.events);
     });
     setSearched(true);
@@ -70,16 +70,16 @@ const SearchScreen = ({ navigation }) => {
           }
           style={[styles.image, themeStyles.image]}
         />
-        <CustomText style={[styles.title, getFontFamily('bold')]} numberOfLines={1}>
+        <CustomText style={[styles.title, getFontFamily('bold'), { color: theme.tertiaryText }]} numberOfLines={1}>
           {event.title}
         </CustomText>
         <View style={styles.eventInfo}>
           <View style={styles.eventMeta}>
-            <Ionicons name={'calendar'} color={theme.text} size={fontSizes.regular} />
-            <CustomText>{format(event.start_date, 'yyyy-MM-dd')}</CustomText>
+            <Ionicons name={'calendar'} color={theme.primaryBG} size={fontSizes.regular} />
+            <CustomText style={{ color: theme.primaryBG }}>{format(event.start_date, 'yyyy-MM-dd')}</CustomText>
           </View>
           <View style={styles.eventMeta}>
-            <Ionicons name={'person'} color={theme.text} size={fontSizes.regular} />
+            <Ionicons name={'person'} color={theme.primaryBG} size={fontSizes.regular} />
             <CustomText>
               {event.participants}/{event.participants_limit}
             </CustomText>
@@ -94,7 +94,7 @@ const SearchScreen = ({ navigation }) => {
       <View style={[globalStyle.header, {}]}>
         <BackButton navigation={navigation} float={false} showBg={false} />
         <View style={[styles.searchInputBox, themeStyles.searchInputBox]}>
-          <Ionicons name="search-outline" color={theme.text} size={18} />
+          <Ionicons name="search-outline" color={theme.primaryText} size={18} />
           <TextInput
             style={[getFontFamily('regular'), styles.inputBox, themeStyles.inputBox]}
             onChangeText={setSearchTerm}
@@ -110,9 +110,9 @@ const SearchScreen = ({ navigation }) => {
             returnKeyType="search"
             onSubmitEditing={searchEvents}
           />
-          {isFocus && <Ionicons name="close-outline" color={theme.text} size={18} onPress={() => setSearchTerm('')} />}
+          {isFocus && <Ionicons name="close-outline" color={theme.primaryText} size={18} onPress={() => setSearchTerm('')} />}
         </View>
-        <CustomButton theme="bw" style={styles.searchButton} textSize={fontSizes.small} onPress={searchEvents}>
+        <CustomButton theme="primary" style={[styles.searchButton]} textSize={fontSizes.small} onPress={searchEvents}>
           SEARCH
         </CustomButton>
       </View>
@@ -126,13 +126,13 @@ const SearchScreen = ({ navigation }) => {
         />
       ) : searched ? (
         <View style={styles.noEventsBox}>
-          <CustomText weight="italic" style={styles.noEventsText}>
+          <CustomText weight="italic" style={[styles.noEventsText, { color: theme.tertiaryText }]}>
             No Similar Events. Try Others =。=?
           </CustomText>
         </View>
       ) : (
         <View style={styles.noEventsBox}>
-          <CustomText weight="italic" style={styles.noEventsText}>
+          <CustomText weight="italic" style={[styles.noEventsText, { color: theme.tertiaryText }]}>
             Search Some Events!
           </CustomText>
         </View>

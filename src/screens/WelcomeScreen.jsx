@@ -5,6 +5,8 @@ import CustomText from '../components/CustomText';
 import fontSizes from '../types/fontSize';
 import { useTheme } from '../utils/themesUtil';
 import CustomButton from '../components/CustomButton';
+import { themeStyles } from '../styles/globalStyles';
+import colors from '../types/colors';
 
 const WelcomeScreen = ({ navigation }) => {
   const { theme, toggleTheme } = useTheme();
@@ -21,7 +23,7 @@ const WelcomeScreen = ({ navigation }) => {
           key={index}
           style={[
             styles.indicator,
-            currentPage === index ? { backgroundColor: theme.primary } : { backgroundColor: theme.text },
+            currentPage === index ? { backgroundColor: theme.primaryBG } : { backgroundColor: theme.tertiaryText },
           ]}
         />
       ))}
@@ -128,7 +130,7 @@ const styles = StyleSheet.create({
   indicator: {
     width: 10,
     height: 10,
-    borderRadius: 5,
+    borderRadius: 50,
     marginHorizontal: 5,
   },
   skipText: {

@@ -21,6 +21,7 @@ import {
 import { getHostName } from '../../services/api';
 import { useTheme } from '../../utils/themesUtil';
 import fontSizes from '../../types/fontSize';
+import { themeStyles } from '../../styles/globalStyles';
 
 const EventsDetails = ({ navigation }) => {
   const route = useRoute();
@@ -172,6 +173,7 @@ const EventsDetails = ({ navigation }) => {
       const result = await subscribe_notification(e.id.toString());
       if (alertState && result.success) {
         setAlertState(false);
+        setIsJoin(true);
         getParticipants(e.id)
       }
       console.log('Event was successfully inserted.');
@@ -211,14 +213,14 @@ const EventsDetails = ({ navigation }) => {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: theme.cardBackground }}>
+    <View style={{ flex: 1, backgroundColor: theme.background }}>
       <LoadingModal text="loading" isVisible={isVisible} />
       {eventDetails && (
         <View style={{ flex: 1 }}>
           <ScrollView stickyHeaderIndices={[1]} contentContainerStyle={{ paddingBottom: 80 }} onScroll={handleScroll}>
             {/* event banner image */}
             <Image
-              style={[styles.image, { backgroundColor: theme.cardBackground }]}
+              style={[styles.image, { backgroundColor: theme.themedBackground }]}
               source={
                 eventDetails.image_path
                   ? { uri: `${getHostName()}${eventDetails.image_path}` }
@@ -231,28 +233,28 @@ const EventsDetails = ({ navigation }) => {
               style={[
                 styles.detailContainer,
                 {
-                  backgroundColor: theme.cardBackground,
+                  backgroundColor: theme.background,
                   paddingTop: isSticky ? 50 : 0,
                 },
               ]}
             >
               {/* event's title */}
-              <CustomText weight="bold" style={styles.title} numberOfLines={1}>
+              <CustomText weight="bold" style={[styles.title, {color:theme.tertiaryText}]} numberOfLines={1}>
                 {eventDetails.title}
               </CustomText>
 
               {/* event date */}
               <View style={styles.info}>
-                <Ionicons name={'calendar'} color={theme.text} size={fontSizes.xlarge} />
-                <CustomText>
+                <Ionicons name={'calendar'} color={theme.primaryBG} size={fontSizes.xlarge} />
+                <CustomText style={{color:theme.tertiaryText}}>
                   {format(eventDetails.start_date, 'yyyy-MM-dd')} - {format(eventDetails.end_date, 'yyyy-MM-dd')}
                 </CustomText>
               </View>
 
               {/* event time */}
               <View style={styles.info}>
-                <Ionicons name={'time'} color={theme.text} size={fontSizes.xlarge} />
-                <CustomText>
+                <Ionicons name={'time'} color={theme.primaryBG} size={fontSizes.xlarge} />
+                <CustomText style={{color:theme.tertiaryText}}>
                   {format(parse(eventDetails.start_time, 'HH:mm:ss', new Date()), 'hh:mm a')} -{' '}
                   {format(parse(eventDetails.end_time, 'HH:mm:ss', new Date()), 'hh:mm a')}
                 </CustomText>
@@ -260,24 +262,24 @@ const EventsDetails = ({ navigation }) => {
 
               {/* event location */}
               <View style={styles.info}>
-                <Ionicons name={'location'} color={theme.text} size={fontSizes.xlarge} />
-                <CustomText style={{ lineHeight: 20 }}>
+                <Ionicons name={'location'} color={theme.primaryBG} size={fontSizes.xlarge} />
+                <CustomText style={[{ lineHeight: 20 }, {color:theme.tertiaryText}]}>
                   {eventDetails.address}, {eventDetails.postcode}, {eventDetails.city}, {eventDetails.state}
                 </CustomText>
               </View>
 
               {/* event participants */}
               <View style={styles.info}>
-                <Ionicons name={'person'} color={theme.text} size={fontSizes.xlarge} />
-                <CustomText>
+                <Ionicons name={'person'} color={theme.primaryBG} size={fontSizes.xlarge} />
+                <CustomText style={{color:theme.tertiaryText}}>
                   {participants.count} / {eventDetails.participants_limit}
                 </CustomText>
               </View>
-              <CustomText style={styles.title}>Description</CustomText>
+              <CustomText style={[styles.title, {color: theme.tertiaryText}]}>Description</CustomText>
             </View>
-            <View style={styles.detailContainer}>
+            <View style={[styles.detailContainer]}>
               {/* event description scroll view */}
-              <CustomText style={{ lineHeight: 24 }}>{eventDetails.description}</CustomText>
+              <CustomText style={[{ lineHeight: 24 }, {color: theme.tertiaryText}]}>{eventDetails.description}</CustomText>
             </View>
           </ScrollView>
 
@@ -287,10 +289,10 @@ const EventsDetails = ({ navigation }) => {
           </CustomButton>
 
           {/* back button */}
-          <BackButton navigation={navigation} onPressFc={backfunction} />
+          <BackButton navigation={navigation} showBg={false} onPressFc={backfunction} />
 
           {/* map button */}
-          <NaviagteMapButton navigation={navigation} data={eventDetails} />
+          <NaviagteMapButton navigation={navigation} showBg={false} data={eventDetails} />
 
           {/* promp when click join/leave */}
           <CustomModel

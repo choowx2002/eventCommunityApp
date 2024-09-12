@@ -19,6 +19,7 @@ import { globalStyle } from '../../styles/globalStyles';
 import { getAllCategories } from '../../services/categoryApi.service';
 import { uploadImage } from '../../services/api';
 import { createEventApi } from '../../services/eventApi.service';
+import colors from '../../types/colors';
 
 const CreateEventScreen = ({ navigation }) => {
   const { theme } = useTheme();
@@ -65,15 +66,15 @@ const CreateEventScreen = ({ navigation }) => {
       fontSize: fontSizes.medium,
     },
     previewImage: {
-      borderColor: theme.text,
-      backgroundColor: theme.cardBackground,
+      borderColor: theme.description,
+      backgroundColor: theme.themedBackground,
     },
     imgRemoveBtn: {
       backgroundColor: theme.dangerBg,
     },
     pickerBox: {
-      backgroundColor: theme.cardBackground,
-      color: theme.text,
+      backgroundColor: theme.themedBackground,
+      color: theme.primaryText,
     },
     picker: {
       fontSize: fontSizes.regular,
@@ -186,7 +187,7 @@ const CreateEventScreen = ({ navigation }) => {
       <LoadingModal text="loading" isVisible={isVisible} />
       <View style={globalStyle.header}>
         <BackButton navigation={navigation} float={false} showBg={false} />
-        <CustomText weight="bold" style={[styles.headerTitle, themeStyles.headerTitle]}>
+        <CustomText weight="bold" style={[styles.headerTitle, themeStyles.headerTitle, {color: theme.description}]}>
           Create Event
         </CustomText>
       </View>
@@ -205,8 +206,8 @@ const CreateEventScreen = ({ navigation }) => {
               </View>
             ) : (
               <View>
-                <CustomText style={styles.imageText}>Upload Banner Image</CustomText>
-                <CustomText weight="light" style={[styles.imageText, globalStyle.smallText]}>
+                <CustomText style={[styles.imageText, {color: theme.primaryText}]}>Upload Banner Image</CustomText>
+                <CustomText weight="light" style={[styles.imageText, globalStyle.smallText, {color: theme.primaryText}]}>
                   Recommend Dimension: 600 x 300. Max Size: 2MB
                 </CustomText>
               </View>
@@ -228,14 +229,14 @@ const CreateEventScreen = ({ navigation }) => {
         {formValues?.errors?.title?.length > 0 &&
           formValues?.errors?.title?.map((value, key) => {
             return (
-              <CustomText style={[styles.errorText, themeStyles.errorText]} weight="semiBold" key={key}>
+              <CustomText style={[styles.errorText, themeStyles.errorText, {color: theme.description}]} weight="semiBold" key={key}>
                 {value}
               </CustomText>
             );
           })}
 
         {/* category picker */}
-        <CustomText style={[styles.labelText, themeStyles.labelText]} weight="semiBold">
+        <CustomText style={[styles.labelText, themeStyles.labelText, {color: theme.tertiaryText}]} weight="semiBold">
           Category:
         </CustomText>
         <Picker
@@ -243,7 +244,7 @@ const CreateEventScreen = ({ navigation }) => {
           onValueChange={(itemValue, itemIndex) => {
             handleFormValueChange('category_id', itemValue, 'category_id');
           }}
-          dropdownIconColor={theme.text}
+          dropdownIconColor={theme.primaryText}
           style={[styles.pickerBox, themeStyles.pickerBox]}
         >
           {categories.length > 0 &&
@@ -258,6 +259,7 @@ const CreateEventScreen = ({ navigation }) => {
         <CustomInput
           label="Participants limit: "
           formKey="participants_limit"
+          colors = {theme.description}
           textInputProps={{
             inputMode: 'numeric',
           }}
@@ -267,14 +269,14 @@ const CreateEventScreen = ({ navigation }) => {
         {formValues?.errors?.participants_limit?.length > 0 &&
           formValues?.errors?.participants_limit?.map((value, key) => {
             return (
-              <CustomText style={[styles.errorText, themeStyles.errorText]} weight="semiBold" key={key}>
+              <CustomText style={[styles.errorText, themeStyles.errorText, {color: theme.description}]} weight="semiBold" key={key}>
                 {value}
               </CustomText>
             );
           })}
 
         {/* date picker start */}
-        <CustomText style={[styles.labelText, themeStyles.labelText]} weight="semiBold">
+        <CustomText style={[styles.labelText, themeStyles.labelText, {color:theme.tertiaryText}]} weight="semiBold">
           Date:
         </CustomText>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -309,7 +311,7 @@ const CreateEventScreen = ({ navigation }) => {
         {/* date picker end*/}
 
         {/* time picker start */}
-        <CustomText style={[styles.labelText, themeStyles.labelText]} weight="semiBold">
+        <CustomText style={[styles.labelText, themeStyles.labelText, {color:theme.tertiaryText}]} weight="semiBold">
           Time:
         </CustomText>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -403,7 +405,7 @@ const CreateEventScreen = ({ navigation }) => {
       </CustomButton>
       <CustomModel
         title={`Are you sure to create this event?`}
-        themeColor={'bw'}
+        themeColor={'primary'}
         isVisible={alertState}
         onClose={() => setAlertState(false)}
         onConfirm={createEvent}

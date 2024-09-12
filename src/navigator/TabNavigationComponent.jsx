@@ -61,8 +61,8 @@ const App = () => {
           component={item.component}
           options={{
             tabBarShowLabel: false,
-            tabBarActiveTintColor: theme.primary,
-            tabBarIcon: ({ color }) => (
+            tabBarActiveTintColor: theme.primaryBG,
+            tabBarIcon: ({color}) => (
               <Ionicons name={item.iconName} color={color} size={26} />
             ),
             ...(item.screenName === 'Notifications' && {

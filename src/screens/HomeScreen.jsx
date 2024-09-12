@@ -10,6 +10,7 @@ import { get, getHostName, getLocationAddress } from '../services/api';
 import { format, parse } from 'date-fns';
 import { getUserCategories } from '../services/userApi.service';
 import { getEventByCatId, getEventByState, getEvents } from '../services/eventApi.service';
+import { themeStyles } from '../styles/globalStyles';
 
 const { width: viewportWidth } = Dimensions.get('window'); // used to get the vw of window
 
@@ -30,7 +31,7 @@ const HomeScreen = ({ navigation }) => {
         if (res?.data.events.length > 0) setUpEvents(res.data.events);
       })
       .finally(() => setApiCall((prevCount) => prevCount + 1));
-    
+
     //get nearby events
     Geolocation.requestAuthorization(() => {
       Geolocation.getCurrentPosition(
@@ -96,7 +97,7 @@ const HomeScreen = ({ navigation }) => {
     <TouchableOpacity
       onPress={() => navigateToEventsDetails(item.id)}
       style={{
-        backgroundColor: theme.cardBackground,
+        backgroundColor: theme.themedBackground,
         borderRadius: 5,
         height: (viewportWidth - 20) / 2 + 65,
         marginHorizontal: 5,
@@ -117,7 +118,7 @@ const HomeScreen = ({ navigation }) => {
         }
       />
       <View style={{ paddingHorizontal: 10, paddingVertical: 5, rowGap: 5 }}>
-        <CustomText style={{ fontSize: fontSizes.large }} numberOfLines={1}>
+        <CustomText style={[{ fontSize: fontSizes.large }, {color: theme.primaryText}]} numberOfLines={1}>
           {item.title}
         </CustomText>
         <View
@@ -127,7 +128,7 @@ const HomeScreen = ({ navigation }) => {
             width: '100%',
           }}
         >
-          <CustomText weight={'light'} style={{ fontSize: fontSizes.regular }}>
+          <CustomText weight={'light'} style={[{ fontSize: fontSizes.regular }, {color: theme.primaryText} ]} >
             {format(item.start_date, 'yyyy-MM-dd')} {format(parse(item.start_time, 'HH:mm:ss', new Date()), 'hh:mm a')}
           </CustomText>
           <View
@@ -137,8 +138,8 @@ const HomeScreen = ({ navigation }) => {
               columnGap: 2,
             }}
           >
-            <Ionicons name={'person'} color={theme.text} size={fontSizes.regular} />
-            <CustomText weight={'light'} style={{ fontSize: fontSizes.regular }}>
+            <Ionicons name={'person'} color={theme.primaryText} size={fontSizes.regular} />
+            <CustomText weight={'light'} style={[{ fontSize: fontSizes.regular }, {color: theme.primaryText}]}>
               {item.participants}/{item.participants_limit}
             </CustomText>
           </View>
@@ -152,7 +153,7 @@ const HomeScreen = ({ navigation }) => {
     <TouchableOpacity
       onPress={() => navigateToEventsDetails(item.id)}
       style={{
-        backgroundColor: theme.cardBackground,
+        backgroundColor: theme.themedBackground,
         borderRadius: 5,
         height: (viewportWidth * 0.75) / 2 + 35,
         marginHorizontal: 5,
@@ -173,7 +174,7 @@ const HomeScreen = ({ navigation }) => {
         }
       />
       <View style={{ paddingHorizontal: 10, paddingVertical: 5 }}>
-        <CustomText style={{ fontSize: fontSizes.large }} numberOfLines={1}>
+        <CustomText style={[{ fontSize: fontSizes.large }, {color: theme.primaryText}]} numberOfLines={1}>
           {item.title}
         </CustomText>
       </View>
@@ -200,10 +201,10 @@ const HomeScreen = ({ navigation }) => {
       {/* banner for upcoming events */}
       <View style={styles.moduleContainer}>
         <View style={styles.swiperHeadar}>
-          <CustomText weight="bold" style={{ fontSize: fontSizes.header }}>
+          <CustomText weight="bold" style={[{ fontSize: fontSizes.header }, {color: theme.tertiaryText}]}>
             Upcoming Events
           </CustomText>
-          <CustomText weight="light" onPress={() => navigation.navigate('Events', { type: 'all' })}>
+          <CustomText weight="light" onPress={() => navigation.navigate('Events', { type: 'all' })} style={{color: theme.tertiaryText}}>
             View All
           </CustomText>
         </View>
@@ -222,14 +223,15 @@ const HomeScreen = ({ navigation }) => {
       {nearEvents?.length > 0 && (
         <View style={styles.moduleContainer}>
           <View style={styles.swiperHeadar}>
-            <CustomText weight="bold" style={{ fontSize: fontSizes.header }}>
+            <CustomText weight="bold" style={[{ fontSize: fontSizes.header }, {color: theme.tertiaryText}]}>
               Nearby Events
             </CustomText>
             <CustomText
               weight="light"
               //routing for eventsScreen
               onPress={() => navigation.navigate('Events', { type: 'Location', value: currentState })}
-            >
+              style={{color: theme.tertiaryText}}
+              >
               View All
             </CustomText>
           </View>
@@ -251,7 +253,7 @@ const HomeScreen = ({ navigation }) => {
           return (
             <View style={styles.moduleContainer} key={key}>
               <View style={styles.swiperHeadar}>
-                <CustomText weight="bold" style={{ fontSize: fontSizes.header }}>
+                <CustomText weight="bold" style={[{ fontSize: fontSizes.header }, {color: theme.tertiaryText}]}>
                   {item.category.name}
                 </CustomText>
                 <CustomText
@@ -266,6 +268,7 @@ const HomeScreen = ({ navigation }) => {
                         },
                       }) //routing for eventsScreen
                   }
+                  style={{color: theme.tertiaryText}}
                 >
                   View All
                 </CustomText>

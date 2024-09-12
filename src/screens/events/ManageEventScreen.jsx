@@ -41,14 +41,14 @@ const ManageEventScreen = ({ navigation }) => {
 
   const dynamicStyles = StyleSheet.create({
     image: {
-      backgroundColor: theme.cardBackground,
+      backgroundColor: theme.background,
     },
     tabContainer: {
-      backgroundColor: theme.cardBackground,
+      backgroundColor: theme.background,
     },
     selectedTab: {
       borderBottomWidth: 3,
-      borderBottomColor: theme.primary,
+      borderBottomColor: theme.primaryBG,
     },
     tabText: {
       fontSize: fontSizes.medium,
@@ -57,7 +57,7 @@ const ManageEventScreen = ({ navigation }) => {
       backgroundColor: theme.background,
     },
     participantBox: {
-      backgroundColor: theme.cardBackground,
+      backgroundColor: theme.background,
     },
   });
 
@@ -238,7 +238,7 @@ const ManageEventScreen = ({ navigation }) => {
               {eParticipants && (
                 <View>
                   <View style={styles.participantNumber}>
-                    <Ionicons name="person" size={fontSizes.regular} color={theme.text} />
+                    <Ionicons name="person" size={fontSizes.regular} color={theme.primaryBG} />
                     <CustomText>
                       {eParticipants.count} / {eventDetails.participants_limit}
                     </CustomText>
@@ -272,7 +272,7 @@ const ManageEventScreen = ({ navigation }) => {
                 <Ionicons
                   name={selectedTab === 2 ? 'download-outline' : 'add-outline'}
                   size={26}
-                  color={theme.text}
+                  color={theme.primaryBG}
                   onPress={() => fabFunction(selectedTab)}
                 />
               }

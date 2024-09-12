@@ -47,8 +47,11 @@ const PersonalEventList = ({ navigation }) => {
       backgroundColor: theme.background,
     },
     eventItem: {
-      backgroundColor: theme.cardBackground,
+      backgroundColor: theme.background,
     },
+    title: {
+      color: theme.primaryBG,
+    }
   });
 
   //error toast
@@ -123,7 +126,7 @@ const PersonalEventList = ({ navigation }) => {
 
         {/* show event's date */}
         <View style={styles.eventMeta}>
-          <Ionicons name={'calendar-outline'} color={theme.text} size={fontSizes.regular} />
+          <Ionicons name={'calendar-outline'} color={theme.primaryBG} size={fontSizes.regular} />
           <CustomText>
             {format(event.start_date, 'yyyy-MM-dd')} - {format(event.end_date, 'yyyy-MM-dd')}
           </CustomText>
@@ -131,7 +134,7 @@ const PersonalEventList = ({ navigation }) => {
 
         {/* show event's time */}
         <View style={styles.eventMeta}>
-          <Ionicons name={'time-outline'} color={theme.text} size={fontSizes.regular} />
+          <Ionicons name={'time-outline'} color={theme.primaryBG} size={fontSizes.regular} />
           <CustomText>
             {format(parse(event.start_time, 'HH:mm:ss', new Date()), 'hh:mm a')} -{' '}
             {format(parse(event.end_time, 'HH:mm:ss', new Date()), 'hh:mm a')}
@@ -141,7 +144,7 @@ const PersonalEventList = ({ navigation }) => {
         <View style={styles.eventInfo}>
           {/* show event's location state/city */}
           <View style={[styles.eventMeta, { width: '75%' }]}>
-            <Ionicons name={'location-outline'} color={theme.text} size={fontSizes.regular} />
+            <Ionicons name={'location-outline'} color={theme.primaryBG} size={fontSizes.regular} />
             <CustomText numberOfLines={2}>
               {event.address}, {event.postcode}, {event.city}, {event.state}
             </CustomText>
@@ -149,7 +152,7 @@ const PersonalEventList = ({ navigation }) => {
 
           {/* show event's participants */}
           <View style={[styles.eventMeta, styles.eventParticipants]}>
-            <Ionicons name={'person-outline'} color={theme.text} size={fontSizes.regular} />
+            <Ionicons name={'person-outline'} color={theme.primaryBG} size={fontSizes.regular} />
             <CustomText>
               {event.participants}/{event.participants_limit}
             </CustomText>
@@ -163,7 +166,7 @@ const PersonalEventList = ({ navigation }) => {
     <View style={[styles.page, themeStyles.page]}>
       <View style={globalStyle.header}>
         <BackButton navigation={navigation} float={false} showBg={false} />
-        <CustomText weight="bold" style={globalStyle.headerTitle}>
+        <CustomText weight="bold" style={[globalStyle.headerTitle, themeStyles.title]}>
           {constantText.title}
         </CustomText>
       </View>

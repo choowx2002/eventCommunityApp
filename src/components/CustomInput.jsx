@@ -40,20 +40,22 @@ const CustomInput = ({
     InputBox: {
       paddingHorizontal: 10,
       marginBottom: 15,
+      
     },
     InputText: {
       paddingHorizontal: 10,
       paddingVertical: 0,
       borderWidth: 0,
       borderBottomWidth: 1,
-      borderColor: theme.text,
-      color: theme.text,
-      backgroundColor: theme.cardBackground,
+      borderColor: theme.themedBackground,
+      color: theme.tertiaryText,
+      backgroundColor: 'transparent',
     },
     labelText: {
       fontSize: fontSizes.medium,
       marginBottom: 0,
       paddingTop: 10,
+      color: theme.tertiaryText
     },
   });
 
@@ -146,7 +148,7 @@ const CustomInput = ({
           <TextInput
             ref={inputRef}
             placeholder={placeholder}
-            placeholderTextColor={theme.text}
+            placeholderTextColor={theme.tertiaryText}
             style={styles.InputText}
             value={
               date &&
@@ -170,7 +172,7 @@ const CustomInput = ({
       ) : (
         <TextInput
           placeholder={placeholder}
-          placeholderTextColor={theme.text}
+          placeholderTextColor={theme.tertiaryText}
           style={[styles.InputText, inputStyle]}
           onEndEditing={validateInput}
           onChange={validateInput}

@@ -32,7 +32,7 @@ const NewNotificationScreen = ({ navigation }) => {
 
   const dynamicStyles = StyleSheet.create({
     header: {
-      backgroundColor: theme.cardBackground,
+      backgroundColor: theme.background,
     },
     page: {
       backgroundColor: theme.background,
