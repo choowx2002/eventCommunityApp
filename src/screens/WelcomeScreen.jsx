@@ -5,6 +5,8 @@ import CustomText from '../components/CustomText';
 import fontSizes from '../types/fontSize';
 import { useTheme } from '../utils/themesUtil';
 import CustomButton from '../components/CustomButton';
+import { themeStyles } from '../styles/globalStyles';
+import colors from '../types/colors';
 
 const WelcomeScreen = ({ navigation }) => {
   const { theme, toggleTheme } = useTheme();
@@ -21,9 +23,7 @@ const WelcomeScreen = ({ navigation }) => {
           key={index}
           style={[
             styles.indicator,
-            currentPage === index
-              ? { backgroundColor: theme.primary }
-              : { backgroundColor: theme.text },
+            currentPage === index ? { backgroundColor: theme.primaryBG } : { backgroundColor: theme.tertiaryText },
           ]}
         />
       ))}
@@ -32,36 +32,29 @@ const WelcomeScreen = ({ navigation }) => {
 
   return (
     <View style={[styles.Container, { backgroundColor: theme.background }]}>
-      <PagerView
-        style={styles.pagerView}
-        initialPage={0}
-        onPageSelected={handlePageChange}
-      >
+      <PagerView style={styles.pagerView} initialPage={0} onPageSelected={handlePageChange}>
         {/* First Page: Welcome Message and Theme Toggler */}
         <View key="1" style={styles.page}>
+          <Pressable style={styles.rightTop} onPress={() => navigation.replace('main', { screen: 'Home' })}>
+            <CustomText style={styles.skipText}>Skip</CustomText>
+          </Pressable>
           <CustomText style={[styles.Title]} weight="semiBoldItalic">
             Welcome To Event Community Application
           </CustomText>
-          <CustomButton
-            onPress={toggleTheme}
-            style={{ marginTop: 20, width: '50%' }}
-            theme="primary"
-          >
+          <CustomButton onPress={toggleTheme} style={{ marginTop: 20, width: '50%' }} theme="primary">
             Change Theme
           </CustomButton>
         </View>
 
         {/* Second Page: Image and Description */}
         <View key="2" style={styles.page}>
-          <Image
-            source={require('../assets/images/welcomescreen.jpg')}
-            style={styles.image}
-            resizeMode="cover"
-          />
+          <Pressable style={styles.rightTop} onPress={() => navigation.replace('main', { screen: 'Home' })}>
+            <CustomText style={styles.skipText}>Skip</CustomText>
+          </Pressable>
+          <Image source={require('../assets/images/welcomescreen.jpg')} style={styles.image} resizeMode="cover" />
           <CustomText style={[styles.Descriptions]}>
-            Join a vibrant community where events come to life. Explore local and
-            global events, share your experiences, and connect with others who
-            share your passions. Together, we make every event memorable!
+            Join a vibrant community where events come to life. Explore local and global events, share your experiences,
+            and connect with others who share your passions. Together, we make every event memorable!
           </CustomText>
         </View>
 
@@ -84,11 +77,8 @@ const WelcomeScreen = ({ navigation }) => {
           >
             Login
           </CustomButton>
-
-          <Pressable onPress={() => navigation.replace('main', { screen: 'Home' })}>
-            <CustomText style={styles.skipText}>
-              Skip
-            </CustomText>
+          <Pressable style={styles.rightTop} onPress={() => navigation.replace('main', { screen: 'Home' })}>
+            <CustomText style={styles.skipText}>Skip</CustomText>
           </Pressable>
         </View>
       </PagerView>
@@ -109,6 +99,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   page: {
+    position: 'relative',
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: '10%',
@@ -138,15 +129,16 @@ const styles = StyleSheet.create({
   indicator: {
     width: 10,
     height: 10,
-    borderRadius: 5,
+    borderRadius: 50,
     marginHorizontal: 5,
   },
   skipText: {
     marginTop: 20,
     fontSize: fontSizes.body,
-    color: 'grey',
+    textDecorationLine: 'underline',
     textAlign: 'center',
   },
+  rightTop: { top: 0, right: "10%", position: 'absolute' },
 });
 
 export default WelcomeScreen;

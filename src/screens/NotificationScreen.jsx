@@ -106,18 +106,18 @@ const NotificationScreen = ({ navigation }) => {
   // Render notification item
   const renderItem = ({ item }) => (
     <TouchableOpacity
-      style={[styles.item, { backgroundColor: theme.cardBackground }]}
+      style={[styles.item, { backgroundColor: theme.background }]}
       onPress={() => openNotificationDetails(item)}
     >
       <View style={styles.textContainer}>
-        <CustomText weight="bold" style={[{ fontSize: fontSizes.header }, { color: theme.text }]}>
+        <CustomText weight="bold" style={[{ fontSize: fontSizes.header }, { color: theme.secondaryText }]}>
           {item.title}
         </CustomText>
-        <CustomText weight="regular" style={[{ color: theme.text }]}>{`From ${item.eventTitle}`}</CustomText>
+        <CustomText weight="regular" style={[{ color: theme.tertiaryText }]}>{`From ${item.eventTitle}`}</CustomText>
         {/* Limit message to one line and truncate with "..." */}
         <CustomText
           weight="light"
-          style={[{ color: theme.text }]}
+          style={[{ color: theme.tertiaryText }]}
           numberOfLines={1}
           ellipsizeMode="tail"
         >
@@ -133,12 +133,12 @@ const NotificationScreen = ({ navigation }) => {
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
       <View style={[styles.headerContainer, { backgroundColor: theme.background }]}>
-        <CustomText style={[styles.headerTitle]} weight="bold">
+        <CustomText style={[styles.headerTitle, {color: theme.primaryBG}]} weight="bold">
           Notifications ({notifications.length})
         </CustomText>
         <Ionicons
           name="trash-outline"
-          color={theme.text}
+          color={theme.primaryBG}
           size={26}
           onPress={confirmClearNotifications}
         />
@@ -156,7 +156,7 @@ const NotificationScreen = ({ navigation }) => {
 
       {error ? (
         <View style={styles.errorContainer}>
-          <CustomText weight="bold" style={[{ fontSize: fontSizes.header }, { color: theme.text }]}>
+          <CustomText weight="bold" style={[{ fontSize: fontSizes.header }, { color: theme.tertiaryText }]}>
             {error}
           </CustomText>
         </View>
@@ -170,8 +170,8 @@ const NotificationScreen = ({ navigation }) => {
             <RefreshControl
               refreshing={refreshing}
               onRefresh={onRefresh}
-              colors={[theme.text]}
-              tintColor={theme.text}
+              colors={[theme.primaryBG]}
+              tintColor={theme.primaryBG}
             />
           }
         />

@@ -16,7 +16,7 @@ const CustomHeader = ({ headerDetails }) => {
 
   return (
     <View style={[styles.headerContainer, { backgroundColor: theme.background }]}>
-      <CustomText style={[styles.headerTitle]} weight="bold">
+      <CustomText style={[styles.headerTitle, {color:theme.primaryBG}]} weight={"bold"} >
         {headerDetails.headerName}
       </CustomText>
 
@@ -25,13 +25,13 @@ const CustomHeader = ({ headerDetails }) => {
           // set custom header for notification screen 
           <Ionicons
             name="trash-outline"
-            color={theme.text}
+            color={theme.primaryBG}
             size={26}
           />
          ): (headerDetails.headerName === 'Events')? (
           <Ionicons
             name="search-outline"
-            color={theme.text}
+            color={theme.primaryBG}
             size={26}
             onPress={() => navigation.navigate('search')}
           />
@@ -39,14 +39,14 @@ const CustomHeader = ({ headerDetails }) => {
           <>
             <Ionicons
               name="search-outline"
-              color={theme.text}
+              color={theme.primaryBG}
               size={26}
-              onPress={() => navigation.navigate('search')}
-            // onPress={() => navigation.navigate('personalEList',{listType: 'manage'})}
+              // onPress={() => navigation.navigate('search')}
+            onPress={() => navigation.navigate('personalEList',{listType: 'manage'})} // testing purpose
             />
             <Ionicons
               name="add-circle-outline"
-              color={theme.text}
+              color={theme.primaryBG}
               size={26}
               onPress={() => navigation.navigate('create')}
             />

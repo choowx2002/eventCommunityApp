@@ -2,28 +2,28 @@ import {StyleSheet} from 'react-native';
 
 const FontUtils = StyleSheet.create({
   regular: {
-    fontFamily: 'Lora-Regular',
+    fontFamily: 'SF-Pro-Display-Black', //'Lora-Regular',
   },
   bold: {
-    fontFamily: 'Lora-Bold',
+    fontFamily: 'SF-Pro-Display-Bold', //'Lora-Bold',
   },
   italic: {
-    fontFamily: 'Lora-Italic',
+    fontFamily: 'SF-Pro-Display-BlackItalic', //'Lora-Italic',
   },
   boldItalic: {
-    fontFamily: 'Lora-BoldItalic',
+    fontFamily: 'SF-Pro-Display-BoldItalic', //'Lora-BoldItalic',
   },
   light: {
-    fontFamily: 'Lora-Light',
+    fontFamily: 'SF-Pro-Display-Light', //'Lora-Light',
   },
   medium: {
-    fontFamily: 'Lora-Medium',
+    fontFamily: 'SF-Pro-Display-Medium', //'Lora-Medium',
   },
   semiBold: {
-    fontFamily: 'Lora-SemiBold',
+    fontFamily: 'SF-Pro-Display-Semibold', //'Lora-SemiBold',
   },
   semiBoldItalic: {
-    fontFamily: 'Lora-SemiBoldItalic',
+    fontFamily: 'SF-Pro-Display-SemiboldItalic', //'Lora-SemiBoldItalic',
   },
 });
 

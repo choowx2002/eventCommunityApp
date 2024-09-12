@@ -10,16 +10,16 @@ const NotificationDetailsScreen = ({ route }) => {
   return (
     <ScrollView style={[styles.container, { backgroundColor: theme.background }]}>
       <View style={styles.content}>
-        <CustomText weight="bold" style={[styles.title, { color: theme.text }]}>
+        <CustomText weight="bold" style={[styles.title, { color: theme.primaryBG }]}>
           {notification.title}
         </CustomText>
-        <CustomText weight='semiBold' style={[styles.eventTitle, { color: theme.text }]}>
+        <CustomText weight='semiBold' style={[styles.eventTitle, { color: theme.tertiaryText }]}>
           From: {notification.eventTitle}
         </CustomText>
-        <CustomText weight='light' style={[styles.message, { color: theme.text }]}>
+        <CustomText weight='light' style={[styles.message, { color: theme.tertiaryText }]}>
           {notification.message}
         </CustomText>
-        <CustomText weight='regular' style={[styles.time, { color: theme.text }]}>
+        <CustomText weight='regular' style={[styles.time, { color: theme.tertiaryText }]}>
           Created: {new Date(notification.created_at).toLocaleString()}
         </CustomText>
       </View>

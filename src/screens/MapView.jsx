@@ -1,19 +1,19 @@
-import {StyleSheet, View, Dimensions} from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {useRoute} from '@react-navigation/native';
+import { StyleSheet, View, Dimensions } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { useRoute } from '@react-navigation/native';
 import Geolocation from '@react-native-community/geolocation';
-import {createMapLink} from 'react-native-open-maps';
-import {WebView} from 'react-native-webview';
+import { createMapLink } from 'react-native-open-maps';
+import { WebView } from 'react-native-webview';
 //components
-import {BackButton} from '../components/CustomButton';
-import {LoadingModal} from '../components/LoadingModal';
+import { BackButton } from '../components/CustomButton';
+import { LoadingModal } from '../components/LoadingModal';
 import CustomText from '../components/CustomText';
 // others
 import fontSizes from '../types/fontSize';
-import {useTheme} from '../utils/themesUtil';
+import { useTheme } from '../utils/themesUtil';
 
-const MapView = ({navigation}) => {
-  const {theme} = useTheme();
+const MapView = ({ navigation }) => {
+  const { theme } = useTheme();
   const route = useRoute();
   const deviceHeight = Dimensions.get('window').height;
   const deviceWidth = Dimensions.get('window').width;
@@ -31,23 +31,23 @@ const MapView = ({navigation}) => {
     Geolocation.getCurrentPosition(async info => {
       try {
         setCurrentP(`ll${info.coords.longitude},${info.coords.latitude}`);
-      } finally{
+      } finally {
         setGeo(true)
       }
-    },err => {
-        if(err.PERMISSION_DENIED) return setGeo(true)
+    }, err => {
+      if (err.PERMISSION_DENIED) return setGeo(true)
     },
-    {
-      enableHighAccuracy: true,
-      timeout: 5000,
-      maximumAge: 0,
-    },);
+      {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0,
+      },);
   };
 
   //create map link
   const getDirectionLink = current => {
     const address = route.params.data;
-    if(!current) return createMapLink({ provider: 'yandex', query: `${address.address}, ${address.postcode}, ${address.city}, ${address.state}` });
+    if (!current) return createMapLink({ provider: 'yandex', query: `${address.address}, ${address.postcode}, ${address.city}, ${address.state}` });
     return createMapLink({
       provider: 'yandex',
       start: current,
@@ -57,24 +57,30 @@ const MapView = ({navigation}) => {
   };
 
   return (
-    <View style={[styles.container, {backgroundColor: theme.background}]}>
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
       <LoadingModal text="loading" isVisible={isVisible} />
       {route.params?.data && (
-        <View style={{marginHorizontal: 5, marginVertical: 10}}>
+        <View style={{ marginHorizontal: 5, marginVertical: 10 }}>
           <CustomText
             weight="bold"
-            style={{
+            style={[{
               fontSize: fontSizes.xlarge,
               alignItems: 'center',
               textAlign: 'center',
-            }}>
+            }, {
+              color: theme.primaryBG
+            }
+            ]}>
             {route.params.data?.title}
           </CustomText>
           <CustomText
-            style={{
+            style={[{
               fontSize: fontSizes.regular,
               alignItems: 'center',
-            }}>
+            }, {
+              color: theme.tertiaryText
+            }
+            ]}>
             {route.params.data.address}, {route.params.data.postcode},{' '}
             {route.params.data.city}, {route.params.data.state}
           </CustomText>
@@ -83,7 +89,7 @@ const MapView = ({navigation}) => {
       {geo && (
         <WebView
           onLoad={() => setisVisible(false)}
-          source={{uri: getDirectionLink(currentP)}}
+          source={{ uri: getDirectionLink(currentP) }}
           style={{
             width: deviceWidth,
             height: deviceHeight * 0.9,
@@ -93,7 +99,7 @@ const MapView = ({navigation}) => {
         />
       )}
       {/* back button */}
-      <BackButton navigation={navigation} />
+      <BackButton navigation={navigation} showBg={false} />
     </View>
   );
 };
