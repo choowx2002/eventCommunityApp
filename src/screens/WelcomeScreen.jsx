@@ -51,7 +51,7 @@ const WelcomeScreen = ({ navigation }) => {
           <Pressable style={styles.rightTop} onPress={() => navigation.replace('main', { screen: 'Home' })}>
             <CustomText style={styles.skipText}>Skip</CustomText>
           </Pressable>
-          <Image source={require('../img/welcomescreen.jpg')} style={styles.image} resizeMode="cover" />
+          <Image source={require('../assets/images/welcomescreen.jpg')} style={styles.image} resizeMode="cover" />
           <CustomText style={[styles.Descriptions]}>
             Join a vibrant community where events come to life. Explore local and global events, share your experiences,
             and connect with others who share your passions. Together, we make every event memorable!
@@ -77,7 +77,6 @@ const WelcomeScreen = ({ navigation }) => {
           >
             Login
           </CustomButton>
-
           <Pressable style={styles.rightTop} onPress={() => navigation.replace('main', { screen: 'Home' })}>
             <CustomText style={styles.skipText}>Skip</CustomText>
           </Pressable>
