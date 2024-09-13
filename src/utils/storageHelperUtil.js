@@ -28,3 +28,17 @@ export const setValue = async (key, value) => {
     console.error(e);
   }
 };
+
+/**
+ * Removes multiple keys from AsyncStorage.
+ * @param {string[]} keys - An array of keys to remove.
+ */
+export const removeMultipleKeys = async (keys) => {
+  try {
+    for (const key of keys) {
+      await AsyncStorage.removeItem(key);
+    }
+  } catch (error) {
+    console.error('Error removing keys:', error);
+  }
+};

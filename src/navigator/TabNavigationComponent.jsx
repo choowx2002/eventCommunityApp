@@ -3,6 +3,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import HomeScreen from '../screens/HomeScreen';
 import NotificationScreen from '../screens/NotificationScreen';
+import ProfileScreen from '../screens/users/ProfileScreen';
 import CustomHeader from '../components/CustomHeader';
 import EventsScreen from '../screens/EventsScreen';
 import {useTheme} from '../utils/themesUtil';
@@ -34,7 +35,7 @@ const App = () => {
     {
       screenName: 'Profile',
       iconName: 'person',
-      component: HomeScreen,
+      component: ProfileScreen,
       headerName: 'Profile',
     },
   ];

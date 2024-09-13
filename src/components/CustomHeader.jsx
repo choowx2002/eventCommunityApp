@@ -16,33 +16,35 @@ const CustomHeader = ({ headerDetails }) => {
 
   return (
     <View style={[styles.headerContainer, { backgroundColor: theme.background }]}>
-      <CustomText style={[styles.headerTitle, {color:theme.primaryBG}]} weight={"bold"} >
+      <CustomText style={[styles.headerTitle, { color: theme.primaryBG }]} weight={'bold'}>
         {headerDetails.headerName}
       </CustomText>
 
       <View style={styles.rightIconsContainer}>
-        {headerDetails.headerName === 'Notifications'? (
-          // set custom header for notification screen 
-          <Ionicons
-            name="trash-outline"
-            color={theme.primaryBG}
-            size={26}
-          />
-         ): (headerDetails.headerName === 'Events')? (
+        {headerDetails.headerName === 'Notifications' ? (
+          // set custom header for notification screen
+          <Ionicons name="trash-outline" color={theme.primaryBG} size={26} />
+        ) : headerDetails.headerName === 'Events' ? (
           <Ionicons
             name="search-outline"
             color={theme.primaryBG}
             size={26}
             onPress={() => navigation.navigate('search')}
           />
-         ): (
+        ) : headerDetails.headerName === 'Profile' ? (
+          <Ionicons
+            name="settings-outline"
+            color={theme.primaryBG}
+            size={26}
+            onPress={() => navigation.navigate('settings')}
+          />
+        ) : (
           <>
             <Ionicons
               name="search-outline"
               color={theme.primaryBG}
               size={26}
-              // onPress={() => navigation.navigate('search')}
-            onPress={() => navigation.navigate('personalEList',{listType: 'manage'})} // testing purpose
+              onPress={() => navigation.navigate('search')}
             />
             <Ionicons
               name="add-circle-outline"
@@ -51,7 +53,7 @@ const CustomHeader = ({ headerDetails }) => {
               onPress={() => navigation.navigate('create')}
             />
           </>
-         )}
+        )}
       </View>
     </View>
   );

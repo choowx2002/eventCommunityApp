@@ -1,4 +1,4 @@
-import {get, post, remove} from '../services/api';
+import {get, post} from '../services/api';
 
 export const getNotificationByEventId = async (id,param={}) =>{
     const path = '/notification/event/'

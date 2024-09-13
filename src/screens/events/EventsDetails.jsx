@@ -22,6 +22,7 @@ import { getHostName } from '../../services/api';
 import { useTheme } from '../../utils/themesUtil';
 import fontSizes from '../../types/fontSize';
 import { themeStyles } from '../../styles/globalStyles';
+import { getData } from '../../utils/storageHelperUtil';
 
 const EventsDetails = ({ navigation }) => {
   const route = useRoute();
@@ -33,8 +34,9 @@ const EventsDetails = ({ navigation }) => {
   const [alertState, setAlertState] = useState(false); //for alert modal shown
   const [isJoin, setIsJoin] = useState(false);
   const [participants, setParticipants] = useState({});
+  const [UID, setUserID] = useState(null);
   LogBox.ignoreLogs(['Non-serializable values were found in the navigation state']); //ignore warning
-  
+
   //Layout Functions
   //get detail layout Y
   const savePosition = (event) => {
@@ -50,16 +52,22 @@ const EventsDetails = ({ navigation }) => {
 
   //error toast
   const showErrorToast = (message, goBack = fasle) => {
-    if(goBack)navigation.goBack();
+    if (goBack) navigation.goBack();
     ToastAndroid.show(message, ToastAndroid.SHORT);
-  }
+  };
 
   //init
   useEffect(() => {
     showLoadingModal();
     const { eventId } = route.params || {}; // Get eventId from route parameters
     if (eventId) {
-      getParticipants(eventId)
+      let uid = '';
+      getData('userData').then((res) => {
+        if (!res) return;
+        setUserID(res.id);
+        uid = res.id;
+      });
+      getParticipants(eventId);
       checkEventById(eventId) //check event is that exists in local sqlite
         .then(({ isJoined, event }) => {
           setIsJoin(isJoined);
@@ -68,10 +76,12 @@ const EventsDetails = ({ navigation }) => {
         .catch((err) => {
           if (err?.isJoined === 'false') {
             // if not exists then we fetch from db
-            fetchEventDetails(eventId);
+            fetchEventDetails(eventId, uid);
           }
         })
-        .finally(() => {hideLoadingModal()});
+        .finally(() => {
+          hideLoadingModal();
+        });
     }
   }, [route.params]);
 
@@ -84,8 +94,8 @@ const EventsDetails = ({ navigation }) => {
       .then((res) => {
         // if is latest then use cache event if not then use return back result
         // latest is true will only not bring back event to reduce cost
-        if(!res){
-          showErrorToast('Please Try Again Later(ง •_•)ง', true)
+        if (!res) {
+          showErrorToast('Please Try Again Later(ง •_•)ง', true);
         }
         if (!res?.data?.isLatest) {
           setEventDetails(res.data.event);
@@ -98,8 +108,7 @@ const EventsDetails = ({ navigation }) => {
   };
 
   //get event by id from server db
-  const fetchEventDetails = async (eventId) => {
-    let uid = 51; // testing purpose
+  const fetchEventDetails = async (eventId, uid) => {
     getEventById(eventId, { user_id: uid })
       .then((res) => {
         if (res?.data?.event) {
@@ -110,40 +119,40 @@ const EventsDetails = ({ navigation }) => {
             setIsJoin(res.data?.isJoined);
           }
         } else {
-          showErrorToast('Please Try Again Later(ง •_•)ง', true)
+          showErrorToast('Please Try Again Later(ง •_•)ง', true);
         }
       })
       .catch((error) => {
         console.log(error);
-        showErrorToast('Please Try Again Later(ง •_•)ง', true)
+        showErrorToast('Please Try Again Later(ง •_•)ง', true);
       });
   };
 
   const getParticipants = (eid) => {
     getParticipantsById(eid)
       .then((res) => {
-        if(res) return setParticipants(res.data);
+        if (res) return setParticipants(res.data);
       })
       .catch((error) => console.log(error));
   };
 
   //join event, send api to db
   const joinEvent = async () => {
-    if (!eventDetails.id) return showErrorToast('Please Try Again Later(ง •_•)ง', false)
+    if (!eventDetails.id) return showErrorToast('Please Try Again Later(ง •_•)ง', false);
     joinEventById({
-      user_id: '51', //testing purpose
+      user_id: UID,
       event_id: eventDetails.id,
-    }).then((res)=>{
-      if(!res) return showErrorToast('Please Try Again Later(ง •_•)ง', false)
+    }).then((res) => {
+      if (!res) return showErrorToast('Please Try Again Later(ง •_•)ง', false);
       if (res.status === 'success') {
         insertEventCache(eventDetails);
       } else {
-        if(res?.data?.message) {
-          showErrorToast(res.data.message, false)
+        if (res?.data?.message) {
+          showErrorToast(res.data.message, false);
           setAlertState(false);
         }
       }
-    })
+    });
   };
 
   //add event details to joined_events table
@@ -174,7 +183,7 @@ const EventsDetails = ({ navigation }) => {
       if (alertState && result.success) {
         setAlertState(false);
         setIsJoin(true);
-        getParticipants(e.id)
+        getParticipants(e.id);
       }
       console.log('Event was successfully inserted.');
     } else {
@@ -185,29 +194,29 @@ const EventsDetails = ({ navigation }) => {
   //remove events form joined_events table
   const removeEvent = async () => {
     const params = {
-      user_id: '51',
+      user_id: UID,
       event_id: eventDetails.id,
-    }
-    leaveEventById(params).then((res)=>{
-      if(!res) return showErrorToast('Please Try Again Later(ง •_•)ง', false)
+    };
+    leaveEventById(params).then((res) => {
+      if (!res) return showErrorToast('Please Try Again Later(ง •_•)ง', false);
       if (res.status === 'success') {
         removeEvents(eventDetails.id).then((removed) => {
           if (removed) {
-            unsubscribe_notification(eventDetails.id.toString())
+            unsubscribe_notification(eventDetails.id.toString());
             setAlertState(false);
             setIsJoin(false);
-            getParticipants(eventDetails.id)
+            getParticipants(eventDetails.id);
           }
         });
       } else {
-        return showErrorToast('Please Try Again Later(ง •_•)ง', false)
+        return showErrorToast('Please Try Again Later(ง •_•)ง', false);
       }
-    })
+    });
   };
 
   //function to hide alert
   const backfunction = () => {
-    console.log("refresh home page")
+    console.log('refresh home page');
     if (route.params.refresh) route.params.refresh();
     navigation.pop();
   };
@@ -239,14 +248,14 @@ const EventsDetails = ({ navigation }) => {
               ]}
             >
               {/* event's title */}
-              <CustomText weight="bold" style={[styles.title, {color:theme.tertiaryText}]} numberOfLines={1}>
+              <CustomText weight="bold" style={[styles.title, { color: theme.tertiaryText }]} numberOfLines={1}>
                 {eventDetails.title}
               </CustomText>
 
               {/* event date */}
               <View style={styles.info}>
                 <Ionicons name={'calendar'} color={theme.primaryBG} size={fontSizes.xlarge} />
-                <CustomText style={{color:theme.tertiaryText}}>
+                <CustomText style={{ color: theme.tertiaryText }}>
                   {format(eventDetails.start_date, 'yyyy-MM-dd')} - {format(eventDetails.end_date, 'yyyy-MM-dd')}
                 </CustomText>
               </View>
@@ -254,7 +263,7 @@ const EventsDetails = ({ navigation }) => {
               {/* event time */}
               <View style={styles.info}>
                 <Ionicons name={'time'} color={theme.primaryBG} size={fontSizes.xlarge} />
-                <CustomText style={{color:theme.tertiaryText}}>
+                <CustomText style={{ color: theme.tertiaryText }}>
                   {format(parse(eventDetails.start_time, 'HH:mm:ss', new Date()), 'hh:mm a')} -{' '}
                   {format(parse(eventDetails.end_time, 'HH:mm:ss', new Date()), 'hh:mm a')}
                 </CustomText>
@@ -263,7 +272,7 @@ const EventsDetails = ({ navigation }) => {
               {/* event location */}
               <View style={styles.info}>
                 <Ionicons name={'location'} color={theme.primaryBG} size={fontSizes.xlarge} />
-                <CustomText style={[{ lineHeight: 20 }, {color:theme.tertiaryText}]}>
+                <CustomText style={[{ lineHeight: 20 }, { color: theme.tertiaryText }]}>
                   {eventDetails.address}, {eventDetails.postcode}, {eventDetails.city}, {eventDetails.state}
                 </CustomText>
               </View>
@@ -271,20 +280,29 @@ const EventsDetails = ({ navigation }) => {
               {/* event participants */}
               <View style={styles.info}>
                 <Ionicons name={'person'} color={theme.primaryBG} size={fontSizes.xlarge} />
-                <CustomText style={{color:theme.tertiaryText}}>
+                <CustomText style={{ color: theme.tertiaryText }}>
                   {participants.count} / {eventDetails.participants_limit}
                 </CustomText>
               </View>
-              <CustomText style={[styles.title, {color: theme.tertiaryText}]}>Description</CustomText>
+              <CustomText style={[styles.title, { color: theme.tertiaryText }]}>Description</CustomText>
             </View>
             <View style={[styles.detailContainer]}>
               {/* event description scroll view */}
-              <CustomText style={[{ lineHeight: 24 }, {color: theme.tertiaryText}]}>{eventDetails.description}</CustomText>
+              <CustomText style={[{ lineHeight: 24 }, { color: theme.tertiaryText }]}>
+                {eventDetails.description}
+              </CustomText>
             </View>
           </ScrollView>
 
           {/* button for join */}
-          <CustomButton style={styles.button} theme={isJoin ? 'danger' : 'primary'} onPress={()=>setAlertState(true)}>
+          <CustomButton
+            style={styles.button}
+            theme={isJoin ? 'danger' : 'primary'}
+            onPress={() => {
+              if (!UID) return showErrorToast('Please Login First! (*/ω＼*)', false);
+              setAlertState(true);
+            }}
+          >
             {isJoin ? 'LEAVE' : 'JOIN'}
           </CustomButton>
 

@@ -183,6 +183,28 @@ export const removeEvents = async id => {
   });
 };
 
+export const removeAllEvents = async () => {
+  const db = await connectDB();
+  if (!db) return null;
+
+  return new Promise((resolve, reject) => {
+    db.transaction(tx => {
+      tx.executeSql(
+        `DELETE FROM joined_events`,
+        [],
+        () => {
+          console.log('All events removed successfully');
+          resolve(true);
+        },
+        error => {
+          console.log('Error removing events: ', error);
+          reject(false);
+        },
+      );
+    });
+  });
+};
+
 export const checkEventById = async id => {
   const db = await connectDB();
   if (!db || !id) return null;

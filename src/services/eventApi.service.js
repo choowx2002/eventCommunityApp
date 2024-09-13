@@ -5,16 +5,6 @@ export const getEventById = async (id,param={}) =>{
     return result = await get(path,param)
 }
 
-export const joinEventById = async (body)=>{
-    const path = '/events/join'
-    return result = await post(path,null,body);
-} 
-
-export const leaveEventById = async (param)=>{
-    const path = '/events/leave'
-    return result = await remove(path,param);
-}
-
 export const checkLatestById = async (id, param) => {
     const path = '/events/checkLatest/'
     return result = await get(path+id, param)
@@ -23,11 +13,6 @@ export const checkLatestById = async (id, param) => {
 export const getParticipantsById = async (id) => {
     const path = '/events/participants/'
     return result = await get(path+id, {})
-}
-
-export const createEventApi = async(body) => {
-    const path = '/events/create'
-    return result = await post(path, null, body)
 }
 
 export const searchEventApi = async(param)=>{
@@ -48,4 +33,19 @@ export const getEvents = async()=>{
 export const getEventByCatId = async(param)=>{
     const path = '/events/category/id'
     return result = await get(path,param)
+}
+
+export const joinEventById = async (body)=>{
+    const path = '/events/join'
+    return result = await post(path,null,body);
+} 
+
+export const leaveEventById = async (param)=>{
+    const path = '/events/leave'
+    return result = await remove(path,param);
+}
+
+export const createEventApi = async(body) => {
+    const path = '/events/create'
+    return result = await post(path, null, body)
 }

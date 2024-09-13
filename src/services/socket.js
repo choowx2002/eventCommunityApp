@@ -76,9 +76,10 @@ export const connectSocket = () => {
   return new Promise((resolve, reject) => {
     socket = io(SOCKET_URI_Ethernet);
     console.log("try connect to server",SOCKET_URI_Ethernet)
-    socket.connect();//connect to server
-    socket.on('connect', () => {
+    socket.on('connect', async () => {
       console.log('Connected to server');
+      const isGranted = await _checkNotificationPermission();
+      if (!isGranted) return resolve();
       socket.on('receive_notification', notification => {// listen to notification
         console.log('Received notification:', notification);
         Toast.show({
@@ -105,8 +106,6 @@ export const disconnectSocket = () =>{//disconnect with server
 
 //initial notification service
 export const init_notification = async () => {
-  const isGranted = await _checkNotificationPermission();
-  if (!isGranted) return;
   await connectSocket();
   const events = await getSubscribeEventsId();
   console.log('data:', events);
@@ -114,6 +113,13 @@ export const init_notification = async () => {
     subscribe_notification(events);
   }
 };
+
+export const unsubscribe_all = async () => {
+  const events = await getSubscribeEventsId();
+  if (events?.length > 0) {
+    unsubscribe_notification(events);
+  }
+}
 
 //check permission and will return boolean to represent is granted or not
 const _checkNotificationPermission = async () => {

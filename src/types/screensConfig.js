@@ -6,6 +6,11 @@ import NewNotificationScreen from '../screens/manageTabs/NewNotificationScreen';
 import MapView from '../screens/MapView';
 import EventsDetails from '../screens/events/EventsDetails';
 import NotificationDetailsScreen from '../screens/NotificationDetailsScreen.jsx';
+import LoginScreen from '../screens/users/LoginScreen.jsx';
+import SignupScreen from '../screens/users/SignupScreen.jsx';
+import InterestsScreen from '../screens/users/InterestsScreen.jsx';
+import ManageProfileScreen from '../screens/users/ManageProfileScreen.jsx';
+import SettingsScreen from '../screens/users/SettingsScreen.jsx';
 
 // Define the configuration for event-related screens
 // The name of the screen for navigation
@@ -79,5 +84,40 @@ export const screens = [
     options: {
       title: 'Notification Details',
     },
-  }
+  },
+  {
+    name: "login",
+    component: LoginScreen,
+    options: {
+      headerShown: false
+    },
+  },
+  {
+    name: "signup",
+    component: SignupScreen,
+    options: {
+      headerShown: false
+    },
+  },
+  {
+    name: "interests",
+    component: InterestsScreen,
+    options: {
+      headerShown: false
+    },
+  },
+  {
+    name: "manageProfile",
+    component: ManageProfileScreen,
+    options: {
+      headerShown: false
+    },
+  },
+  {
+    name: "settings",
+    component: SettingsScreen,
+    options: {
+      headerShown: false
+    },
+  },
 ];

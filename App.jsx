@@ -6,11 +6,10 @@ import {
 import {createStackNavigator} from '@react-navigation/stack';
 import WelcomeScreen from './src/screens/WelcomeScreen';
 import TabNavigationComponent from './src/navigator/TabNavigationComponent';
-import {getData, setValue} from './src/utils/storageHelperUtil';
+import {getData} from './src/utils/storageHelperUtil';
 import {ThemeProvider} from './src/utils/themesUtil';
-import {SafeAreaView, View} from 'react-native';
+import {SafeAreaView} from 'react-native';
 import {screens} from './src/types/screensConfig';
-import {init_notification} from './src/services/socket';
 import Toast from 'react-native-toast-message';
 import { initSQLiteDB } from './src/services/sqliteServices';
 import { getHostName } from './src/services/api';
@@ -22,11 +21,9 @@ const App = () => {
   const navigationRef = useNavigationContainerRef();
   useEffect(() => {
     const checkFirstTime = async () => {
-      const firstTime = await getData('isFirstTime');
-      if (firstTime === null) {
-        // await setValue('isFirstTime', false);
+      const isLogin = await getData('userData');
+      if (isLogin === null) {
         initSQLiteDB();//initialize sqlite table
-        init_notification();//initialize notification service
         console.log(getHostName())
         setIsFirstTime(true);
       } else {

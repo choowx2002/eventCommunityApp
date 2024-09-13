@@ -45,10 +45,10 @@ const CustomModel = ({
             style.modalBox,
             {maxWidth: (vw * 4) / 5, backgroundColor: theme.background, borderRadius: 10},
           ]}>
-          <CustomText weight="bold" style={[{fontSize: fontSizes.xlarge,}, {color:theme.tertiaryText}]}>
+          <CustomText weight="bold" style={{fontSize: fontSizes.xlarge, color:theme.tertiaryText}}>
             {title}
           </CustomText>
-          <CustomText style={[{colors: theme.tertiaryText}]}>
+          <CustomText style={{color: theme.tertiaryText}}>
             {message}
           </CustomText>
           <View style={style.buttonBox}>

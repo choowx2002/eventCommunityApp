@@ -10,6 +10,7 @@ import { formatDistance, parseISO } from 'date-fns';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
 import CustomModal from '../components/AlertModal';
+import { getData } from '../utils/storageHelperUtil';
 
 const NotificationScreen = ({ navigation }) => {
   const { theme } = useTheme();
@@ -39,8 +40,8 @@ const NotificationScreen = ({ navigation }) => {
   // Fetch notifications
   const fetchNotifications = async () => {
     try {
-      const userId = '43'; // Replace with actual user ID
-      const response = await getNotificationByUserId(userId);
+      const user = await getData("userData");
+      const response = await getNotificationByUserId(user.id);
       let notifications = response.data.notifications || [];
 
       // Sort notifications by created_at date (most recent first)

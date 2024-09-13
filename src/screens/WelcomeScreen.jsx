@@ -5,8 +5,7 @@ import CustomText from '../components/CustomText';
 import fontSizes from '../types/fontSize';
 import { useTheme } from '../utils/themesUtil';
 import CustomButton from '../components/CustomButton';
-import { themeStyles } from '../styles/globalStyles';
-import colors from '../types/colors';
+import { setValue } from '../utils/storageHelperUtil';
 
 const WelcomeScreen = ({ navigation }) => {
   const { theme, toggleTheme } = useTheme();
@@ -41,7 +40,15 @@ const WelcomeScreen = ({ navigation }) => {
           <CustomText style={[styles.Title]} weight="semiBoldItalic">
             Welcome To Event Community Application
           </CustomText>
-          <CustomButton onPress={toggleTheme} style={{ marginTop: 20, width: '50%' }} theme="primary">
+          <CustomButton
+            onPress={() => {
+              setValue('theme', theme.isDarkMode ? 'light' : 'dark').then(() => {
+                toggleTheme();
+              });
+            }}
+            style={{ marginTop: 20, width: '50%' }}
+            theme="primary"
+          >
             Change Theme
           </CustomButton>
         </View>
@@ -64,14 +71,14 @@ const WelcomeScreen = ({ navigation }) => {
             Get Started!
           </CustomText>
           <CustomButton
-            // onPress={() => navigation.navigate('CreateAccount')}
+            onPress={() => navigation.navigate('signup')}
             style={{ marginTop: 20, width: '50%' }}
             theme="primary"
           >
             Create Account
           </CustomButton>
           <CustomButton
-            // onPress={() => navigation.navigate('Login')}
+            onPress={() => navigation.navigate('login')}
             style={{ marginTop: 20, width: '50%' }}
             theme="secondary"
           >
@@ -139,7 +146,7 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline',
     textAlign: 'center',
   },
-  rightTop: { top: 0, right: "10%", position: 'absolute' },
+  rightTop: { top: 0, right: '10%', position: 'absolute' },
 });
 
 export default WelcomeScreen;

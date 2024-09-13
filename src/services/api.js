@@ -59,7 +59,7 @@ export const get = async (path, params = {}) => {
     const response = await fetch(url);
     if (!response.ok) {
       const errorResponse = await response.json();
-      throw new Error(errorResponse.error || `HTTP error! Status: ${response.status}`);
+      throw new Error(errorResponse.message || `HTTP error! Status: ${response.status}`);
     }
     const responseData = await response.json();
     console.log('result', JSON.stringify(responseData));
@@ -85,7 +85,7 @@ export const remove = async (path, params) => {
     });
     if (!response.ok) {
       const errorResponse = await response.json();
-      throw new Error(errorResponse.error || `HTTP error! Status: ${response.status}`);
+      throw new Error(errorResponse.message || `HTTP error! Status: ${response.status}`);
     }
     const responseData = await response.json();
     console.log('result', JSON.stringify(responseData));
@@ -112,7 +112,7 @@ export const post = async (path, params, body) => {
     });
     if (!response.ok) {
       const errorResponse = await response.json();
-      throw new Error(errorResponse.error || `HTTP error! Status: ${response.status}`);
+      throw new Error(errorResponse.message || `HTTP error! Status: ${response.status}`);
     }
     const responseData = await response.json();
     console.log('result', responseData);
@@ -139,7 +139,7 @@ export const put = async (path, params, body) => {
     });
     if (!response.ok) {
       const errorResponse = await response.json();
-      throw new Error(errorResponse.error || `HTTP error! Status: ${response.status}`);
+      throw new Error(errorResponse.message || `HTTP error! Status: ${response.status}`);
     }
     const responseData = await response.json();
     console.log('result', responseData);

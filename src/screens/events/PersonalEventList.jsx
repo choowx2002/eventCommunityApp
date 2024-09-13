@@ -14,6 +14,7 @@ import { globalStyle } from '../../styles/globalStyles';
 import fontSizes from '../../types/fontSize';
 import { getFontFamily } from '../../types/customFonts';
 import { getUserEvents } from '../../services/userApi.service';
+import { getData } from '../../utils/storageHelperUtil';
 
 const groups = {
   active: {
@@ -70,7 +71,9 @@ const PersonalEventList = ({ navigation }) => {
   }, [listType]);
 
   const _fetchEventDetails = (eventType) => {
-    getUserEvents({ userId: 51, eventType }) //testing purpose
+    getData('userData').then((res) => {
+      if (!res) return;
+      getUserEvents({ userId: res.id, eventType }) //testing purpose
       .then((res) => {
         if (!res) return showErrorToast('Please Try Again Later(ง •_•)ง', true);
         setEvents(res?.data?.userEvents);
@@ -83,6 +86,8 @@ const PersonalEventList = ({ navigation }) => {
         if (refreshing) setRefreshing(false);
         hideLoadingModal();
       });
+    });
+    
   };
 
   /**

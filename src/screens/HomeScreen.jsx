@@ -6,11 +6,12 @@ import Carousel from 'react-native-snap-carousel';
 import CustomText from '../components/CustomText';
 import fontSizes from '../types/fontSize';
 import Geolocation from '@react-native-community/geolocation';
-import { get, getHostName, getLocationAddress } from '../services/api';
+import { getHostName, getLocationAddress } from '../services/api';
 import { format, parse } from 'date-fns';
 import { getUserCategories } from '../services/userApi.service';
 import { getEventByCatId, getEventByState, getEvents } from '../services/eventApi.service';
-import { themeStyles } from '../styles/globalStyles';
+import { init_notification } from '../services/socket';
+import { getData } from '../utils/storageHelperUtil';
 
 const { width: viewportWidth } = Dimensions.get('window'); // used to get the vw of window
 
@@ -26,7 +27,7 @@ const HomeScreen = ({ navigation }) => {
 
   const _getEvents = () => {
     //get events
-    getEvents()
+    getEvents({ limit: 4 })
       .then((res) => {
         if (res?.data.events.length > 0) setUpEvents(res.data.events);
       })
@@ -38,8 +39,7 @@ const HomeScreen = ({ navigation }) => {
         async (info) => {
           try {
             const state = await getLocationAddress(info.coords.latitude, info.coords.longitude);
-            if(state) {
-              setApiCallMax((prevCount) => prevCount + 1);
+            if (state) {
               setCurrentState(state);
               const result = await getEventByState({ state: state, limit: 3 });
               if (result?.data?.events?.length > 0) setNearEvents(result.data.events);
@@ -54,37 +54,40 @@ const HomeScreen = ({ navigation }) => {
       );
     });
 
-    //get categories events
-    getUserCategories(51).then((res) => {
-      //testing purpose id
-      if (!res?.data?.categories) return;
-      let interestEvents = [];
-      let promises = [];
-      const cat_ids = res.data.categories;
-      for (const { id, name } of cat_ids) {
-        promises.push(
-          new Promise(async (resolve) => {
-            const res = await getEventByCatId({
-              category_id: id,
-              limit: 3,
-            });
-            if (res?.data.events.length > 0) {
-              interestEvents.push(res.data);
-              resolve();
-            } else resolve();
+    getData('userData').then((res) => {
+      if (!res) return setApiCall((prevCount) => prevCount + 1);
+      //get categories events
+      getUserCategories(res.id).then((res) => {
+        if (!res?.data?.categories) return;
+        let interestEvents = [];
+        let promises = [];
+        const cat_ids = res.data.categories;
+        for (const { id, name } of cat_ids) {
+          promises.push(
+            new Promise(async (resolve) => {
+              const res = await getEventByCatId({
+                category_id: id,
+                limit: 3,
+              });
+              if (res?.data.events.length > 0) {
+                interestEvents.push(res.data);
+                resolve();
+              } else resolve();
+            })
+          );
+        }
+        Promise.all(promises)
+          .then(() => {
+            setCatsEvents(interestEvents);
           })
-        );
-      }
-      Promise.all(promises)
-        .then(() => {
-          setCatsEvents(interestEvents);
-        })
-        .finally(() => setApiCall((prevCount) => prevCount + 1));
+          .finally(() => setApiCall((prevCount) => prevCount + 1));
+      });
     });
   };
 
   useEffect(() => {
     _getEvents();
+    init_notification();
   }, []);
 
   //navigate to event detail page with id
@@ -118,7 +121,7 @@ const HomeScreen = ({ navigation }) => {
         }
       />
       <View style={{ paddingHorizontal: 10, paddingVertical: 5, rowGap: 5 }}>
-        <CustomText style={[{ fontSize: fontSizes.large }, {color: theme.primaryText}]} numberOfLines={1}>
+        <CustomText style={[{ fontSize: fontSizes.large }, { color: theme.primaryText }]} numberOfLines={1}>
           {item.title}
         </CustomText>
         <View
@@ -128,7 +131,7 @@ const HomeScreen = ({ navigation }) => {
             width: '100%',
           }}
         >
-          <CustomText weight={'light'} style={[{ fontSize: fontSizes.regular }, {color: theme.primaryText} ]} >
+          <CustomText weight={'light'} style={[{ fontSize: fontSizes.regular }, { color: theme.primaryText }]}>
             {format(item.start_date, 'yyyy-MM-dd')} {format(parse(item.start_time, 'HH:mm:ss', new Date()), 'hh:mm a')}
           </CustomText>
           <View
@@ -139,7 +142,7 @@ const HomeScreen = ({ navigation }) => {
             }}
           >
             <Ionicons name={'person'} color={theme.primaryText} size={fontSizes.regular} />
-            <CustomText weight={'light'} style={[{ fontSize: fontSizes.regular }, {color: theme.primaryText}]}>
+            <CustomText weight={'light'} style={[{ fontSize: fontSizes.regular }, { color: theme.primaryText }]}>
               {item.participants}/{item.participants_limit}
             </CustomText>
           </View>
@@ -174,7 +177,7 @@ const HomeScreen = ({ navigation }) => {
         }
       />
       <View style={{ paddingHorizontal: 10, paddingVertical: 5 }}>
-        <CustomText style={[{ fontSize: fontSizes.large }, {color: theme.primaryText}]} numberOfLines={1}>
+        <CustomText style={[{ fontSize: fontSizes.large }, { color: theme.primaryText }]} numberOfLines={1}>
           {item.title}
         </CustomText>
       </View>
@@ -201,10 +204,14 @@ const HomeScreen = ({ navigation }) => {
       {/* banner for upcoming events */}
       <View style={styles.moduleContainer}>
         <View style={styles.swiperHeadar}>
-          <CustomText weight="bold" style={[{ fontSize: fontSizes.header }, {color: theme.tertiaryText}]}>
+          <CustomText weight="bold" style={[{ fontSize: fontSizes.header }, { color: theme.tertiaryText }]}>
             Upcoming Events
           </CustomText>
-          <CustomText weight="light" onPress={() => navigation.navigate('Events', { type: 'all' })} style={{color: theme.tertiaryText}}>
+          <CustomText
+            weight="light"
+            onPress={() => navigation.navigate('Events', { type: 'all' })}
+            style={{ color: theme.tertiaryText }}
+          >
             View All
           </CustomText>
         </View>
@@ -223,15 +230,15 @@ const HomeScreen = ({ navigation }) => {
       {nearEvents?.length > 0 && (
         <View style={styles.moduleContainer}>
           <View style={styles.swiperHeadar}>
-            <CustomText weight="bold" style={[{ fontSize: fontSizes.header }, {color: theme.tertiaryText}]}>
+            <CustomText weight="bold" style={[{ fontSize: fontSizes.header }, { color: theme.tertiaryText }]}>
               Nearby Events
             </CustomText>
             <CustomText
               weight="light"
               //routing for eventsScreen
               onPress={() => navigation.navigate('Events', { type: 'Location', value: currentState })}
-              style={{color: theme.tertiaryText}}
-              >
+              style={{ color: theme.tertiaryText }}
+            >
               View All
             </CustomText>
           </View>
@@ -253,7 +260,7 @@ const HomeScreen = ({ navigation }) => {
           return (
             <View style={styles.moduleContainer} key={key}>
               <View style={styles.swiperHeadar}>
-                <CustomText weight="bold" style={[{ fontSize: fontSizes.header }, {color: theme.tertiaryText}]}>
+                <CustomText weight="bold" style={[{ fontSize: fontSizes.header }, { color: theme.tertiaryText }]}>
                   {item.category.name}
                 </CustomText>
                 <CustomText
@@ -268,7 +275,7 @@ const HomeScreen = ({ navigation }) => {
                         },
                       }) //routing for eventsScreen
                   }
-                  style={{color: theme.tertiaryText}}
+                  style={{ color: theme.tertiaryText }}
                 >
                   View All
                 </CustomText>

@@ -19,7 +19,7 @@ import { globalStyle } from '../../styles/globalStyles';
 import { getAllCategories } from '../../services/categoryApi.service';
 import { uploadImage } from '../../services/api';
 import { createEventApi } from '../../services/eventApi.service';
-import colors from '../../types/colors';
+import { getData } from '../../utils/storageHelperUtil';
 
 const CreateEventScreen = ({ navigation }) => {
   const { theme } = useTheme();
@@ -27,6 +27,7 @@ const CreateEventScreen = ({ navigation }) => {
   const [alertState, setAlertState] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [categories, setCategories] = useState([]);
+  const [UID, setUserID] = useState(null);
   const [formValues, handleFormValueChange, validateForm] = formData({
     data: {
       title: '',
@@ -98,7 +99,14 @@ const CreateEventScreen = ({ navigation }) => {
   };
 
   useEffect(() => {
-    _query();
+    getData('userData').then((res) => {
+      if (!res) navigation.reset({
+        index: 1,
+        routes: [{ name: 'main' }, {name: "login"}],
+      });
+      setUserID(res.id);
+      _query();
+    })
   }, []);
 
   // get image from gallery
@@ -160,7 +168,7 @@ const CreateEventScreen = ({ navigation }) => {
       start_date: format(parse(formValues.data.start_date, 'M/d/yyyy', new Date()), 'yyyy-MM-dd'),
       end_date: format(parse(formValues.data.end_date, 'M/d/yyyy', new Date()), 'yyyy-MM-dd'),
       image_path: await uploadImage(selectedImage),
-      admin_id: 51, //testing purpose
+      admin_id: UID,
       participants_limit: formValues.data.participants_limit,
       address: formValues.data.address,
       postcode: formValues.data.postcode,
