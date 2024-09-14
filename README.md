@@ -1,4 +1,5 @@
 # event-community-app
+Assignment purpose
 Develop an Event Community App targeted for the Android platform using React Native. 
 
 
