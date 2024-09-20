@@ -6,7 +6,7 @@ import { useTheme } from '../../utils/themesUtil';
 import CustomText from '../../components/CustomText';
 import { setValue } from '../../utils/storageHelperUtil';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { disconnectSocket, unsubscribe_all } from '../../services/socket';
+import { disconnectSocket, init_notification, unsubscribe_all } from '../../services/socket';
 import { deleteUser } from '../../services/userApi.service';
 import { removeAllEvents } from '../../services/sqliteServices';
 
@@ -78,6 +78,7 @@ const SettingsScreen = ({ navigation }) => {
           }}
           onValueChange={(itemValue) => {
             setValue('theme', itemValue).then(() => {
+              setValue("theme", itemValue)
               setTheme(itemValue);
               toggleTheme();
             });
@@ -97,7 +98,12 @@ const SettingsScreen = ({ navigation }) => {
           onValueChange={(itemValue) => {
             setValue('enableNotification', itemValue).then(() => {
               setEnableNotification(itemValue);
-              unsubscribe_all();
+              setValue("enableNotification", itemValue)
+              if(itemValue === "0"){
+                unsubscribe_all();
+              } else {
+                init_notification();
+              }
             });
           }}
         >

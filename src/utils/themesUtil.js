@@ -13,16 +13,8 @@ export const ThemeProvider = ({ children }) => {
   // Determine the initial theme based on the device's color scheme
   const systemTheme = Appearance.getColorScheme() === 'dark' ? colors.dark : colors.light;
   let initialTheme = systemTheme;
-  getData('theme').then((res) => {
-    if (res === 'dark') {
-      initialTheme = colors.dark;
-    } else if (res === 'light') {
-      initialTheme = colors.light;
-    }
-  });
   
   const [theme, setTheme] = useState(initialTheme);
-  
   // Function to switch between light and dark themes
   const toggleTheme = async () => {
     const storedTheme = await getData('theme');

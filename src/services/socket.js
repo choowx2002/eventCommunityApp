@@ -31,8 +31,6 @@ export const subscribe_notification = async id => {
 };
 
 export const unsubscribe_notification = async id => {
-  const isGranted = await _checkNotificationPermission();
-  if (!isGranted) return {success: true, error: null};
   return new Promise((resolve, reject) => {
     try {
       // Emit an event to subscribe to notifications

@@ -79,7 +79,7 @@ export const insertEvent = async event => {
   if (!db) {
     return false;
   }
-
+  await removeEvents(event.id);
   return new Promise(resolve => {
     db.transaction(tx => {
       tx.executeSql(

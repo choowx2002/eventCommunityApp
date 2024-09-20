@@ -16,7 +16,7 @@ import { getData } from '../utils/storageHelperUtil';
 const { width: viewportWidth } = Dimensions.get('window'); // used to get the vw of window
 
 const HomeScreen = ({ navigation }) => {
-  const { theme } = useTheme();
+  const { theme, toggleTheme } = useTheme();
   const [refreshing, setRefreshing] = useState(false);
   const [upEvents, setUpEvents] = useState([]);
   const [nearEvents, setNearEvents] = useState([]);
@@ -91,6 +91,7 @@ const HomeScreen = ({ navigation }) => {
   useEffect(() => {
     _getEvents();
     init_notification();
+    toggleTheme();
   }, []);
 
   //navigate to event detail page with id

@@ -63,7 +63,7 @@ export const get = async (path, params = {}) => {
       throw new Error(errorResponse.message || `HTTP error! Status: ${response.status}`);
     }
     const responseData = await response.json();
-    console.log('result', JSON.stringify(responseData));
+    // console.log('result', JSON.stringify(responseData));
     return responseData;
   } catch (error) {
     console.log('Fetch Error:', error.message);
@@ -89,7 +89,7 @@ export const remove = async (path, params) => {
       throw new Error(errorResponse.message || `HTTP error! Status: ${response.status}`);
     }
     const responseData = await response.json();
-    console.log('result', JSON.stringify(responseData));
+    // console.log('result', JSON.stringify(responseData));
     return responseData;
   } catch (error) {
     console.log('Fetch Error:', error.message);
@@ -116,7 +116,7 @@ export const post = async (path, params, body) => {
       throw new Error(errorResponse.message || `HTTP error! Status: ${response.status}`);
     }
     const responseData = await response.json();
-    console.log('result', responseData);
+    // console.log('result', responseData);
     return responseData;
   } catch (error) {
     console.log('Fetch Error:', error.message);
@@ -143,7 +143,7 @@ export const put = async (path, params, body) => {
       throw new Error(errorResponse.message || `HTTP error! Status: ${response.status}`);
     }
     const responseData = await response.json();
-    console.log('result', responseData);
+    // console.log('result', responseData);
     return responseData;
   } catch (error) {
     console.log('Fetch Error:', error.message);
