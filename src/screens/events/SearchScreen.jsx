@@ -28,7 +28,7 @@ const SearchScreen = ({ navigation }) => {
       backgroundColor: theme.inputBackground,
     },
     inputBox: {
-      color: theme.primaryText,
+      color: theme.tertiaryText,
     },
     image: {
       width: deviceWidth - 20,
@@ -94,7 +94,7 @@ const SearchScreen = ({ navigation }) => {
       <View style={[globalStyle.header, {}]}>
         <BackButton navigation={navigation} float={false} showBg={false} />
         <View style={[styles.searchInputBox, themeStyles.searchInputBox]}>
-          <Ionicons name="search-outline" color={theme.primaryText} size={18} />
+          <Ionicons name="search-outline" color={theme.tertiaryText} size={18} />
           <TextInput
             style={[getFontFamily('regular'), styles.inputBox, themeStyles.inputBox]}
             onChangeText={setSearchTerm}

@@ -25,9 +25,9 @@ export const getEventByState = async(param)=>{
     return result = await get(path,param)
 }
 
-export const getEvents = async()=>{
+export const getEvents = async(params)=>{
     const path = '/events/'
-    return result = await get(path,{})
+    return result = await get(path,params)
 }
 
 export const getEventByCatId = async(param)=>{

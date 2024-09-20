@@ -5,9 +5,10 @@ export const getLocationAddress = async (latitude, longitude) => {
       `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
     );
     const json = await response.json();
-    return json.address.state ?? json.address.city;
+    const state = json.address.state ?? json.address.city
+    return state.toLowerCase() === "kuala lumpur"?"Selangor":state;
   } catch (error) {
-    console.error(error);
+    console.log("error", error);
     return null
   }
 };

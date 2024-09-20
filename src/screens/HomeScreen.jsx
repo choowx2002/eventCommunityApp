@@ -44,7 +44,10 @@ const HomeScreen = ({ navigation }) => {
               const result = await getEventByState({ state: state, limit: 3 });
               if (result?.data?.events?.length > 0) setNearEvents(result.data.events);
             }
-          } finally {
+          }catch(err){
+            console.log("err", err)
+          }
+          finally {
             setApiCall((prevCount) => prevCount + 1);
           }
         },

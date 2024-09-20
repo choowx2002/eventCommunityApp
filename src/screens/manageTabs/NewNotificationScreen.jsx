@@ -1,4 +1,4 @@
-import { View, StyleSheet, ToastAndroid, Alert } from 'react-native';
+import { View, StyleSheet, ToastAndroid, Alert, LogBox } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { useRoute } from '@react-navigation/native';
 //components
@@ -14,6 +14,9 @@ import fontSizes from '../../types/fontSize';
 import { send_notification } from '../../services/socket';
 import { createNotification } from '../../services/notificationApi.service';
 
+LogBox.ignoreLogs(['Non-serializable values were found in the navigation state']); //ignore warning
+
+
 const NewNotificationScreen = ({ navigation }) => {
   const { theme } = useTheme();
   const route = useRoute();
@@ -28,7 +31,6 @@ const NewNotificationScreen = ({ navigation }) => {
     requiredData: ['title', 'message'],
     error: {},
   });
-  LogBox.ignoreLogs(['Non-serializable values were found in the navigation state']); //ignore warning
 
   const dynamicStyles = StyleSheet.create({
     header: {

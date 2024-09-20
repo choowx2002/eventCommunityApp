@@ -156,12 +156,14 @@ const PersonalEventList = ({ navigation }) => {
           </View>
 
           {/* show event's participants */}
+          {(event.hasOwnProperty('participants')) && (
           <View style={[styles.eventMeta, styles.eventParticipants]}>
             <Ionicons name={'person-outline'} color={theme.primaryBG} size={fontSizes.regular} />
             <CustomText>
               {event.participants}/{event.participants_limit}
             </CustomText>
           </View>
+          )}
         </View>
       </Pressable>
     );

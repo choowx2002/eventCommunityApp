@@ -117,7 +117,6 @@ const CustomInput = ({
    * do validation for normal text or numeric input
    */
   const validateInput = event => {
-    console.log('check'); //testing purpose
     const value = event.nativeEvent.text;
     let errorList = [];
     switch (formKey) {

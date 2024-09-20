@@ -4,7 +4,7 @@ import { launchImageLibrary } from 'react-native-image-picker';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Picker } from '@react-native-picker/picker';
 import { findPostcode } from 'malaysia-postcodes';
-import { format, parse } from 'date-fns';
+import { format, parse, parseISO } from 'date-fns';
 //components
 import CustomButton, { BackButton } from '../../components/CustomButton';
 import { LoadingModal, loadingHook } from '../../components/LoadingModal';
@@ -163,8 +163,8 @@ const CreateEventScreen = ({ navigation }) => {
     const event = await {
       title: formValues.data.title,
       description: formValues.data.description,
-      start_time: formValues.data.start_time,
-      end_time: formValues.data.end_time,
+      start_time: format(formValues.data.start_time, 'HH:mm:ss'),
+      end_time: format(formValues.data.end_time, 'HH:mm:ss'),
       start_date: format(parse(formValues.data.start_date, 'M/d/yyyy', new Date()), 'yyyy-MM-dd'),
       end_date: format(parse(formValues.data.end_date, 'M/d/yyyy', new Date()), 'yyyy-MM-dd'),
       image_path: await uploadImage(selectedImage),
@@ -267,7 +267,6 @@ const CreateEventScreen = ({ navigation }) => {
         <CustomInput
           label="Participants limit: "
           formKey="participants_limit"
-          colors = {theme.description}
           textInputProps={{
             inputMode: 'numeric',
           }}

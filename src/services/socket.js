@@ -6,7 +6,7 @@ import { SOCKET_PORT, HOST } from '@env';
 
 const SOCKET_URI_Ethernet = `http://${HOST}:${SOCKET_PORT}`;
 
-let socket;
+let socket = null;
 
 export const subscribe_notification = async id => {
   const isGranted = await _checkNotificationPermission();
@@ -74,6 +74,9 @@ export const send_notification = data => {
 
 export const connectSocket = () => {
   return new Promise((resolve, reject) => {
+    if (socket && socket.connected) {
+      return resolve(socket); 
+    }
     socket = io(SOCKET_URI_Ethernet);
     console.log("try connect to server",SOCKET_URI_Ethernet)
     socket.on('connect', async () => {
@@ -101,7 +104,11 @@ export const connectSocket = () => {
 };
 
 export const disconnectSocket = () =>{//disconnect with server
-  socket.disconnect()
+  if (socket) {
+    console.log("Disconnecting socket");
+    socket.disconnect();
+    socket = null;
+  }
 }
 
 //initial notification service

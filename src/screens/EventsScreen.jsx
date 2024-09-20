@@ -10,8 +10,6 @@ import CustomText from '../components/CustomText';
 import { format } from 'date-fns';
 import { getAllCategories } from '../services/categoryApi.service';
 import CustomButton from '../components/CustomButton';
-import colors from '../types/colors';
-import { themeStyles } from '../styles/globalStyles';
 import { ScrollView } from 'react-native-gesture-handler';
 
 const EventsScreen = ({ navigation }) => {

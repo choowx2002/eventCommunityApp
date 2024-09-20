@@ -2,6 +2,7 @@ import React from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
 import { useTheme } from '../utils/themesUtil';
 import CustomText from '../components/CustomText';
+import { addHours } from 'date-fns';
 
 const NotificationDetailsScreen = ({ route }) => {
   const { theme } = useTheme();
@@ -20,7 +21,7 @@ const NotificationDetailsScreen = ({ route }) => {
           {notification.message}
         </CustomText>
         <CustomText weight='regular' style={[styles.time, { color: theme.tertiaryText }]}>
-          Created: {new Date(notification.created_at).toLocaleString()}
+          Created: {addHours(new Date(notification.created_at), 8).toLocaleString()}
         </CustomText>
       </View>
     </ScrollView>

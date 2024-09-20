@@ -55,7 +55,7 @@ const CustomButton = ({
   return (
     <Pressable style={[buttonTheme, globalStyle.Button, style]} {...props}>
       {icon && !iconEnd && <View style={{ marginRight: 8 }}>{icon}</View>}
-      <CustomText weight="bold" style={[buttonTheme, { fontSize: textSize }]}>
+      <CustomText weight="bold" style={[buttonTheme, { fontSize: textSize, textAlign: "center" }]}>
         {children}
       </CustomText>
       {icon && iconEnd && <View style={{ marginRight: 8 }}>{icon}</View>}
